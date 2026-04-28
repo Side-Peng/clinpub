@@ -137,6 +137,116 @@ function removeDir(dir) {
   }
 }
 
+// ─── Hook registration ────────────────────────────────────────────
+function getSettingsPath(isGlobal) {
+  const home = os.homedir();
+  return isGlobal
+    ? path.join(home, '.claude', 'settings.json')
+    : path.join(process.cwd(), '.claude', 'settings.json');
+}
+
+function getHookDefinitions(hooksDir, isGlobal) {
+  const guardJs = isGlobal
+    ? `node "${path.join(hooksDir, 'clinpub-workflow-guard.js')}"`
+    : `node "${path.relative(process.cwd(), path.join(hooksDir, 'clinpub-workflow-guard.js'))}"`;
+
+  const boundarySh = isGlobal
+    ? `bash "${path.join(hooksDir, 'clinpub-phase-boundary.sh')}"`
+    : `bash "${path.relative(process.cwd(), path.join(hooksDir, 'clinpub-phase-boundary.sh'))}"`;
+
+  const promptJs = isGlobal
+    ? `node "${path.join(hooksDir, 'clinpub-prompt-guard.js')}"`
+    : `node "${path.relative(process.cwd(), path.join(hooksDir, 'clinpub-prompt-guard.js'))}"`;
+
+  return [
+    { matcher: 'Write|Edit', hook: { type: 'command', command: guardJs, timeout: 5000 } },
+    { matcher: 'Bash', hook: { type: 'command', command: boundarySh, timeout: 5000 } },
+    { matcher: 'Read', hook: { type: 'command', command: promptJs, timeout: 3000 } },
+  ];
+}
+
+function registerHooks(isGlobal) {
+  const settingsPath = getSettingsPath(isGlobal);
+  const { resourceDir } = getPaths(isGlobal);
+  const hooksDir = path.join(resourceDir, 'hooks');
+  const hookDefs = getHookDefinitions(hooksDir, isGlobal);
+
+  const settingsDir = path.dirname(settingsPath);
+  fs.mkdirSync(settingsDir, { recursive: true });
+
+  let settings = {};
+  if (fs.existsSync(settingsPath)) {
+    try {
+      settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+    } catch (e) {
+      settings = {};
+    }
+  }
+
+  if (!settings.hooks) settings.hooks = {};
+  if (!settings.hooks.PreToolUse) settings.hooks.PreToolUse = [];
+
+  const preToolUse = settings.hooks.PreToolUse;
+
+  // Remove existing clinpub hook entries (idempotent: delete then add)
+  const clinpubPattern = /clinpub-(workflow-guard|phase-boundary|prompt-guard)/;
+  for (let i = preToolUse.length - 1; i >= 0; i--) {
+    const entry = preToolUse[i];
+    if (entry.hooks && entry.hooks.some(h => clinpubPattern.test(h.command))) {
+      preToolUse.splice(i, 1);
+    }
+  }
+
+  // Add clinpub hook entries
+  for (const def of hookDefs) {
+    preToolUse.push({
+      matcher: def.matcher,
+      hooks: [def.hook],
+    });
+  }
+
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n');
+  console.log(`  ${green}✓${reset} Hooks registered in ${settingsPath}`);
+}
+
+function unregisterHooks(isGlobal) {
+  const settingsPath = getSettingsPath(isGlobal);
+
+  if (!fs.existsSync(settingsPath)) return;
+
+  let settings;
+  try {
+    settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+  } catch (e) {
+    return;
+  }
+
+  if (!settings.hooks || !settings.hooks.PreToolUse) return;
+
+  const preToolUse = settings.hooks.PreToolUse;
+  const clinpubPattern = /clinpub-(workflow-guard|phase-boundary|prompt-guard)/;
+  let removed = 0;
+
+  for (let i = preToolUse.length - 1; i >= 0; i--) {
+    const entry = preToolUse[i];
+    if (entry.hooks && entry.hooks.some(h => clinpubPattern.test(h.command))) {
+      preToolUse.splice(i, 1);
+      removed++;
+    }
+  }
+
+  if (removed > 0) {
+    if (preToolUse.length === 0) {
+      delete settings.hooks.PreToolUse;
+    }
+    if (Object.keys(settings.hooks).length === 0) {
+      delete settings.hooks;
+    }
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n');
+    console.log(`  ${green}✓${reset} Removed ${removed} hook entries from ${settingsPath}`);
+  }
+}
+
 // ─── Install ───────────────────────────────────────────────────────
 function install(isGlobal) {
   const { claudeRoot, skillsDir, resourceDir, resourceRef } = getPaths(isGlobal);
@@ -194,7 +304,10 @@ function install(isGlobal) {
     installed++;
   }
 
-  // 4. Summary
+  // 4. Register hooks in settings.json
+  registerHooks(isGlobal);
+
+  // 5. Summary
   console.log(`\n${green}${bold}Installed ${installed} skills${reset}`);
   console.log(`${dim}Resources at: ${resourceDir}${reset}`);
   console.log(`\n${bold}Usage:${reset}`);
@@ -232,6 +345,9 @@ function uninstall(isGlobal) {
     removeDir(resourceDir);
     console.log(`  ${green}✓${reset} Removed ${resourceDir}`);
   }
+
+  // Remove hook registrations from settings.json
+  unregisterHooks(isGlobal);
 
   console.log(`\n${green}${bold}clinpub uninstalled.${reset}\n`);
 }

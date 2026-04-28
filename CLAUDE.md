@@ -78,7 +78,7 @@ tests/                 → Test files
 
 ## Dependencies
 
-- **R**: dplyr, ggplot2, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx
-- **Python**: pandas, numpy, pymupdf, requests, openpyxl
+- **R**: dplyr, tidyr, stringr, readr, readxl, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx, ggplot2, ggpubr, patchwork, survminer, ggsurvfit, ggsignif, here, fs
+- **Python**: pandas, numpy, requests, openpyxl
 - **Claude Code skills**: ncbi-search, tavily, pdf-reader
 - **Env vars**: `NCBI_API_KEY` (optional), `TAVILY_API_KEY` (required for Tavily)

@@ -58,7 +58,7 @@ Search strategies by trigger phase:
 For key references requiring full text:
 
 1. Use DOI to check open-access status via Unpaywall
-2. If OA available: download PDF → extract full text with `scripts/pdf_reader.py`
+2. If OA available: download PDF → extract full text using Claude Code's built-in pdf-reader skill
 3. If not OA: request user to provide PDF
 4. Extract: abstract, methods, key results, limitations
 </step>
@@ -84,6 +84,8 @@ Write two output files to `Reference/`:
 ```
 
 Deduplicate at final stage. Flag any references without DOIs for user action.
+
+Write MANIFEST.yaml to `Reference/` declaring all outputs and listing writer-agent as consumer (see `pipeline/references/manifest-format.md`).
 </step>
 
 </execution_flow>

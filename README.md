@@ -8,6 +8,15 @@
 
 **目标期刊**：Alzheimer's & Dementia、Molecular Psychiatry 等 SCI Q1/Q2 水平。
 
+## 快速开始
+
+```bash
+npx clinpub-cc@latest        # 一键安装
+/clinpub                     # 启动完整管线
+```
+
+完整教程、示例数据和常见问题 → `docs/getting-started.md`
+
 ## 架构
 
 ```
@@ -20,6 +29,8 @@ pipeline/
   contexts/*.md        — Context configurations
 scripts/*.py           — Tool scripts (profiling, search, PDF)
 hooks/*.js/*.sh        — Claude Code hooks (workflow guard, phase boundary, prompt guard)
+docs/                  — Tutorials and guides
+examples/              — Sample data and example configs
 tests/                 — Test files
 ```
 
@@ -43,7 +54,7 @@ USER → COMMANDS (commands/clinpub/clinpub.md)
 | **Writer Agent** | — | IMRAD 撰写、图表整合、模拟审稿 |
 | **Clinpub Planner** | — | 研究分析规划，创建可执行的 PLAN.md（波次依赖图） |
 | **Clinpub Executor** | R/Python | 分析执行，原子提交，偏差处理，SUMMARY.md 生成 |
-| **Clinpub Verifier** | — | 统计验证，敌对验证心态，8 种验证模式检查 |
+| **Clinpub Verifier** | — | 跨阶段验证（Phase 1 数据质量 + Phase 2 统计 + Phase 3 论文），15 种验证模式 |
 
 ### 阶段化流程
 
@@ -53,7 +64,7 @@ USER → COMMANDS (commands/clinpub/clinpub.md)
 |-------|------|------|
 | 0 | init | 研究框架、目录结构、项目配置 |
 | 1 | data-prep | cleaned.csv + 数据质量报告 |
-| 2 | analysis | 每方法输出图 + 表 + 统计报告 |
+| 2 | analysis | 按数据特征动态定制的分析方案（图 + 表 + 统计报告） |
 | 3 | writing | IMRAD 各章节 draft.md |
 | 4 | review | 审稿意见 + response letter + 修订稿 |
 
@@ -128,7 +139,7 @@ Project_Root/
 - **路径**：here, fs
 
 ### Python 包
-pandas, numpy, pymupdf, requests, pathlib, openpyxl, tavily-python
+pandas, numpy, requests, pathlib, openpyxl, tavily-python
 
 ## 出版级图表标准
 
