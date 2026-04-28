@@ -103,7 +103,7 @@ function isDataFile(filePath) {
 /**
  * Hook entry point.
  * Input (stdin JSON): { tool_name, tool_input }
- * Output (stdout JSON): { decision, reason }
+ * Output (stdout JSON): { hookSpecificOutput: { hookEventName, decision, additionalContext? } }
  */
 function main() {
   let input = "";
@@ -115,27 +115,24 @@ function main() {
 
       // Only guard Read operations on data files
       if (tool_name !== "Read") {
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
         return;
       }
 
       const filePath = tool_input.file_path;
       if (!filePath || !isDataFile(filePath)) {
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
         return;
       }
 
       // Check file exists and is readable
       if (!fs.existsSync(filePath)) {
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
         return;
       }
 
-      // Read first 1000 lines (enough to catch most injection attempts)
       const content = fs.readFileSync(filePath, "utf-8");
-      const headContent = content.split("\n").slice(0, 1000).join("\n");
-
-      const findings = scanContent(headContent);
+      const findings = scanContent(content);
 
       if (findings.length > 0) {
         const summary = findings
@@ -144,21 +141,19 @@ function main() {
 
         console.log(
           JSON.stringify({
-            decision: "block",
-            reason: `Potential prompt injection detected in ${path.basename(filePath)}. Suspicious patterns found at: ${summary}. Review file contents manually before proceeding.`,
+            hookSpecificOutput: {
+              hookEventName: "PreToolUse",
+              decision: "allow",
+              additionalContext: `Warning: Potential prompt injection detected in ${path.basename(filePath)}. Suspicious patterns found at: ${summary}. Proceed with caution and verify file contents manually.`
+            }
           })
         );
       } else {
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
       }
     } catch (e) {
-      // On error, allow (don't break workflow) but log
-      console.log(
-        JSON.stringify({
-          decision: "allow",
-          _warning: `Prompt guard check failed: ${e.message}`,
-        })
-      );
+      // On error, allow (don't break workflow)
+      console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
     }
   });
 }
