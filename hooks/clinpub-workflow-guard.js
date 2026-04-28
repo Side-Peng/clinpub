@@ -13,17 +13,11 @@ const path = require("path");
 
 const PROJECT_DIR = process.env.PROJECT_DIR || process.cwd();
 
-// Phase ordering and their allowed output directories
+// clinpub canonical project directory layout per phase
 const PHASE_MAP = {
   0: { name: "init", allowed_dirs: [".planning", "project_config.yml"] },
-  1: {
-    name: "data-prep",
-    allowed_dirs: ["01_RawData", "02_PreprocessedData"],
-  },
-  2: {
-    name: "analysis",
-    allowed_dirs: ["03_AnalysisMethods", "04_Outputs"],
-  },
+  1: { name: "data-prep", allowed_dirs: ["01_RawData", "02_PreprocessedData"] },
+  2: { name: "analysis", allowed_dirs: ["03_AnalysisMethods", "04_Outputs"] },
   3: { name: "writing", allowed_dirs: ["05_Manuscript", "Reference"] },
   4: { name: "review", allowed_dirs: ["05_Manuscript/final"] },
 };
@@ -84,7 +78,7 @@ function validatePhaseAccess(currentPhase, targetDir) {
 /**
  * Hook entry point.
  * Input (stdin JSON): { tool_name, tool_input }
- * Output (stdout JSON): { decision, reason }
+ * Output (stdout JSON): { hookSpecificOutput: { hookEventName, decision, reason } } | stderr JSON + exit 2 on block
  */
 function main() {
   let input = "";
@@ -96,20 +90,20 @@ function main() {
 
       // Only guard file write operations
       if (!["Write", "Edit"].includes(tool_name)) {
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
         return;
       }
 
       const filePath = tool_input.file_path;
       if (!filePath) {
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
         return;
       }
 
       const currentPhase = getCurrentPhase();
       if (currentPhase < 0) {
         // No state file — allow (project may not be initialized)
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
         return;
       }
 
@@ -117,18 +111,20 @@ function main() {
       const result = validatePhaseAccess(currentPhase, targetDir);
 
       if (!result.allowed) {
-        console.log(
-          JSON.stringify({
+        process.stderr.write(JSON.stringify({
+          hookSpecificOutput: {
+            hookEventName: "PreToolUse",
             decision: "block",
-            reason: result.reason,
-          })
-        );
+            reason: result.reason
+          }
+        }) + '\n');
+        process.exit(2);
       } else {
-        console.log(JSON.stringify({ decision: "allow" }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
       }
     } catch (e) {
       // On parse error, allow (don't break workflow)
-      console.log(JSON.stringify({ decision: "allow" }));
+      console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
     }
   });
 }
