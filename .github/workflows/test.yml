@@ -1,0 +1,45 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: Python tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Install pytest
+        run: pip install pytest
+
+      - name: Run pytest
+        run: |
+          if [ -d "tests" ] && find tests -name "test_*.py" -print -quit | grep -q .; then
+            pytest tests/ --no-header -q
+          else
+            echo "No Python tests found, skipping."
+          fi
+
+  node:
+    name: Node.js tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run node:test
+        run: node --test "tests/**/*.test.cjs"
