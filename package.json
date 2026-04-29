@@ -12,10 +12,7 @@
     "url": "https://github.com/Side-Peng/clinpub.git"
   },
   "scripts": {
-    "test": "node --test tests/*.test.cjs",
-    "test:unit": "node --test tests/unit/*.test.cjs",
-    "lint:agents": "node scripts/lint-agents.cjs",
-    "build:hooks": "node scripts/build-hooks.js"
+    "test": "node --test \"tests/**/*.test.cjs\""
   },
   "engines": {
     "node": ">=22.0.0"
