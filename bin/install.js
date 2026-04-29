@@ -248,6 +248,80 @@ function unregisterHooks(isGlobal) {
   }
 }
 
+// ─── Environment checks ─────────────────────────────────────────────
+function checkEnvironment() {
+  const isWin = process.platform === 'win32';
+  let warnings = 0;
+
+  // 1. Node.js version check (PUB-03)
+  const nodeMajor = parseInt(process.version.slice(1), 10);
+  if (nodeMajor < 22) {
+    console.log(`  ${yellow}⚠${reset} Node.js ${process.version} detected — requires >= 22.0.0`);
+    console.log(`    ${dim}Download: https://nodejs.org/${reset}`);
+    warnings++;
+  } else {
+    console.log(`  ${green}✓${reset} Node.js ${process.version}`);
+  }
+
+  // 2. R check (PUB-04)
+  try {
+    const cmd = isWin ? 'where R' : 'which R';
+    execSync(cmd, { encoding: 'utf8', timeout: 5000, stdio: ['pipe', 'pipe', 'pipe'] });
+    console.log(`  ${green}✓${reset} R found`);
+  } catch {
+    console.log(`  ${yellow}⚠${reset} R not found in PATH`);
+    console.log(`    ${dim}Download: https://cran.r-project.org/${reset}`);
+    warnings++;
+  }
+
+  // 3. Python check (PUB-04)
+  try {
+    const cmd = isWin ? 'where python' : 'which python3 || which python';
+    execSync(cmd, { encoding: 'utf8', timeout: 5000, stdio: ['pipe', 'pipe', 'pipe'] });
+    console.log(`  ${green}✓${reset} Python found`);
+  } catch {
+    console.log(`  ${yellow}⚠${reset} Python not found in PATH`);
+    console.log(`    ${dim}Download: https://www.python.org/downloads/${reset}`);
+    warnings++;
+  }
+
+  // 4. Claude Code version check (PUB-05)
+  try {
+    const cmd = isWin ? 'where claude' : 'which claude';
+    execSync(cmd, { encoding: 'utf8', timeout: 5000, stdio: ['pipe', 'pipe', 'pipe'] });
+    // claude found in PATH, try to get version
+    try {
+      const output = execSync('claude --version', { encoding: 'utf8', timeout: 5000 });
+      const match = output.match(/(\d+)\.(\d+)\.(\d+)/);
+      if (match) {
+        const [, major, minor, patch] = match;
+        const ccMajor = parseInt(major, 10);
+        const ccMinor = parseInt(minor, 10);
+        const ccPatch = parseInt(patch, 10);
+        if (ccMajor < 2 || (ccMajor === 2 && ccMinor < 1) || (ccMajor === 2 && ccMinor === 1 && ccPatch < 88)) {
+          console.log(`  ${yellow}⚠${reset} Claude Code v${major}.${minor}.${patch} — requires >= 2.1.88`);
+          warnings++;
+        } else {
+          console.log(`  ${green}✓${reset} Claude Code v${major}.${minor}.${patch}`);
+        }
+      } else {
+        console.log(`  ${green}✓${reset} Claude Code found`);
+      }
+    } catch {
+      // claude exists but --version failed
+      console.log(`  ${green}✓${reset} Claude Code found`);
+    }
+  } catch {
+    // claude not in PATH — silently skip (D-11)
+  }
+
+  if (warnings > 0) {
+    console.log('');
+  }
+
+  return warnings;
+}
+
 // ─── Install ───────────────────────────────────────────────────────
 function install(isGlobal) {
   const { claudeRoot, skillsDir, resourceDir, resourceRef } = getPaths(isGlobal);
@@ -256,6 +330,9 @@ function install(isGlobal) {
 
   console.log(`\n${bold}${cyan}clinpub v${pkg.version}${reset} — Clinical Data Analysis Pipeline`);
   console.log(`${dim}Installing ${location} to ${locationPath}${reset}\n`);
+
+  // Environment checks (soft warnings — don't block install)
+  checkEnvironment();
 
   // 1. Create directories
   fs.mkdirSync(skillsDir, { recursive: true });
