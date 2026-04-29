@@ -72,7 +72,7 @@
 |-------|----------|----------------|
 | IMRAD structure complete | Yes | All sections present with substantive content |
 | Reporting standard checklist | Yes | STROBE/CONSORT/TRIPOD checklist completed |
-| All figures >= 300 DPI | Yes | No figure below threshold |
+| All figures ≥300 DPI (FIGURE_DPI) | Yes | No figure below threshold |
 | English figure/table labels | Yes | All axis labels, legends, annotations in English |
 | Manuscript language consistent | Yes | Chinese manuscript body, English figures/tables |
 | All citations have DOIs | Yes | Every reference entry has valid DOI |

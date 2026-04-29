@@ -26,7 +26,7 @@ Each agent contract defines:
 | **Inputs** | `01_RawData/*.csv`, `project_config.yml`, `pipeline/references/r_patterns.md`, `pipeline/references/analysis_methods.md` |
 | **Outputs** | `02_PreprocessedData/data/cleaned.csv`, `02_PreprocessedData/reports/data_quality.html`, `04_Outputs/XX_MethodName/` (figures + tables), `03_AnalysisMethods/XX_MethodName/README.md` |
 | **Communication** | Writes to filesystem only. No direct agent-to-agent messaging. |
-| **Completion markers** | `cleaned.csv` exists, each method directory has figure + table + README, all figures >= 300 DPI |
+| **Completion markers** | `cleaned.csv` exists, each method directory has figure + table + README, all figures ≥300 DPI (FIGURE_DPI) |
 
 ---
 

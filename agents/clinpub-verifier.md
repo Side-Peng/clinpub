@@ -196,7 +196,7 @@ score: N/M patterns verified
 
 <critical_rules>
 - Do NOT trust SUMMARY claims. Read actual output files.
-- Every figure must be checked for >= 300 DPI.
+- Every figure must be checked for ≥300 DPI (FIGURE_DPI).
 - Cross-check values between figures and tables.
 - Verify all assumption tests were performed.
 - Check for data leakage in train/validation splits.

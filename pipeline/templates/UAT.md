@@ -27,7 +27,7 @@ User Acceptance Testing for Phase {{phase_number}} deliverables. Each item must 
 
 | Item | Expected Result | Actual Result | Status |
 |------|-----------------|---------------|--------|
-| Each method has figure file | File exists, >= 300 DPI | | PASS / FAIL |
+| Each method has figure file | File exists, ≥300 DPI (FIGURE_DPI) | | PASS / FAIL |
 | Each method has table file | File exists, readable | | PASS / FAIL |
 | Each method has README | README complete with interpretation | | PASS / FAIL |
 | Effect sizes + 95% CI in all analyses | Present in every output | | PASS / FAIL |

@@ -110,7 +110,7 @@ Include:
 - Every analysis reads from `cleaned.csv` — never from raw data
 - R scripts must call `sessionInfo()` at the end
 - Python scripts must record package versions
-- Every figure must be >= 300 DPI
+- Every figure must be ≥300 DPI (FIGURE_DPI)
 - Every analysis must output figure + table + README
 - Set random seed for any stochastic method
 - No manual steps between script sections — full automation

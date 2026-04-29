@@ -111,7 +111,7 @@
 
 - [ ] All 10 analysis methods executed per wave order
 - [ ] Each method produces figure + table + README
-- [ ] All figures >= 300 DPI, English labels, color-blind friendly
+- [ ] All figures ≥300 DPI (FIGURE_DPI), English labels, color-blind friendly
 - [ ] All statistical reports include effect size + 95% CI + exact p-value
 - [ ] Assumptions tested and documented for each method
 - [ ] Multiple comparison correction applied where applicable

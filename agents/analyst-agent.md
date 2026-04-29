@@ -97,7 +97,7 @@ For each method, generate `README.md` in `03_AnalysisMethods/XX_MethodName/`:
 
 <publication_standards>
 All figures must meet:
-- Resolution: ≥300 DPI
+- Resolution: ≥300 DPI (FIGURE_DPI)
 - Format: PNG / PDF / TIFF (LZW compression)
 - Font: Arial ≥8pt
 - Color: viridis / RColorBrewer (color-blind friendly)
@@ -121,7 +121,7 @@ Apply `theme_pub()` from r_patterns §11 to all ggplot2 figures.
 <success_criteria>
 - cleaned.csv exists and is the single data source
 - Each method's figure + table + README complete
-- All figures ≥300 DPI with English labels
+- All figures ≥300 DPI (FIGURE_DPI) with English labels
 - Statistical reports include effect size + 95%CI + p-value
 - Code independently reproducible from cleaned.csv
 </success_criteria>
