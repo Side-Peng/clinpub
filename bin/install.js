@@ -21,6 +21,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const readline = require('readline');
+const { execSync } = require('child_process');
 
 // ─── Colors ────────────────────────────────────────────────────────
 const cyan = '\x1b[36m';
@@ -370,6 +371,35 @@ async function promptLocation() {
 
 // ─── Main ──────────────────────────────────────────────────────────
 async function main() {
+  // --version: print version and exit
+  if (args.includes('--version') || args.includes('-v')) {
+    console.log(`clinpub v${pkg.version}`);
+    process.exit(0);
+  }
+
+  // --help: print usage and exit
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+${bold}${cyan}clinpub v${pkg.version}${reset} — Clinical Data Analysis Pipeline
+
+${bold}Usage:${reset}
+  npx clinpub-cc [options]
+
+${bold}Options:${reset}
+  --version, -v     Show version number
+  --help, -h        Show this help message
+  --global, -g      Install globally (~/.claude/)
+  --local, -l       Install locally (./.claude/)
+  --uninstall, -u   Remove clinpub installation
+
+${bold}Examples:${reset}
+  npx clinpub-cc --global        # Global install
+  npx clinpub-cc --local         # Local install
+  npx clinpub-cc --uninstall     # Uninstall
+`);
+    process.exit(0);
+  }
+
   if (hasUninstall) {
     uninstall(hasGlobal || !hasLocal);
     return;
