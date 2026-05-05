@@ -1,8 +1,8 @@
 # STATE.md — clinpub 优化进度
 
 **最后更新**: 2026-05-05
-**当前状态**: Phase 1 执行完成
-- 阶段：Phase 1
+**当前状态**: Phase 2 上下文已收集，准备规划
+- 阶段：Phase 2
 
 ---
 
@@ -11,7 +11,7 @@
 见: `.planning/PROJECT.md` (updated 2026-05-05 after initialization)
 
 **核心价值:** 用户提供原始临床数据，clinpub 输出结构化的分析结果和可投稿的 IMRAD 手稿
-**当前聚焦:** Phase 1 — Bug Fixes
+**当前聚焦:** Phase 2 — 断点续做
 
 ---
 
@@ -20,7 +20,7 @@
 | # | Phase | 状态 | 进度 |
 |---|-------|------|------|
 | 1 | Bug Fixes | ✅ 完成 | 100% |
-| 2 | 断点续做 | ⏳ 待开始 | 0% |
+| 2 | 断点续做 | ⏳ 上下文已收集 | 0% |
 | 3 | 手稿拼接 | ⏳ 待开始 | 0% |
 | 4 | 方法增强 | ⏳ 待开始 | 0% |
 | 5 | Phase 前调研流程 | ⏳ 待开始 | 0% |
@@ -39,7 +39,7 @@
 ## 下一步
 
 ```
-/gsd-discuss-phase 2  → 讨论 Phase 2: 断点续做（推荐）
-/gsd-plan-phase 2     → 规划 Phase 2
+/gsd-plan-phase 2     → 规划 Phase 2: 断点续做  ← 推荐
+/gsd-discuss-phase 2  → 重新讨论 Phase 2
 /gsd-execute-phase 2  → 执行 Phase 2
 ```
