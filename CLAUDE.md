@@ -20,7 +20,6 @@ pipeline/
   contexts/*.md        → Context configurations
 scripts/*.py           → Tool scripts (data profiling, literature search, PDF reading)
 hooks/*.js/*.sh        → Claude Code hooks (workflow guard, phase boundary, prompt guard)
-tests/                 → Test files
 ```
 
 ## Key Directory Reference
