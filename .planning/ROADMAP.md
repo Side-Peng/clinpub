@@ -35,6 +35,11 @@ Success criteria:
 1. `/clinpub-do` 读取工作区状态（STATE.md 和当前文件结构），自动路由到合适的命令
 2. `/clinpub-next-step` 自动推进到下一 Phase 或 Wave
 3. Phase/Wave 结束时自动提示 clear 并输出下一步提示
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — `/clinpub-do` 命令：工作区状态自动检测 + NL 意图路由
+- [ ] 02-02-PLAN.md — `/clinpub-next-step` 命令 + clear 提示标准化
 
 **Phase 3: 手稿拼接**
 Goal: IMRAD 各段独立撰写引用后拼接为终稿
