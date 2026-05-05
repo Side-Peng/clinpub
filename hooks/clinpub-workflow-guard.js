@@ -27,11 +27,12 @@ function getCurrentPhase() {
   if (!fs.existsSync(statePath)) return -1;
 
   const content = fs.readFileSync(statePath, "utf-8");
-  // Look for current phase indicator
-  const phaseMatch = content.match(/当前.*Phase\s*(\d)/i);
+  // D-02: Authoritative source — match structured line only
+  const phaseMatch = content.match(/阶段：Phase\s*(\d)/);
   if (phaseMatch) return parseInt(phaseMatch[1], 10);
 
-  // Fallback: count completed milestones
+  // D-04: Legacy fallback — kept for backward compatibility.
+  //       New code path above handles the structured line match.
   const completedMatches = content.match(/✅/g);
   return completedMatches ? completedMatches.length : 0;
 }
