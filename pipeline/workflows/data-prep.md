@@ -5,6 +5,7 @@ description: "Phase 1 orchestration: Load raw data, discuss cleaning strategy wi
 
 <purpose>
 Transform raw patient-level data into analysis-ready cleaned.csv with full quality documentation. Handle missing values, outliers, derived variables, and encoding through a tiered decision framework with user confirmation at ambiguity points.
+Supports re-entry refresh: re-runs profile, spec, and config when project is already initialized.
 </purpose>
 
 <required_reading>
@@ -15,6 +16,47 @@ Transform raw patient-level data into analysis-ready cleaned.csv with full quali
 
 <process>
 
+<step name="reinit_data_prep" priority="first">
+当检测到项目已初始化时（由命令入口 data-prep.md 触发），执行全链路文件刷新：
+
+1. **重新运行 profile（更新变量字典）**
+   - 定位原始数据文件（从 `project_config.yml` 的 `paths.raw_data` 字段获取路径，查找 `01_RawData/` 下的第一个 CSV/XLSX 文件）
+   - 执行：`python scripts/data_profiler.py {raw_data_filepath} --output {preprocessed_path}/data_profile.json`
+   - 读取输出的 `data_profile.json`，获取最新的变量列表、缺失模式、变量角色等
+
+2. **重新生成 spec 模板（更新分析规范）**
+   - 读取 `data_profile.json` 的变量摘要和 `project_config.yml` 的项目配置
+   - 基于 `pipeline/templates/spec.md` 模板，填充以下 Mustache 占位符：
+     - `{{study_title}}` -> 从 `project_config.yml` 的 `project.name` 读取
+     - `{{study_type}}` -> 从 `project_config.yml` 的 `project.design` 读取
+     - `{{N}}` -> 从 `data_profile.json` 的 `n_rows` 读取
+     - `{{primary_outcome}}` -> 从 `project_config.yml` 的 `variables.outcome` 读取
+     - `{{phase_number}}` -> "1"
+     - `{{phase_name}}` -> "Data Preparation"
+     - `{{date}}` -> 当前日期
+   - 未更改的占位符保持原样（留给 Phase 2 填充）
+   - 输出到 `03_AnalysisMethods/01-spec.md`（覆盖旧文件）
+
+3. **同步更新 project_config.yml**
+   - 读取当前 `project_config.yml`
+   - 根据 `data_profile.json` 的 `role_summary` 更新：
+     - `variables.outcome`：如果 profile 检测到 outcome 角色变量且当前 config 中 outcome 为空，填充第一个 outcome 变量名
+     - `variables.covariates`：从 profile 的 covariate 角色变量更新列表
+     - `variables.group_variable`：从 profile 的 exposure 角色变量更新
+   - 仅更新变量相关字段，保留用户自定义的 `project.name`、`analysis` 阈值等手动配置
+   - 写回 `project_config.yml`（覆盖但不破坏用户手动编辑的非变量字段）
+
+4. **向用户报告变更摘要**
+   - 输出格式：
+     ```
+     ### 刷新完成
+     - Profile 更新: {n_variables} 个变量，{n_rows} 行
+     - Spec 更新: 填充了 {n_filled_fields} 个字段
+     - Config 更新: {changed_fields} 字段已同步
+     - 下一步: 清理策略讨论
+     ```
+</step>
+
 <step name="discuss_cleaning_strategy" priority="first">
 Discuss with user before any data transformation:
 
@@ -23,6 +65,36 @@ Discuss with user before any data transformation:
 3. **Variable encoding**: categorical reference levels, continuous variable transformations
 4. **Derived variables**: any calculated scores, indices, or composite variables needed
 5. **Train/validation split**: needed? Ratio? Stratification variables?
+</step>
+
+<step name="detect_data_structure" priority="first">
+Before cleaning, detect data structure characteristics that affect downstream analysis:
+
+1. **Longitudinal detection**: Check for repeated patients (same `name`/`id` with different `time` values)
+   - If `time` column exists AND patient ID appears multiple times → **longitudinal data**
+   - For each patient, count timepoints; if majority have >1 → **repeated measures**
+2. **Outcome type detection**: Infer `outcome_type` from variable values:
+   - Unique values = 2 → binary
+   - Unique values 3-20 → could be categorical/continuous
+   - Unique values >20 → continuous (check distribution)
+3. **Structural missingness**: If specific variables are missing only at certain timepoints → flag as "structurally missing" (not data quality issue)
+
+**If longitudinal data detected**: Discuss with user:
+   - Which timepoint(s) to use for analysis (e.g., "baseline only", "change scores", "all timepoints")
+   - Store decision as `analysis_timepoint: "baseline"` in processing notes
+   - For Table 1/BaselineTable: **must filter to a single timepoint** (typically baseline) to avoid duplicate patient counting
+   - For repeated measures analysis: note that mixed models (lme4) will be needed instead of standard t-tests
+
+**Recording**: Write structural notes to `.planning/phases/01-data-prep/00-STRUCTURE.md`:
+```yaml
+data_structure:
+  type: longitudinal | cross-sectional
+  n_patients: 86
+  n_timepoints: 3
+  timepoint_labels: ["baseline", "post_treatment", "follow_up"]
+  analysis_timepoint: "baseline"
+  structural_missing: ["cg_factor1", "cg_factor2"]
+```
 </step>
 
 <step name="execute_cleaning" priority="high">
@@ -47,6 +119,12 @@ Load raw data from `01_RawData/` and execute cleaning pipeline:
    - Distribution plots for key variables
    - Outlier documentation
    - Training/validation split summary (if applicable)
+   - **If longitudinal**: include missing pattern by timepoint to distinguish structural vs random missingness
+
+6. **Filter to analysis timepoint** (if longitudinal):
+   - Use the user-confirmed `analysis_timepoint` (typically "baseline")
+   - Filter cleaned data to that timepoint before saving as `cleaned.csv`
+   - Save the full longitudinal data as `02_PreprocessedData/data/full_longitudinal.csv` (for mixed models later)
 
 All ambiguous handling points must be confirmed with user.
 </step>
