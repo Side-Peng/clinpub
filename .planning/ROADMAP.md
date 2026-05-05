@@ -22,6 +22,11 @@ Requirements: BUG-01, BUG-02
 Success criteria:
 1. Hook 正则在 STATE.md 写 `- 阶段：Phase N` 时正确识别，不回退到 Phase 0
 2. 用户修改清洗数据需求时，Phase 1 所有关联文件（profile、spec 等）自动联动更新
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — BUG-01: Hook 正则修复（STATE.md 标识行 + getCurrentPhase() 新正则）
+- [ ] 01-02-PLAN.md — BUG-02: 数据联动更新（data-prep 重新进入检测 + 工作流刷新步骤）
 
 **Phase 2: 断点续做**
 Goal: 支持工作中断后恢复，无需从头摸索上下文
@@ -91,7 +96,7 @@ flowchart LR
     P3 --> P4[Phase 4: 方法增强]
     P4 --> P5[Phase 5: Phase前调研]
     P5 --> P6[Phase 6: 引用策略]
-    P6 --> P7[Phase 7: 图表+文档]
+    P6 --> P7[Phase 7: 图表+文档优化]
 ```
 
 ---
