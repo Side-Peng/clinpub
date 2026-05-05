@@ -1,7 +1,7 @@
 # STATE.md — clinpub 优化进度
 
 **最后更新**: 2026-05-05
-**当前状态**: Phase 1 上下文已收集，准备规划
+**当前状态**: Phase 1 已规划，等待执行
 - 阶段：Phase 1
 
 ---
@@ -19,7 +19,7 @@
 
 | # | Phase | 状态 | 进度 |
 |---|-------|------|------|
-| 1 | Bug Fixes | ⏳ 待开始 | 0% |
+| 1 | Bug Fixes | ⏳ 已规划 | 0% |
 | 2 | 断点续做 | ⏳ 待开始 | 0% |
 | 3 | 手稿拼接 | ⏳ 待开始 | 0% |
 | 4 | 方法增强 | ⏳ 待开始 | 0% |
@@ -39,6 +39,5 @@
 ## 下一步
 
 ```
-/gsd-plan-phase 1   → 规划 Phase 1: Bug Fixes
-/gsd-execute-phase 1 → 执行 Phase 1
+/gsd-execute-phase 1   → 执行 Phase 1: Bug Fixes
 ```

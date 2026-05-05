@@ -302,22 +302,20 @@ Source: [CITED: D-05, D-06 from CONTEXT.md]
 | A1 | `project_config.yml` 存在于项目根目录时表示"项目已初始化" | BUG-02 检测条件 | 用户在 data2idea 流程中从 `idea/to_project_config.yml` 复制了未经验证的 config，但未跑完完整的 Phase 0。建议补充验证：检查关键字段非空 + `01_RawData` 是否有数据文件 |
 | A2 | `pipeline/templates/spec.md` 的 Mustache 占位符与 refresh 流程兼容 | BUG-02 spec 生成 | 如果 spec.md 模板的占位符（如 `{{phase_number}}`）需要在 refresh时重新填充，需确保 refresh 流程有完整的变量上下文 |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **[BUG-02] Refresh 流程与用户交互策略**
    - What we know: D-06 说"再进入用户讨论"，D-05 触发的 refresh 应该自动化
-   - What's unclear: refresh 完成后是否立即进入讨论阶段？还是需要先让用户确认刷新结果？
    - Recommendation: refresh 后自动输出变更摘要给用户查看，然后正常进入 `discuss_cleaning_strategy` 步骤
+   - **RESOLVED:** Plan 01-02 Task 2 step 4 实现了自动输出变更摘要后进入讨论流程
 
 2. **[CODEBASE] Phase 4 的目录名拼写错误**
    - What we know: `workflow-guard.js:22` 写的是 `"05_Manuscript/final"`，但该目录实际上可能在 Phase 3 时创建为 `"05_Manuscript"`
-   - What's unclear: 是否属于 Phase 1 的修复范围
-   - Recommendation: 属于代码质量问题，非阻塞 bug，可以在此 Phase 顺带修正（增加一行代码）
+   - **RESOLVED:** 不属于 Phase 1（Bug Fixes）的范围。Phase 1 的 bug 定义是"影响基础可用性"，目录名拼写不影响功能。推迟到后续 Phase 处理。
 
 3. **[CODEBASE] phase-boundary.sh 的重复函数调用**
    - What we know: `phase-boundary.sh:135-136` 重复调用了两次 `check_phase_boundary()`
-   - What's unclear: 是否属于 Phase 1 的修复范围
-   - Recommendation: 微小的性能问题，可以在 Phase 1 顺带修复（改 2 行）
+   - **RESOLVED:** 不阻塞基础可用性。推迟到后续 Phase 处理。
 
 ## Environment Availability
 
