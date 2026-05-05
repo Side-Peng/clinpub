@@ -53,7 +53,14 @@ progress:
 
 ## 下一步
 
-```
-/gsd-execute-phase 2  → 执行 Phase 2: 断点续做  ← 推荐
-/gsd-plan-phase 2     → 重新规划 Phase 2
-```
+对话积累上下文后，建议先 `/clear` 清除上下文，然后继续：
+
+/clinpub-next-step → 自动推进到下一阶段或 Wave
+
+### 进度总结
+- Phase 1 (Bug Fixes): ✅ 已完成
+- Phase 2 (断点续做): ⏳ 进行中
+- Phase 3 (手稿拼接): ⏳ 待开始
+- Phase 4 (方法增强): ⏳ 待开始
+
+---
