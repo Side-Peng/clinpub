@@ -47,7 +47,7 @@ grep -A 100 "analysis_plan:" project_config.yml | grep -E "^\s+\d+:" | wc -l
 <execution_context>
 @./.planning/STATE.md
 @./.planning/ROADMAP.md
-@./pipeline/templates/project_config.yml
+@./project_config.yml
 @./pipeline/references/checkpoints.md
 @./pipeline/templates/milestone.md
 </execution_context>
@@ -69,7 +69,7 @@ PHASE=$(grep -oP '阶段：Phase\s*\K\d' .planning/STATE.md)
 
 # 如果 PHASE=0 → 项目刚初始化，没有 Wave 需要推进
 #   → 输出: "当前 Phase 0 (初始化阶段)。需要推进到 Phase 1 数据清洗。"
-#   → 直接跳转到「4. 推进到下一 Phase」
+#   → 直接跳转到「3. 推进决策」
 ```
 
 ### 1.2 从 ROADMAP.md 获取 Plan 完成状态
@@ -98,7 +98,7 @@ WAVES=$(grep -A 100 "analysis_plan:" project_config.yml 2>/dev/null | grep -E "^
 
 # 如果 WAVES=0（即 waves: {} 或字段不存在）
 #   → Phase 2 尚未定义 Wave → 视为 Wave 0（未开始）
-#   → 跳转到「4. 推进到下一 Phase」的 Phase 2 特殊处理
+#   → 跳转到「2.3 Phase 2 验证」
 # 如果 WAVES>0
 #   → 检查最后一个 Wave 的 SUMMARY.md 是否存在
 #   → 存在 → 所有 Wave 完成 → 推进到 Phase 3
@@ -152,12 +152,14 @@ WAVES=$(grep -A 100 "analysis_plan:" project_config.yml 2>/dev/null | grep -E "^
     LAST_WAVE=$(grep -E "^\s+\d+:" project_config.yml | tail -1 | tr -d ' :')
     # 检查最后一个 Wave 的 SUMMARY.md 是否存在
     # (SUMMARY.md 由 clinpub-executor 在每个 Wave 结束时生成)
-    WAVE_SUMMARY=$(find .planning/phases -name "*SUMMARY.md" -path "*/02*" 2>/dev/null | grep -c "$LAST_WAVE")
+    WAVE_SUMMARY=$(find .planning/phases -name "02-${LAST_WAVE}-SUMMARY.md" 2>/dev/null | wc -l)
     
     if [ "$WAVE_SUMMARY" -gt 0 ]; then
       WAVE_COMPLETE=true
+      ALL_WAVES_COMPLETE=true
     else
       WAVE_COMPLETE=false
+      ALL_WAVES_COMPLETE=false
     fi
 
 通过条件：
@@ -275,8 +277,9 @@ elif CURRENT_PHASE == 4:
      - `- 阶段：Phase N` → `- 阶段：Phase N+1`
      - `**当前状态**: ...` → 更新为 "Phase {N+1} ({name}) — 进行中"
   4. 更新 ROADMAP.md:
-     - 当前 Phase 状态标记为 ✅ Complete（表格第一列）
-     - 下一 Phase 状态标记为 🔄 In Progress（如果有 Phase 状态 emoji 行）
+     - ROADMAP.md Phase 表格的完成状态在"Goal"列，没有独立状态列
+     - 当前 Phase 完成: 将 Goal 列设为 "✅ Complete"
+     - 下一 Phase 开始: 将 Goal 列设为 "🔄 In Progress"
      - 注意: 不自动勾选 Plan checkboxes（[ ] → [x]），这由 executor 在 Plan 完成时操作
   5. 更新 STATE.md 的 `progress.completed_phases` 计数 +1（frontmatter YAML 中）
   6. 输出 clear 提示（见 Step 5）
