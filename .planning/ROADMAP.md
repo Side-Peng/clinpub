@@ -4,7 +4,7 @@
 
 | # | Phase | Goal | Requirements | 工作量 |
 |---|-------|------|-------------|--------|
-| 1 | Bug Fixes | 修 hook 正则 + 数据联动更新 | BUG-01, BUG-02 | 小 |
+| 1 | Bug Fixes | ✅ Complete | 2026-05-05 |
 | 2 | 断点续做 | `/clinpub-do` + `/clinpub-next-step` + clear 提醒 | NEXT-01, NEXT-02, NEXT-03 | 中 |
 | 3 | 手稿拼接 | IMRAD 各段独立撰写 + 拼接为终稿 | WRITE-01, WRITE-02 | 大 |
 | 4 | 方法增强 | 未知方法搜索 + 组间对比方法固化 | METH-01, METH-02 | 中 |
@@ -25,8 +25,8 @@ Success criteria:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — BUG-01: Hook 正则修复（STATE.md 标识行 + getCurrentPhase() 新正则）
-- [ ] 01-02-PLAN.md — BUG-02: 数据联动更新（data-prep 重新进入检测 + 工作流刷新步骤）
+- [x] 01-01-PLAN.md — BUG-01: Hook 正则修复（STATE.md 标识行 + getCurrentPhase() 新正则）
+- [x] 01-02-PLAN.md — BUG-02: 数据联动更新（data-prep 重新进入检测 + 工作流刷新步骤）
 
 **Phase 2: 断点续做**
 Goal: 支持工作中断后恢复，无需从头摸索上下文
