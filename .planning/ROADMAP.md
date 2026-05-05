@@ -5,7 +5,7 @@
 | # | Phase | Goal | Requirements | 工作量 |
 |---|-------|------|-------------|--------|
 | 1 | Bug Fixes | ✅ Complete | 2026-05-05 |
-| 2 | 断点续做 | `/clinpub-do` + `/clinpub-next-step` + clear 提醒 | NEXT-01, NEXT-02, NEXT-03 | 中 |
+| 2 | 断点续做 | ✅ Complete | 2026-05-05 |
 | 3 | 手稿拼接 | IMRAD 各段独立撰写 + 拼接为终稿 | WRITE-01, WRITE-02 | 大 |
 | 4 | 方法增强 | 未知方法搜索 + 组间对比方法固化 | METH-01, METH-02 | 中 |
 | 5 | Phase 前调研流程 | 调研→建议→讨论→执行 的标准化流程 | FLOW-01 | 中 |
@@ -38,8 +38,8 @@ Success criteria:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — `/clinpub-do` 命令：工作区状态自动检测 + NL 意图路由
-- [ ] 02-02-PLAN.md — `/clinpub-next-step` 命令 + clear 提示标准化
+- [x] 02-01-PLAN.md — `/clinpub-do` 命令：工作区状态自动检测 + NL 意图路由
+- [x] 02-02-PLAN.md — `/clinpub-next-step` 命令 + clear 提示标准化
 
 **Phase 3: 手稿拼接**
 Goal: IMRAD 各段独立撰写引用后拼接为终稿
