@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: active
-last_updated: "2026-05-05T18:35:00.000Z"
+last_updated: "2026-05-06T23:00:00.000Z"
 progress:
   total_phases: 7
   completed_phases: 2
@@ -14,8 +14,8 @@ progress:
 
 # STATE.md — clinpub 优化进度
 
-**最后更新**: 2026-05-05
-**当前状态**: Phase 2 执行完成
+**最后更新**: 2026-05-06
+**当前状态**: Phase 3 上下文已收集
 
 - 阶段：Phase 3
 
@@ -26,7 +26,7 @@ progress:
 见: `.planning/PROJECT.md` (updated 2026-05-05 after initialization)
 
 **核心价值:** 用户提供原始临床数据，clinpub 输出结构化的分析结果和可投稿的 IMRAD 手稿
-**当前聚焦:** Phase 3 — 手稿拼接（待规划）
+**当前聚焦:** Phase 3 — 手稿拼接（上下文已收集，待规划）
 
 ---
 
@@ -51,17 +51,18 @@ progress:
 - 7 Phase Roadmap 创建
 - 测试基础设施清除
 - Phase 2 执行完成：`/clinpub-do` + `/clinpub-next-step` + clear 提示标准化
+- Phase 3 上下文收集完成：撰写流程、引用策略、交叉引用、输出格式均已讨论
 
 ## 下一步
 
-对话积累上下文后，建议先 `/clear` 清除上下文，然后继续：
+上下文已收集，下一步：
 
-/clinpub-discuss-phase 3 → 讨论 Phase 3: 手稿拼接
+/gsd-plan-phase 3 → 规划 Phase 3 执行方案
 
 ### 进度总结
 - Phase 1 (Bug Fixes): ✅ 已完成
 - Phase 2 (断点续做): ✅ 已完成
-- Phase 3 (手稿拼接): ⏳ 待规划
+- Phase 3 (手稿拼接): 📋 上下文已收集
 - Phase 4 (方法增强): ⏳ 待开始
 
 ---
