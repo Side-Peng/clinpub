@@ -14,52 +14,23 @@ Features:
     - Date filtering
     - Article type filtering
 
-Author: 亮子 (OpenClaw Assistant)
+Author: clinpub
 """
 
 import os
 import sys
 import json
-import time
 import argparse
 import re
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Tuple
 
-try:
-    import requests
-    from requests.adapters import HTTPAdapter
-    from urllib3.util.retry import Retry
-except ImportError:
-    print("Error: requests library required. Install with: pip install requests")
-    sys.exit(1)
+import ncbi_client
 
-
-def create_session():
-    """Create a session with retry logic."""
-    session = requests.Session()
-    retry_strategy = Retry(
-        total=3,
-        backoff_factor=1,
-        status_forcelist=[429, 500, 502, 503, 504],
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    session.mount("https://", adapter)
-    session.mount("http://", adapter)
-    return session
-
-
-# Global session
-SESSION = None
-
-# NCBI E-Utilities Base URLs
-EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
-ESEARCH_URL = f"{EUTILS_BASE}/esearch.fcgi"
-EFETCH_URL = f"{EUTILS_BASE}/efetch.fcgi"
-
-# Rate limiting
-LAST_REQUEST_TIME = 0
-MIN_REQUEST_INTERVAL = 0.34
+from ncbi_client import (
+    create_session, get_api_key, rate_limit, print_api_key_tip,
+    GENE_SYMBOLS, ESEARCH_URL, EFETCH_URL,
+)
 
 # Known MeSH terms for common medical concepts
 MESH_TERMS = {
@@ -105,14 +76,6 @@ MESH_TERMS = {
     "angiogenesis": "Angiogenesis",
 }
 
-# Gene symbols (common ones)
-GENE_SYMBOLS = [
-    "APOE", "APP", "PSEN1", "PSEN2", "TREM2", "MAPT", "SNCA", "TARDBP",
-    "BRCA1", "BRCA2", "TP53", "EGFR", "KRAS", "MYC", "PTEN", "VEGF",
-    "IL6", "TNF", "IFNG", "IL1B", "IL10", "TGFB1",
-    "BDNF", "NGF", "GDNF", "NTF3",
-]
-
 # Stop words to exclude from query
 STOP_WORDS = {
     "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for",
@@ -126,23 +89,6 @@ STOP_WORDS = {
     "more", "most", "other", "some", "such", "no", "nor", "not", "only",
     "own", "same", "so", "than", "too", "very", "just", "also", "now",
 }
-
-
-def get_api_key(args: argparse.Namespace) -> Optional[str]:
-    """Get NCBI API key from args or environment."""
-    if args.api_key:
-        return args.api_key
-    return os.environ.get("NCBI_API_KEY")
-
-
-def rate_limit(api_key: Optional[str]):
-    """Enforce rate limiting."""
-    global LAST_REQUEST_TIME
-    interval = 0.11 if api_key else MIN_REQUEST_INTERVAL
-    elapsed = time.time() - LAST_REQUEST_TIME
-    if elapsed < interval:
-        time.sleep(interval - elapsed)
-    LAST_REQUEST_TIME = time.time()
 
 
 def detect_query_elements(query: str) -> Dict[str, Any]:
@@ -312,12 +258,11 @@ def search_pubmed(
     api_key: Optional[str] = None
 ) -> Dict[str, Any]:
     """Search PubMed and return PMIDs."""
-    global SESSION
-    if SESSION is None:
-        SESSION = create_session()
-    
+    if ncbi_client.SESSION is None:
+        ncbi_client.SESSION = create_session()
+
     rate_limit(api_key)
-    
+
     params = {
         "db": "pubmed",
         "term": query,
@@ -325,11 +270,11 @@ def search_pubmed(
         "retmode": "json",
         "sort": "relevance"
     }
-    
+
     if api_key:
         params["api_key"] = api_key
-    
-    response = SESSION.get(ESEARCH_URL, params=params, timeout=30)
+
+    response = ncbi_client.SESSION.get(ESEARCH_URL, params=params, timeout=30)
     response.raise_for_status()
     
     data = response.json()
@@ -346,26 +291,25 @@ def fetch_articles(
     api_key: Optional[str] = None
 ) -> List[Dict[str, Any]]:
     """Fetch article details by PMID."""
-    global SESSION
-    if SESSION is None:
-        SESSION = create_session()
-    
+    if ncbi_client.SESSION is None:
+        ncbi_client.SESSION = create_session()
+
     if not pmids:
         return []
-    
+
     rate_limit(api_key)
-    
+
     params = {
         "db": "pubmed",
         "id": ",".join(pmids),
         "rettype": "xml",
         "retmode": "xml"
     }
-    
+
     if api_key:
         params["api_key"] = api_key
-    
-    response = SESSION.get(EFETCH_URL, params=params, timeout=60)
+
+    response = ncbi_client.SESSION.get(EFETCH_URL, params=params, timeout=60)
     response.raise_for_status()
     
     return parse_pubmed_xml(response.text)
@@ -546,13 +490,7 @@ def main():
 
     api_key = get_api_key(args)
     if not api_key:
-        print("=" * 60, file=sys.stderr)
-        print("⚠️ NCBI_API_KEY 未设置。无 key 仍可检索，但限速 3 次/秒。", file=sys.stderr)
-        print("   设置后可提速至 10 次/秒。", file=sys.stderr)
-        print(f"   临时设置: export NCBI_API_KEY=your_key_here", file=sys.stderr)
-        print(f"   或添加到项目 .env 文件", file=sys.stderr)
-        print(f"   申请地址: https://ncbi.nlm.nih.gov/account/settings/", file=sys.stderr)
-        print("=" * 60, file=sys.stderr)
+        print_api_key_tip()
     
     # Detect query elements
     elements = detect_query_elements(args.query)

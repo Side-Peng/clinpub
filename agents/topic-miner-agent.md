@@ -134,6 +134,113 @@ One-sentence core question + specific statistical hypothesis.
 **Output**: Write full report to `idea/选题报告.md`. Include a comparison table at the end ranking all topics.
 </step>
 
+<step name="generate_project_config" priority="high">
+After user selects a topic (from the 3-5 candidates), generate a `project_config.yml` that can be directly used to start the clinpub pipeline.
+
+**Trigger**: User says "选第 N 个" or confirms a topic.
+
+**Mapping from topic to config:**
+
+| Topic Field | Config Field |
+|-------------|-------------|
+| `Research Question & Hypothesis` | `project.description` |
+| `Type` (Cohort/RCT/Cross-sectional/Diagnostic/Descriptive) | `project.design` |
+| Variable Mapping → Outcome | `variables.outcome` |
+| Variable Mapping → Exposure/Group | `variables.exposure` and/or `variables.group_variable` |
+| Variable Mapping → Covariates | `variables.covariates` |
+| Variable Mapping → Subgroups | `variables.subgroup` (not in base template, appended) |
+| Proposed Analysis Methods | `methods_to_run` (numbered consecutively) |
+| Target Journals (first recommendation) | `project.target_journal` |
+| Sample size from data profile | `project.sample_size` |
+| Outcome type detection | `variables.outcome_type` (binary/continuous/survival based on variable characteristics) |
+
+**For survival analysis**: if time-to-event variables detected, set `variables.outcome_type: survival`, populate `variables.time_variable` and `variables.event_variable`.
+
+**methods_to_run generation rules** based on topic type:
+
+| Study Type | Default Methods (user can adjust) |
+|------------|----------------------------------|
+| Cohort | BaselineTable, GroupComparison, LogisticRegression, SurvivalAnalysis, SubgroupAnalysis |
+| RCT | BaselineTable, GroupComparison, LogisticRegression, SubgroupAnalysis, SensitivityAnalysis |
+| Case-Control | BaselineTable, GroupComparison, LogisticRegression, ROCAnalysis |
+| Cross-sectional | BaselineTable, GroupComparison, LogisticRegression, CorrelationAnalysis |
+| Descriptive | BaselineTable, GroupComparison, CorrelationAnalysis |
+| Diagnostic/Biomarker | BaselineTable, GroupComparison, ROCAnalysis, MarkerPanel, SimpleML |
+
+All method lists are **advisory** — user must confirm before final writing.
+
+**Output**: Write to `idea/to_project_config.yml`:
+
+```yaml
+# ============================================================
+# 由 topic-miner-agent 根据选题结果自动生成
+# 用户确认后，重命名为 project_config.yml 即可启动 clinpub 管线
+# ============================================================
+
+project:
+  name: "<论文标题>"
+  description: "<研究假设>"
+  design: "<研究类型>"
+  sample_size: <样本量>
+  target_journal: "<目标期刊>"
+  reporting_standard: "<CONSORT / STROBE>"
+
+variables:
+  outcome: "<结局变量>"
+  outcome_type: "<binary / continuous / survival>"
+  exposure: ["<暴露变量1>"]
+  covariates: ["<协变量1>", "<协变量2>"]
+  time_variable: "<随访时间变量>"        # 仅 survival 类型
+  event_variable: "<事件变量>"           # 仅 survival 类型
+  group_variable: "<分组变量>"
+  id_variable: "<患者ID>"
+
+paths:
+  raw_data: "01_RawData"
+  preprocessed: "02_PreprocessedData"
+  methods: "03_AnalysisMethods"
+  outputs: "04_Outputs"
+  reference: "Reference"
+  manuscript: "05_Manuscript"
+
+methods_to_run:
+  - 01_BaselineTable
+  - 02_GroupComparison
+  # ... 根据选题类型生成，用户确认后启用
+
+language:
+  manuscript: "zh-CN"
+  figures_tables: "en"
+  statistics: "R"
+
+quality:
+  journal_level: "Q1"
+  figure_dpi: 300
+  figure_format: "png"
+  figure_font: "Arial"
+  figure_font_size: 10
+
+analysis:
+  missing_threshold_low: 0.05
+  missing_threshold_mid: 0.20
+  missing_threshold_high: 0.20
+  significance_level: 0.05
+  multiple_comparison: "fdr"
+```
+
+**After writing**: Present the generated config to user with this message:
+
+> `idea/to_project_config.yml` 已根据选题生成。请确认变量映射和分析方法是否符合预期：
+> - 确认无误 → 将文件重命名为 `project_config.yml`，然后使用 `/clinpub-init-project` 启动管线
+> - 需要调整 → 告诉我哪些地方需要修改，我会重新生成
+
+**Prioritize config fields in this order when values can't be determined:**
+1. Must be inferred from data (outcome, exposure → user must confirm)
+2. Can be inferred with high confidence (sample_size, outcome_type from data profile)
+3. Can be recommended with reasoning (target_journal, methods_to_run)
+4. Should use defaults (quality, analysis thresholds)
+</step>
+
 </execution_flow>
 
 <critical_rules>
@@ -143,6 +250,9 @@ One-sentence core question + specific statistical hypothesis.
 - Do NOT fabricate variables or data characteristics
 - Report generation capabilities honestly — if data cannot support a topic type, say so
 - After user selects topic, guide them to `clinpub` for full analysis pipeline
+- Generate `idea/to_project_config.yml` after topic selection — user must review and confirm variable mappings before use
+- Do NOT overwrite existing `project_config.yml` — always write to `idea/to_project_config.yml`
+- If critical config fields cannot be determined from data (e.g., outcome variable is ambiguous), flag them with `# TODO: user confirmation needed` in the generated YAML
 - Check NCBI_API_KEY before any PubMed search; inform user if missing
 </critical_rules>
 
@@ -152,5 +262,6 @@ One-sentence core question + specific statistical hypothesis.
 - 3-5 candidate topics with feasibility scores, variable mapping, and target journals
 - Topics ranked in comparison table
 - User has selected a topic (or returned to refine)
-- User informed about next steps (clinpub pipeline)
+- `idea/to_project_config.yml` generated with variable mappings, methods, and journal recommendation
+- User informed about next steps: review config → rename to project_config.yml → start clinpub pipeline
 </success_criteria>

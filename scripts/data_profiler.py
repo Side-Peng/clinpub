@@ -206,7 +206,7 @@ def profile_data(filepath: str, sheet: Optional[str] = None) -> Dict[str, Any]:
     if ext == ".csv":
         df = pd.read_csv(filepath, low_memory=False)
     elif ext in (".xlsx", ".xls"):
-        df = pd.read_excel(filepath, sheet_name=sheet)
+        df = pd.read_excel(filepath, sheet_name=sheet if sheet is not None else 0)
     else:
         return {"error": f"Unsupported format: {ext}"}
 

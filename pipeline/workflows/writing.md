@@ -38,6 +38,7 @@ Reference Agent performs comprehensive literature search:
 3. Build references.bib in Vancouver format with DOIs
 4. Retrieve full text for key references via Unpaywall/pdf-reader
 5. Write all outputs to `Reference/` directory
+6. Write MANIFEST.yaml in `Reference/` listing writer-agent as consumer
 
 See `@./agents/reference-agent.md` for detailed search protocol.
 </step>
@@ -97,6 +98,9 @@ Final verification:
 6. No AI-template patterns detected
 7. Word count within target journal limits
 8. References de-duplicated
+9. MANIFEST.yaml exists in `05_Manuscript/` listing clinpub-verifier as consumer
+
+If manifest is missing, write it here.
 </step>
 
 <step name="checkpoint_confirm" priority="medium">

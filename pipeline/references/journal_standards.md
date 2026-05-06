@@ -50,9 +50,18 @@
 5. 报告规范不完整
 6. Methods 部分薄弱/不完整
 
-## 图表要求
+## 图表技术规范
 
-- 分辨率 ≥300 DPI
+<!-- FIGURE_DPI is the canonical source for figure resolution across all clinpub artifacts. -->
+<!-- When this value changes, r_patterns.md::PUBLICATION_DPI must be updated to match. -->
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| **FIGURE_DPI** | **300** | 所有图表的最低分辨率，R/Python 代码中通过 `PUBLICATION_DPI` 引用 |
+
+### 图表要求
+
+- 分辨率 ≥300 DPI（见上表 FIGURE_DPI）
 - 矢量格式优先（PDF/SVG）
 - 不接受 Excel 默认图表
 - Meta 分析必须有 PRISMA 流程图和森林图

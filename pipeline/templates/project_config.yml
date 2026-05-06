@@ -32,21 +32,30 @@ paths:
   global: "00_Global"
 
 # ============================================================
-# methods_to_run: 只列出用户确认的分析方法
-# 编号按实际选用顺序编排，不是固定编号
-# 示例：如果只选了基线表和Logistic回归，则为：
-#   - 01_BaselineTable
-#   - 02_LogisticRegression
+# analysis_plan: 由 Phase 2 动态生成，非手动填写。
+# Claude 在 diagnose → propose → confirm 流程后，
+# 将用户确认的分析方案写入此处。
+# 波次数量不固定（可能 1 波、3 波、6 波），
+# 完全取决于项目需求。
 # ============================================================
-methods_to_run:
-  - 01_BaselineTable
-  - 02_GroupComparison
-  # - LogisticRegression
-  # - SurvivalAnalysis
-  # - SubgroupAnalysis
-  # - SensitivityAnalysis
-  # - CorrelationAnalysis
-  # - SimpleML
+analysis_plan:
+  # 示例（由 Claude 在 Phase 2 讨论后自动填充）：
+  # waves:
+  #   1:
+  #     label: "基线描述"
+  #     methods:
+  #       - id: "01_BaselineTable"
+  #         type: baseline
+  #         data: "cleaned.csv"
+  #         timepoint: "baseline"
+  #   2:
+  #     label: "组间比较"
+  #     methods:
+  #       - id: "02_TwoGroupComparison"
+  #         type: comparison
+  #         method: "wilcox.test"
+  #         grouping: "Treatment"
+  waves: {}
 
 language:
   manuscript: "zh-CN"                  # 论文语言

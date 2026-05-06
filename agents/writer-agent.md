@@ -24,7 +24,30 @@ REFERENCE=$(pwd)/Reference/
 MANUSCRIPT=$(pwd)/05_Manuscript/
 ```
 
-Read: project_config.yml (study type, variables, target journal), Reference/citation_map.md and references.bib, all outputs from 04_Outputs/, and the appropriate study type template from pipeline/templates/study_types/.
+**Validate input manifests:**
+Before reading any outputs, check MANIFEST.yaml from each upstream agent:
+
+```bash
+# Check analyst-agent manifest
+if [ -f "$OUTPUTS/MANIFEST.yaml" ]; then
+  echo "✓ Analyst manifest found"
+  # Verify all required files for writer-agent are listed
+else
+  echo "⚠ No MANIFEST.yaml in 04_Outputs/ — proceeding without validation"
+fi
+
+# Check reference-agent manifest
+if [ -f "$REFERENCE/MANIFEST.yaml" ]; then
+  echo "✓ Reference manifest found"
+  # Verify all required files for writer-agent are listed
+else
+  echo "⚠ No MANIFEST.yaml in Reference/ — proceeding without validation"
+fi
+```
+
+If any file declared as required for writer-agent is missing, report to user and stop. Do not fabricate data.
+
+Then read: project_config.yml (study type, variables, target journal), Reference/citation_map.md and references.bib, all outputs from 04_Outputs/, and the appropriate study type template from pipeline/templates/study_types/.
 </step>
 
 <step name="draft_methods" priority="high">
@@ -76,6 +99,10 @@ Structured abstract written last:
 Background → Methods → Results → Conclusions
 
 Keywords: 3-6 terms.
+</step>
+
+<step name="write_manifest" priority="last">
+After the complete manuscript is drafted and Humanizer review passed, write MANIFEST.yaml to `05_Manuscript/` declaring all outputs and listing clinpub-verifier as consumer. See `pipeline/references/manifest-format.md` for format.
 </step>
 
 </execution_flow>

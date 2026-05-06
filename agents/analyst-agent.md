@@ -11,7 +11,7 @@ You work within the clinpub pipeline. Your responsibilities:
 1. **Phase 1 — Data preparation**: Clean data, handle missing values (tiered strategy), detect outliers, create derived variables, generate data quality report
 2. **Phase 2 — Statistical analysis**: Execute analysis methods per wave, produce publication-grade figures and tables
 
-**Communication**: Share results through the filesystem. Read from `02_PreprocessedData/data/cleaned.csv`, write figures/tables to `04_Outputs/XX_MethodName/`, write analysis documentation to `03_AnalysisMethods/XX_MethodName/README.md`.
+**Communication**: Share results through the filesystem. Read from `02_PreprocessedData/data/cleaned.csv`, write figures/tables to `04_Outputs/XX_MethodName/`, write analysis documentation to `03_AnalysisMethods/XX_MethodName/README.md`. After completing all outputs, write MANIFEST.yaml in each output directory.
 </role>
 
 <execution_flow>
@@ -37,30 +37,41 @@ Phase 1 tasks (when called by data-prep workflow):
 5. Train/validation split if applicable
 6. Generate data quality report (HTML)
 7. Write cleaned.csv to `02_PreprocessedData/data/`
+8. Write MANIFEST.yaml to `02_PreprocessedData/` declaring all outputs and downstream consumers (see `pipeline/references/manifest-format.md`)
 
 All ambiguous handling points must be confirmed with user.
 </step>
 
 <step name="statistical_analysis" priority="high">
-Phase 2 tasks. Execute only user-confirmed methods, organized by wave:
+Phase 2 tasks. Execute the **user-confirmed analysis plan** from `.planning/phases/02-analysis/01-PLAN.md`.
 
-**Wave 1 (no dependencies):**
-- `01_BaselineTable`: Table 1 (docx, 3-line style), group comparisons with t-test/chi-square/Wilcoxon
-- `02_GroupComparison`: Box/violin plots with 3-layer rendering (see r_patterns §1), significance annotations, Excel export
+**Do NOT use a fixed method list.** The analysis plan was dynamically built during `diagnose → propose → confirm` and is unique to this project.
 
-**Wave 2 (depends on Wave 1):**
-- `03_LogisticRegression`: Univariate → multivariate → model diagnostics (Hosmer-Lemeshow, VIF, ROC)
-- `04_SurvivalAnalysis`: KM curves with risk table, Cox regression, PH assumption test (Schoenfeld residuals)
+Each method in the plan belongs to a numbered wave. Execute in ascending wave order. **The number of waves is not fixed** — the plan may have 1 wave (simple project) or 6+ waves (complex project with review-stage additions).
 
-**Wave 3 (depends on Wave 2 models):**
-- `05_SubgroupAnalysis`: Forest plot with interaction p-values
-- `06_SensitivityAnalysis`: Comparison table, E-value
+For each method:
+1. Read the method specification from the plan (variables, formula, method type)
+2. Look up technique details in `analysis_methods.md §三` (Analysis Scenarios Reference) as needed
+3. Generate R/Python code:
+   - **Standard approach**: Use conventional statistical tests (t-test, Wilcoxon, linear model, mixed model)
+   - **Complex methods**: Refer to `r_patterns.md` Part 2 for implementation patterns
+   - **Always**: Apply Core Standards from `r_patterns.md` Part 1 (theme_pub, ggsave, directory rules)
+4. Run the code, verify outputs, write README
+5. After all methods in the wave complete, write MANIFEST.yaml in `04_Outputs/` listing all method outputs and declaring writer-agent as consumer (see `pipeline/references/manifest-format.md`)
+6. Proceed to next method in same wave; after wave completes, present checkpoint
 
-**Wave 4 (depends on data partitioning):**
-- `07_CorrelationAnalysis`: Correlation matrix heatmap, scatter matrix
-- `08_ROCAnalysis`: Per-biomarker + combined ROC, Wilson CI, Youden threshold, AUC forest plot
-- `09_MarkerPanel`: LASSO feature selection, train/validation ROC, confusion matrix, risk stratification
-- `10_SimpleML`: Random Forest/XGBoost/SVM, feature importance, ROC
+**Common analysis patterns (not exhaustive — generate what the plan says):**
+
+| Plan Method | Typical R Code | Reference |
+|------------|---------------|-----------|
+| BaselineTable | `gtsummary::tbl_summary()` + `add_p()` | analysis_methods.md §3.1 |
+| TwoGroupComparison | `wilcox.test()` or `t.test()` + `ggplot2` boxplot | analysis_methods.md §3.2 |
+| RepeatedMeasures | `lme4::lmer()` + `emmeans::emmeans()` | analysis_methods.md §3.2 |
+| LinearRegression | `lm()` + `summary()` + `car::vif()` | analysis_methods.md §3.3 |
+| LogisticRegression | `glm(family=binomial)` + `pROC::roc()` | analysis_methods.md §3.3 |
+| SurvivalAnalysis | `survival::Surv()` + `survfit()` + `coxph()` | analysis_methods.md §3.4 |
+| CorrelationAnalysis | `cor()` + `ggcorrplot` | analysis_methods.md §3.6 |
+| ROCAnalysis | `pROC::roc()` + Wilson CI | analysis_methods.md §3.7 |
 </step>
 
 <step name="generate_readme" priority="medium">
@@ -116,6 +127,8 @@ Apply `theme_pub()` from r_patterns §11 to all ggplot2 figures.
 - Report R version and key package versions
 - Test normality, homoscedasticity, proportional hazards assumptions
 - Directory numbering follows user confirmation order, not fixed scheme
+- Every generated R script must create its output directories before writing: `dir.create("04_Outputs/XX_MethodName", recursive = TRUE, showWarnings = FALSE)`
+- Never assume directories already exist
 </critical_rules>
 
 <success_criteria>

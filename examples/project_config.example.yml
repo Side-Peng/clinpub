@@ -1,0 +1,67 @@
+# ============================================================
+# 示例项目配置 — rTMS 治疗抑郁症 RCT
+# 配合 examples/sample_data/rct_depression.csv 使用
+#
+# 用法：复制此文件到项目根目录并改名为 project_config.yml
+# ============================================================
+
+project:
+  name: "rTMS 对难治性抑郁症的随机对照试验"
+  description: "评估连续θ爆发刺激(cTBS)对比假刺激对抑郁症患者的疗效——HAMD/HAMA 评分变化及生物标志物响应"
+  design: "RCT"
+  sample_size: 86
+  target_journal: "Molecular Psychiatry"
+  reporting_standard: "CONSORT"
+
+variables:
+  outcome: "HAMD_total"                  # 主要结局
+  outcome_type: "continuous"             # 连续变量
+  exposure: ["Treatment"]                # 分组变量（Sham / cTBS）
+  covariates:
+    - "Age"
+    - "Sex"
+    - "BMI"
+    - "BDNF"
+    - "IL6"
+    - "TNF_alpha"
+    - "Cortisol"
+  secondary_outcomes:
+    - "HAMA_total"                       # 次要结局——焦虑
+    - "CGI_S"                            # 临床总体印象
+  time_variable: "Timepoint"             # 重复测量时间点
+  group_variable: "Treatment"
+  id_variable: "PatientID"
+
+paths:
+  raw_data: "01_RawData"
+  preprocessed: "02_PreprocessedData"
+  methods: "03_AnalysisMethods"
+  outputs: "04_Outputs"
+  reference: "Reference"
+  manuscript: "05_Manuscript"
+
+# ============================================================
+# analysis_plan 由 Phase 2 的 diagnose → propose → confirm 流程动态填充。
+# 下方仅为示例，你的实际方案会在与 Claude 讨论后自动生成。
+# ============================================================
+analysis_plan:
+  waves: {}
+
+language:
+  manuscript: "zh-CN"
+  figures_tables: "en"
+  statistics: "R"
+
+quality:
+  journal_level: "Q1"
+  figure_dpi: 300
+  figure_format: "png"
+  figure_font: "Arial"
+  figure_font_size: 10
+
+analysis:
+  missing_threshold_low: 0.05
+  missing_threshold_mid: 0.20
+  missing_threshold_high: 0.20
+  significance_level: 0.05
+  multiple_comparison: "fdr"

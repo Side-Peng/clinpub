@@ -1,6 +1,6 @@
 ---
 name: clinpub:analysis
-description: "Phase 2: Statistical analysis. Execute wave-based analysis (baseline table, group comparison, regression, survival, subgroup, sensitivity, ROC, marker panel, ML). Each method outputs figure + table + README with publication-grade standards."
+description: "Phase 2: Adaptive statistical analysis. Claude diagnoses data structure (groups, timepoints, outcome types), proposes a customized analysis plan, discusses with user, and executes in dependency order. Each method outputs figure + table + README with publication-grade standards."
 argument-hint: ""
 allowed-tools:
   - Read

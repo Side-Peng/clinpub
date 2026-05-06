@@ -35,18 +35,18 @@
 
 ### 预填回答
 
-| 讨论项 | 预填回答 |
-|--------|----------|
-| 研究标题 | "cTBS 对抑郁症患者的疗效：随机对照试验" |
-| 研究类型 | RCT |
-| 样本量 | 86 例 |
-| 结局变量 | HAMD_total（连续变量） |
-| 分组变量 | Treatment（Sham vs cTBS） |
-| 协变量 | Age, Sex, BMI |
-| 目标期刊 | SCI Q1/Q2 |
-| 报告标准 | CONSORT |
+| 讨论项   | 预填回答                                                                             |
+| -------- | ------------------------------------------------------------------------------------ |
+| 研究标题 | "cTBS 对抑郁症患者的疗效：随机对照试验"                                              |
+| 研究类型 | RCT                                                                                  |
+| 样本量   | 86 例                                                                                |
+| 结局变量 | HAMD_total（连续变量）                                                               |
+| 分组变量 | Treatment（Sham vs cTBS）                                                            |
+| 协变量   | Age, Sex, BMI                                                                        |
+| 目标期刊 | SCI Q1/Q2                                                                            |
+| 报告标准 | CONSORT                                                                              |
 | 分析方法 | 接受 Claude 推荐方案（通常包含 BaselineTable、TwoGroupComparison、RepeatedMeasures） |
-| 语言 | 中文正文 + 英文图表 |
+| 语言     | 中文正文 + 英文图表                                                                  |
 
 ### 验证
 
@@ -81,13 +81,13 @@ done
 
 ### 预填回答
 
-| 讨论项 | 预填回答 |
-|--------|----------|
+| 讨论项     | 预填回答                                                          |
+| ---------- | ----------------------------------------------------------------- |
 | 缺失值策略 | 使用默认三级框架：缺失率 <5% 删除、5-20% MICE 插补、>20% 标记讨论 |
-| 异常值处理 | IQR 1.5 倍检测 + Winsorize |
-| 分析时间点 | baseline（用于 Table 1）+ 全部时间点（用于纵向分析） |
-| 衍生变量 | 无特殊衍生，按默认处理 |
-| 数据结构 | 纵向数据（86 患者，3 时间点），需要同时输出 full_longitudinal.csv |
+| 异常值处理 | IQR 1.5 倍检测 + Winsorize                                        |
+| 分析时间点 | baseline（用于 Table 1）+ 全部时间点（用于纵向分析）              |
+| 衍生变量   | 无特殊衍生，按默认处理                                            |
+| 数据结构   | 纵向数据（86 患者，3 时间点），需要同时输出 full_longitudinal.csv |
 
 > **预期行为：** rct_depression.csv 的 HAMD_total 在 baseline 有少量缺失值（正常数据特征），Claude 应按三级框架处理并通过 checkpoint。
 
@@ -125,13 +125,13 @@ grep -q "^handoffs:" "02_PreprocessedData/MANIFEST.yaml" 2>/dev/null && echo "  
 
 ### 预填回答
 
-| 讨论项 | 预填回答 |
-|--------|----------|
-| 分析方案 | 接受 Claude 推荐方案（基于 RCT + 连续结局 + 纵向数据） |
-| 颜色方案 | 默认 viridis |
-| 显著性水平 | α = 0.05 |
-| 多重比较校正 | FDR |
-| 方法参数 | 接受 Claude 推荐的变量选择和模型公式 |
+| 讨论项       | 预填回答                                               |
+| ------------ | ------------------------------------------------------ |
+| 分析方案     | 接受 Claude 推荐方案（基于 RCT + 连续结局 + 纵向数据） |
+| 颜色方案     | 默认 viridis                                           |
+| 显著性水平   | α = 0.05                                              |
+| 多重比较校正 | FDR                                                    |
+| 方法参数     | 接受 Claude 推荐的变量选择和模型公式                   |
 
 ### 验证
 
@@ -204,12 +204,12 @@ grep -q "^handoffs:" "04_Outputs/MANIFEST.yaml" 2>/dev/null && echo "  handoffs:
 
 ### 预填回答
 
-| 讨论项 | 预填回答 |
-|--------|----------|
-| 核心发现 | 接受 Claude 基于分析结果的总结 |
-| 目标期刊 | SCI Q1/Q2（与 Phase 0 一致） |
-| 参考文献策略 | 默认 PubMed 检索 |
-| 图表选择 | 全部纳入 |
+| 讨论项       | 预填回答                       |
+| ------------ | ------------------------------ |
+| 核心发现     | 接受 Claude 基于分析结果的总结 |
+| 目标期刊     | SCI Q1/Q2（与 Phase 0 一致）   |
+| 参考文献策略 | 默认 PubMed 检索               |
+| 图表选择     | 全部纳入                       |
 
 ### 验证
 
@@ -268,11 +268,11 @@ test -f "Reference/MANIFEST.yaml" && echo "Reference MANIFEST: EXISTS" || echo "
 
 ### 预填回答
 
-| 讨论项 | 预填回答 |
-|--------|----------|
-| 审稿严格度 | 目标期刊水平 |
-| 重点审查 | 统计方法、样本量、混杂控制 |
-| 修订范围 | 全部接受 |
+| 讨论项     | 预填回答                   |
+| ---------- | -------------------------- |
+| 审稿严格度 | 目标期刊水平               |
+| 重点审查   | 统计方法、样本量、混杂控制 |
+| 修订范围   | 全部接受                   |
 
 ### 验证
 
@@ -332,11 +332,11 @@ $sc4_pass && echo "SC4: PASS" || echo "SC4: FAIL"
 echo "SC5: PASS (本文件即 checklist)"
 ```
 
-- [ ] **SC1:** `cleaned.csv` 存在且非空
-- [ ] **SC2:** 至少 1 个分析方法产出 figure + table + README
-- [ ] **SC3:** IMRAD 四章节各有 draft.md
-- [ ] **SC4:** Phase 1-4 每阶段 MANIFEST.yaml 存在（共 4 个）
-- [ ] **SC5:** 本 checklist 文件存在（`clinpub/examples/04-INTEGRATION-CHECKLIST.md`）
+- [X] **SC1:** `cleaned.csv` 存在且非空
+- [X] **SC2:** 至少 1 个分析方法产出 figure + table + README
+- [X] **SC3:** IMRAD 四章节各有 draft.md
+- [X] **SC4:** Phase 1-4 每阶段 MANIFEST.yaml 存在（共 4 个）
+- [X] **SC5:** 本 checklist 文件存在（`clinpub/examples/04-INTEGRATION-CHECKLIST.md`）
 
 ---
 

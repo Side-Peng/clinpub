@@ -11,10 +11,8 @@
     "type": "git",
     "url": "https://github.com/Side-Peng/clinpub.git"
   },
-  "scripts": {
-    "test": "node --test \"tests/**/*.test.cjs\""
-  },
-  "engines": {
+  "scripts": {},
+"engines": {
     "node": ">=22.0.0"
   },
   "files": [

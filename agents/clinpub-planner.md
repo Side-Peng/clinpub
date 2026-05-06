@@ -44,16 +44,18 @@ For Phase 2 (analysis), load:
 </step>
 
 <step name="build_dependency_graph">
-For each confirmed analysis method, determine:
+For the user-confirmed analysis plan, determine:
 - `needs`: What data or prior analysis results are required
 - `creates`: What outputs this method produces
-- `parallel`: Can it run independently (Wave 1) or depends on others?
+- `parallel`: Can it run independently or depends on other methods?
 
-Wave structure from analysis_methods.md:
-- **Wave 1**: 01_BaselineTable, 02_GroupComparison (no dependencies)
-- **Wave 2**: 03_LogisticRegression, 04_SurvivalAnalysis (depend on Wave 1)
-- **Wave 3**: 05_SubgroupAnalysis, 06_SensitivityAnalysis (depend on Wave 2)
-- **Wave 4**: 07-10 (depend on data partitioning)
+Use the dependency rules from `analysis_methods.md §四`:
+- Descriptive/baseline → Wave 1 (no deps)
+- Simple comparisons → Wave 2 (no deps, runs after baseline context is known)
+- Multivariable models → Wave 3 (depends on Wave 2 variable selection)
+- Prediction/diagnostic → Wave 4 (depends on train/validation split)
+
+Each method's wave assignment is stored in the confirmed `analysis_plan`:
 </step>
 
 <step name="break_into_tasks">

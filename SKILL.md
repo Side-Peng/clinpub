@@ -22,7 +22,7 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 | `/clinpub-data2idea <filepath>` | **Topic mining** — Analyze data structure + PubMed search → 3-5 candidate paper topics |
 | `/clinpub-init-project` | Phase 0 — Set up project directory, config, research framework |
 | `/clinpub-data-prep` | Phase 1 — Data cleaning, EDA, generate cleaned.csv |
-| `/clinpub-analysis` | Phase 2 — Wave-based statistical analysis (10 methods) |
+| `/clinpub-analysis` | Phase 2 — Adaptive statistical analysis (methods dynamically proposed based on data) |
 | `/clinpub-writing` | Phase 3 — Literature search + IMRAD manuscript drafting |
 | `/clinpub-review` | Phase 4 — Simulated peer review + revision + response letter |
 | `/clinpub-milestone <N>` | Phase gate — Verify success criteria, record decisions, user sign-off |
@@ -40,6 +40,8 @@ npx clinpub-cc@latest
 # 3. Or mine topics from data first:
 /clinpub-data2idea your_data.csv
 ```
+
+**新手？** 完整教程、示例数据和常见问题 → `docs/getting-started.md`
 
 ## Architecture
 
