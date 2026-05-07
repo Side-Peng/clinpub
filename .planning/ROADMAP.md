@@ -48,6 +48,13 @@ Success criteria:
 1. Introduction/Methods/Results/Discussion 各段独立完成引用和撰写
 2. 终稿由各段拼接生成，非重写
 3. 引用在合并时统一整理，不重复不遗漏
+**Plans:** 4 plans
+
+Plans:
+- [x] 03-01-PLAN.md — 分段撰写流程改造: workflow 改造为逐段顺序撰写 + reference-agent 预搜索 + 用户审阅 pause
+- [x] 03-02-PLAN.md — 引用管理与交叉引用: shared reference library JSON schema + placeholder 约定 + 去重规则
+- [x] 03-03-PLAN.md — 终稿拼接输出: 7 步拼接协议（段落合并 + 占位符替换 + 引用统一编号 + YAML frontmatter + MANIFEST.yaml）
+- [x] 03-04-PLAN.md — 命令入口适配: 更新 commands/clinpub/writing.md 描述和引用
 
 **Phase 4: 方法增强**
 Goal: 处理未知方法和标准组间对比
