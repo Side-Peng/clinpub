@@ -62,6 +62,11 @@ Requirements: METH-01, METH-02
 Success criteria:
 1. 用户提到未知统计方法时自动搜索，总结后与用户讨论
 2. 组间对比自动按组数选择标准检验 → 输出到分析报告中
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — 组间对比方法决策树文档（comparison-methods.md），覆盖 2组/3+组×连续/分类+配对 全覆盖 + 效应量标准
+- [ ] 04-02-PLAN.md — reference-agent method_search 未知方法搜索模式 + 分析工作流集成
 
 **Phase 5: Phase 前调研流程**
 Goal: 每个 Phase 前有标准调研→讨论→执行流程

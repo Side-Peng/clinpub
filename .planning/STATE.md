@@ -7,17 +7,19 @@ last_updated: "2026-05-07T00:00:00.000Z"
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 4
-  completed_plans: 4
+  current_phase: 4
+  current_phase_status: planned
+  total_plans: 2
+  completed_plans: 0
   percent: 42
 ---
 
 # STATE.md — clinpub 优化进度
 
 **最后更新**: 2026-05-07
-**当前状态**: Phase 3 执行完成
+**当前状态**: Phase 4 规划完成
 
-- 阶段：Phase 3
+- 阶段：Phase 4
 
 ---
 
@@ -37,7 +39,7 @@ progress:
 | 1 | Bug Fixes | ✅ 完成 | 100% |
 | 2 | 断点续做 | ✅ 完成 | 100% |
 | 3 | 手稿拼接 | ✅ 完成 | 100% |
-| 4 | 方法增强 | ⏳ 待开始 | 0% |
+| 4 | 方法增强 | 📋 已规划 | 0% (2 plans ready) |
 | 5 | Phase 前调研流程 | ⏳ 待开始 | 0% |
 | 6 | 引用策略 | ⏳ 待开始 | 0% |
 | 7 | 图表+文档优化 | ⏳ 待开始 | 0% |
@@ -50,14 +52,18 @@ progress:
   - 03-03: 终稿拼接协议 — `pipeline/references/concatenation-protocol.md`
   - 03-04: 命令入口适配 — `commands/clinpub/writing.md` 更新
 
+- Phase 4 (方法增强) 规划完成（2 个计划已就绪）：
+  - 04-01: 组间对比方法决策树文档 comparison-methods.md
+  - 04-02: reference-agent method_search 未知方法搜索模式 + 分析工作流集成
+
 ## 下一步
 
-- Phase 4 (方法增强): 未知方法搜索 + 组间对比方法固化
+- 执行 Phase 4 (方法增强): 依次执行 04-01 → 04-02 两个计划
 
 ### 进度总结
 - Phase 1 (Bug Fixes): ✅ 已完成
 - Phase 2 (断点续做): ✅ 已完成
 - Phase 3 (手稿拼接): ✅ 已完成
-- Phase 4 (方法增强): ⏳ 待开始
+- Phase 4 (方法增强): 📋 已规划 (2 plans)
 
 ---
