@@ -128,6 +128,7 @@ data_structure:
   - 正态分布 + 方差齐 → 独立样本 t 检验
   - 偏态分布 → Wilcoxon 秩和检验
   - 配对设计 → 配对 t 检验 / Wilcoxon 符号秩检验
+- **完整决策树**：参见 `comparison-methods.md §二` — 含正态性检验驱动的自动分支、方差不齐处理、效应量公式。
 - **绘图**：三层绘图法（见 `r_patterns.md §2.1`）+ 动态显著性标注（见 `r_patterns.md §1.4`）
 
 #### MultiGroupComparison（多组比较）
@@ -135,6 +136,7 @@ data_structure:
 - **方法选择**：
   - 正态 + 方差齐 → ANOVA + Tukey HSD
   - 偏态 → Kruskal-Wallis + Dunn 事后比较
+- **完整决策树**：参见 `comparison-methods.md §三` — 含 Welch ANOVA、Games-Howell、Kruskal-Wallis+Dunn 分支。
 
 #### RepeatedMeasures（重复测量）
 - **用途**：同一患者在多个时间点的测量（纵向数据）
@@ -142,6 +144,7 @@ data_structure:
   - 两组 + 两个时间点：混合模型（`lme4::lmer()`），关注 time×group 交互项
   - 两组 + 多时间点：混合模型 + 时间趋势对比
   - 多组 + 多时间点：混合模型 + 简单效应分析
+- **完整决策树**：参见 `comparison-methods.md §四` — 含配对 t 检验、Wilcoxon 符号秩、重复测量 ANOVA、Friedman 检验分支。
 - **模型规范**：
   ```r
   library(lme4)
