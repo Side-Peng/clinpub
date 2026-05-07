@@ -160,10 +160,85 @@ Final verification:
 If manifest is missing, write it here.
 </step>
 
-<step name="placeholder_concatenation" priority="medium">
-注意：终稿拼接（合并各段 → 替换占位符 → 统一引用编号 → 生成 manuscript.md + YAML frontmatter + sections/ 输出）在 {{@./.planning/phases/03-手稿拼接/03-03-PLAN.md}} 中处理。本步骤仅确保各段独立文件就绪。
+<step name="concatenate_manuscript" priority="high">
+执行终稿拼接协议（Concatenation Protocol）将各段合并为最终 manuscript.md。
 
-当前各段文件和引用库就绪后，进入 checkpoint_confirm。
+按 `@./pipeline/references/concatenation-protocol.md` 执行以下步骤：
+
+1. **段落合并**: 按 IMRAD 顺序读取 `05_Manuscript/sections/01-introduction.md` ~ `04-discussion.md`
+2. **占位符替换**:
+   - `{{Table:N}}` → 按 IMRAD 顺序全局编号（Table 1, Table 2...）
+   - `{{Figure:N}}` → 按 IMRAD 顺序全局编号（Figure 1, Figure 2...）
+   - `{{SupplementaryTable:N}}` → 独立编号
+   - `{{SupplementaryFigure:N}}` → 独立编号
+   - `{{Method:name}}` → 替换为 "the {name} analysis"
+   - `{{Section:name}}` → 替换为段落名
+3. **引用统一编号**:
+   - 读取 `Reference/reference_library.json`
+   - 扫描全文中所有 `[id]` 引用
+   - 按正文出现顺序重新分配连续编号 [1] 开始
+   - 同一引用在多段使用自动复用编号（自然去重）
+   - 在文末生成统一的 References 区（Vancouver 格式）
+4. **YAML frontmatter 生成**:
+   - `title`: 留空（由用户在最终审阅填写）或从 project_config.yml project.title 读取
+   - `target_journal`: 从 project_config.yml 读取
+   - `word_count`: 自动计算正文（中文 + 英文单词数）
+   - `reference_count`: 引用条目总数
+5. **写入 manuscript.md**:
+   ```markdown
+   ---
+   title: "{title}"
+   target_journal: "{journal}"
+   word_count: {count}
+   reference_count: {count}
+   ---
+   
+   # {Title}
+   
+   ## Introduction
+   ...
+   
+   ## Methods
+   ...
+   
+   ## Results
+   ...
+   
+   ## Discussion
+   ...
+   
+   ## References
+   [1] ...
+   [2] ...
+   ```
+6. **更新 MANIFEST.yaml**: 写入 `05_Manuscript/MANIFEST.yaml`（声明 manuscript.md + sections/ 下所有文件，consumer 为 clinpub-verifier）
+7. **更新引用库**: 追加 `concatenated: true` 标记，更新时间戳
+
+验证（执行后检查）：
+- 扫描全文确认无 `{{Table:\d+}}` 或 `{{Figure:\d+}}` 残留
+- word_count > 5000
+- reference_count >= 20
+- 所有引用有 DOI
+- IMRAD 结构完整
+
+参见 `@./pipeline/references/concatenation-protocol.md` 获取各步骤的详细伪代码和规则。
+</step>
+
+<step name="concatenation_output" priority="medium">
+拼接完成后输出：
+
+```
+✅ 终稿拼接完成
+
+文件:
+- 05_Manuscript/manuscript.md — 完整终稿（{word_count} 字, {reference_count} 篇引用）
+- 05_Manuscript/sections/ — 各段独立文件
+
+下一步:
+- 检查 manuscript.md 确认拼接质量
+- 如需要调整 → 直接编辑 manuscript.md（非重写原则下，手动修正局部问题）
+- 如确认无误 → 进入最终 checkpoint_confirm
+```
 </step>
 
 <step name="checkpoint_confirm" priority="medium">
@@ -210,4 +285,10 @@ See @./pipeline/workflows/milestone.md for full protocol.
 - 引用库引用不重复
 - 各段使用占位符进行交叉引用
 - 全文各段合计 >5000 字
+- 05_Manuscript/manuscript.md 存在，包含 YAML frontmatter 和完整 IMRAD 结构
+- 05_Manuscript/sections/ 下 4 个段文件保留
+- 全文中无残留占位符
+- 引用从 [1] 开始连续编号，文末 References 区完整
+- word_count > 5000, reference_count >= 20
+- MANIFEST.yaml 存在且声明所有输出
 </success_criteria>
