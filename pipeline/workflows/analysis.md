@@ -127,6 +127,20 @@ Discuss the proposed plan with user and finalize:
 6. **Significance level**: default α=0.05
 7. **Outcome transformation**: If creating binary cutoffs, discuss threshold basis (median, clinical)
 
+<!-- 方法搜索触发（Phase 4 方法增强） -->
+**方法搜索提示：**
+如果用户提到不熟悉的统计方法（如"这个方法我不太熟悉"、"帮我查一下 XX 检验"），
+在讨论过程中自动触发 `reference-agent` 的 `method_search` 模式（见 `agents/reference-agent.md §method_search`）：
+
+1. 调用 Tavily 搜索方法概览 + 适用场景
+2. 学术引用不足时用 PubMed 补充
+3. 输出摘要级结果直接替换 spec 的方法描述部分
+4. 用户追问时输出详细教程到 `attachments/{method-name}-tutorial.md`
+
+如果用户确认的对比方法涉及 2 组或 3+ 组比较，提示用户：
+1. 对比方法已标准化到 `pipeline/references/comparison-methods.md`
+2. 给出标准检验树（正态性→方差齐性→具体方法→效应量）
+
 **Write confirmed plan** to `.planning/phases/02-analysis/01-PLAN.md`:
 
 ```yaml
