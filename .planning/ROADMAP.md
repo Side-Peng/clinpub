@@ -78,7 +78,7 @@ Success criteria:
 
 Plans:
 - [x] 05-01-PLAN.md — 创建 pre-phase-research.md 参考文档（轨道选择、Track A/B 协议、RESEARCH.md 模板）
-- [ ] 05-02-PLAN.md — 扩展 reference-agent 添加 phase_research 模式
+- [x] 05-02-PLAN.md — 扩展 reference-agent 添加 phase_research 模式
 
 **Phase 6: 引用策略**
 Goal: 文献引用策略标准化
