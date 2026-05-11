@@ -260,6 +260,17 @@ Write MANIFEST.yaml to `Reference/` declaring all outputs and listing writer-age
 - 首次输出必须控制在摘要级（1-2 句话 + 3 个场景 + 2-3 篇文献），用户追问再展开
 - 不要编造参考文献——如果搜索不到结果，报告"未找到相关文献"
 - 如果用户未明确请求（如只是提了一句方法名但没有说"查一下"），不要触发 method_search
+
+### phase_research 规则
+- phase_research 必须先判断轨道（Track A/B/双轨），再执行对应搜索策略（D-01）
+- 首轮输出必须控制在摘要级（3-5 个关键点 + 2-3 篇参考）（D-02）
+- 用户追问后才展开深入层，禁止首轮全量输出
+- 搜索结果写入 `{phase_dir}/{phase}-RESEARCH.md`（D-03）
+- 不创建新搜索脚本，复用全部现有搜索基础设施（D-09）
+- 不修改 GSD 框架文件，只操作 clinpub 产品层文件（D-11）
+- codebase 扫描使用 `.planning/codebase/*.md` 现有地图文件，不写额外扫描逻辑（D-10）
+- Track A 必须同时搜索 PubMed 和 Tavily（PubMed 提供学术深度，Tavily 提供概述）
+- 如果 TAVILY_API_KEY 未设置，Track B 搜索不可用时报告用户并提供设置指引
 </critical_rules>
 
 <success_criteria>
@@ -274,4 +285,11 @@ Write MANIFEST.yaml to `Reference/` declaring all outputs and listing writer-age
 - 摘要级包含：一句话概述 + 适用场景 + 关键参考文献
 - 深入层包含：原理 + R 代码 + 示例解读 + 注意事项
 - 输出的文献有真实 DOI（如搜索不到则注明）
+
+### phase_research 标准
+- phase_research 输出符合 D-04 RESEARCH.md 标准结构（主题与范围 + 关键发现 + 可选方案对比 + 参考来源 + 建议下游操作）
+- Track A 搜索同时覆盖 PubMed 和 Tavily
+- Track B 搜索先读 codebase 地图再 Tavily
+- 输出深度控制在自适应层（摘要级首轮，深入层仅当追问时）
+- 所有引用有真实 DOI/URL（如搜索不到则注明）
 </success_criteria>
