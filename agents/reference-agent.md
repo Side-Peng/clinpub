@@ -128,6 +128,88 @@ result <- {function}({params})
 写入文件后，在 `MANIFEST.yaml` 中声明 tutorial 文件路径。
 </step>
 
+<step name="phase_research" priority="high">
+Phase 前调研模式。在 GSD discuss-phase 之前执行，为每个 clinpub 开发 Phase（6、7 及后续）提供领域/技术背景调研。
+
+**触发条件：**
+- 在 GSD plan-phase 之前，planner agent 读取 `pipeline/references/pre-phase-research.md` 后触发
+- 或用户直接要求："调研一下 Phase N 的领域/技术背景"
+- 首次触发时不会自动展开，输出摘要级发现
+
+**轨道选择（per D-01 双轨制）：**
+
+根据 Phase 名称和 ROADMAP.md 描述判断轨道：
+
+Track A 关键词（领域调研）：分析、方法、文献、引用、统计、研究、临床、期刊
+Track B 关键词（技术调研）：命令、钩子、workflow、配置、工具、重构、脚本、文档
+
+匹配规则：
+- 只匹配 Track A 关键词 → Track A
+- 只匹配 Track B 关键词 → Track B
+- 两者都有 → 双轨（先 A 后 B）
+- 两者都没有 → 默认 Track A（领域优先）
+
+**轨道执行：**
+
+### Track A — 领域调研
+
+调研目标：搜索临床/方法学领域的最新文献、最佳实践、研究空白。
+
+搜索策略：
+1. 从 ROADMAP.md 的 Phase Goal 和 Requirements 提取核心关键词
+2. PubMed 学术搜索：
+   ```bash
+   python scripts/pubmed_search.py "{phase_keywords} clinical research" --max 5 --type review
+   ```
+3. Tavily 补充搜索：
+   ```bash
+   python scripts/tavily_search.py "{phase_description} clinical practice guideline" --depth basic --max-results 5
+   ```
+
+自适应深度（per D-02）：
+- **第一轮 — 摘要级**：产出一句话概述 + 3-5 个关键发现 + 2-3 篇参考文献。控制在够做决策的量级。
+- **用户追问时 — 深入层**：展开原理说明、提供实现细节或代码示例、补充更多参考文献。
+- 无追问时不得自动展开。
+
+### Track B — 技术调研
+
+调研目标：搜索工程技术方案、库选型、实现策略。
+
+搜索策略：
+1. 读取 codebase 地图文件：
+   - 读取 `.planning/codebase/ARCHITECTURE.md`（架构）、`CONVENTIONS.md`（规范）、`STRUCTURE.md`（结构）、`INTEGRATIONS.md`（集成）
+   - 这些文件已在 `.planning/codebase/` 下存在（per D-10），无需额外扫描逻辑
+2. Tavily 技术搜索：
+   ```bash
+   python scripts/tavily_search.py "{technology_keyword} implementation guide best practice" --depth advanced --max-results 5
+   ```
+3. 库选型对比（如涉及）：
+   ```bash
+   python scripts/tavily_search.py "{lib_a} vs {lib_b} comparison features" --depth advanced --max-results 3
+   ```
+
+自适应深度（同 Track A）：首轮摘要，追问后展开。
+
+### 双轨模式
+
+当 Phase 同时需要领域和技术调研时：
+1. 先执行 Track A（领域优先）
+2. 再执行 Track B
+3. 输出合并为一个统一的调研报告
+
+**输出要求：**
+- 调研结果写入该 Phase 目录下的 RESEARCH.md（如 `.planning/phases/06-引用策略/06-RESEARCH.md`）（per D-03）
+- 不覆盖同目录下已有文件
+- 如果 RESEARCH.md 已存在，输出调研发现后与用户确认是否更新
+
+**搜索注意事项：**
+- 复用全部现有搜索基础设施（per D-09），不创建新脚本
+- 检查 TAVILY_API_KEY 和 NCBI_API_KEY 是否设置（复用 existing `<step name="check_api_keys">`）
+- 参考文献必须有真实 DOI，禁止编造（继承 reference-agent 的核心规则）
+- 如果搜索无结果，报告"未找到相关文献"而非编造
+- Tavily 搜索优先于 PubMed（更快获取概述），PubMed 用于补充学术深度
+</step>
+
 <step name="full_text_retrieval" priority="medium">
 For key references requiring full text:
 
