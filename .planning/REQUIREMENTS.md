@@ -28,7 +28,7 @@
 
 ### Phase 前调研
 
-- [ ] **FLOW-01**: 每个 Phase 前先调研，以建议方式与用户讨论，结合用户反馈再执行
+- [x] **FLOW-01**: 每个 Phase 前先调研，以建议方式与用户讨论，结合用户反馈再执行
 
 ### 引用策略
 
@@ -70,7 +70,7 @@
 | WRITE-02 | Phase 3 | Pending |
 | METH-01 | Phase 4 | Pending |
 | METH-02 | Phase 4 | Pending |
-| FLOW-01 | Phase 5 | Pending |
+| FLOW-01 | Phase 5 | Complete |
 | CITE-01 | Phase 6 | Pending |
 | CITE-02 | Phase 6 | Pending |
 | CHART-01 | Phase 7 | Pending |
