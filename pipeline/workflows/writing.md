@@ -13,6 +13,7 @@ Draft a complete IMRAD manuscript in Chinese (English figures/tables) targeting 
 @./pipeline/references/reference-library.md
 @./agents/reference-agent.md
 @./agents/writer-agent.md
+@./pipeline/references/citation-strategy.md
 </required_reading>
 
 <context_files>
@@ -20,6 +21,40 @@ Draft a complete IMRAD manuscript in Chinese (English figures/tables) targeting 
 </context_files>
 
 <process>
+
+<step name="discuss_citation_strategy" priority="first">
+引用策略讨论（per D-19, D-20, D-21）
+
+在撰写手稿前与用户确认引用策略。策略默认值参见 `@./pipeline/references/citation-strategy.md`。
+
+讨论内容：
+
+1. **各段引用数量（D-18）**：默认配比 Intro 10-15, Methods 3-5, Results 0-3, Discussion 15-25（弹性 ±20%），总量 30-55 为硬约束（D-17）。与用户确认是否需要调整
+2. **时间范围（D-21）**：默认近 5 年文献。是否有经典文献/landmark 研究需要作为年限例外？
+3. **IF 偏好（D-21）**：目标期刊影响因子下限偏好。无严格默认值，与用户讨论后确定
+
+讨论结果写入 `project_config.yml`（per D-22）中的 `citation_strategy` 段：
+
+```yaml
+citation_strategy:
+  section_targets:
+    introduction: {count}
+    methods: {count}
+    results: {count}
+    discussion: {count}
+  total_range: [30, 55]
+  year_range:
+    max_years_ago: 5
+    landmark_exceptions: []
+  if_preference:
+    min_if: null
+    note: ""
+```
+
+后续 `reference_pre_search` 和 `sequential_section_writing` 步骤读取此配置决定搜索参数和引用量。
+
+参见 `@./pipeline/references/citation-strategy.md` 获取完整引用策略规范。
+</step>
 
 <step name="discuss_writing_plan" priority="first">
 Discuss with user before drafting:

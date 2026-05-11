@@ -33,6 +33,29 @@ If `TAVILY_API_KEY` is missing, inform user and provide setup instructions. Do n
 </step>
 
 <step name="literature_search" priority="high">
+**搜索过滤参数（可选）：**
+
+以下参数由 writing workflow 的 discuss_citation_strategy 步骤传递（通过 project_config.yml citation_strategy 段）。
+
+| 参数 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `--max-year-range` | int | 5 | 最大文献年限。搜索结果中过滤掉超过此年限的文献，除非标记为 landmark/经典例外 |
+| `--min-if` | float | null（不过滤） | 最小影响因子。搜索结果优先保留 IF >= 此值的文献。无 IF 信息的文献标记为 "IF unavailable" 供用户判断 |
+
+**使用方式：**
+
+在 `reference_pre_search` 步骤中，根据 `project_config.yml` 的 `citation_strategy` 配置构建搜索命令：
+
+```bash
+# 从 project_config.yml 读取过滤参数
+# year_range.max_years_ago: 5
+# if_preference.min_if: 3.0
+# 搜索时应用过滤
+python scripts/pubmed_search.py "{keywords}" --max 10 --max_year 5 --min_if 3.0
+```
+
+如果 `citation_strategy.if_preference.min_if` 为 null 或未设置，则不传 `--min_if`（保持向后兼容）。
+
 Search strategies by trigger phase:
 
 **Phase 0 (research gap confirmation):**
@@ -42,7 +65,7 @@ Search strategies by trigger phase:
 
 **Phase 3 (full pre-search before writing):**
 - Comprehensive PubMed search on: disease, exposure/biomarker, outcome, population
-- Read abstracts → retain: directly relevant, SCI-indexed, last 5 years (except classics)
+- Read abstracts → retain: directly relevant, SCI-indexed, within year range from citation_strategy config (with landmark exceptions)
 - Exclude: case reports, editorials, errata
 - Get DOI for every retained reference
 

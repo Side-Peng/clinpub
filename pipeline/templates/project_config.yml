@@ -75,3 +75,22 @@ analysis:
   missing_threshold_high: 0.20         # 缺失率 > 20% 讨论是否保留
   significance_level: 0.05
   multiple_comparison: "fdr"           # fdr / bonferroni / none
+
+# ============================================================
+# citation_strategy: 由 Phase 3 writing workflow 的
+# discuss_citation_strategy 步骤动态生成，非手动填写。
+# 各段引用数量弹性 ±20%，总量 30-55 为硬约束。
+# ============================================================
+citation_strategy:
+  section_targets:
+    introduction: 10-15
+    methods: 3-5
+    results: 0-3
+    discussion: 15-25
+  total_range: [30, 55]
+  year_range:
+    max_years_ago: 5
+    landmark_exceptions: []
+  if_preference:
+    min_if: null
+    note: ""
