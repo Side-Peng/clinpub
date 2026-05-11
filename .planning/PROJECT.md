@@ -19,6 +19,7 @@ clinpub 是一个临床数据分析与稿件自动生成管线。它扮演资深
 - ✓ 3 个 Claude Code hooks（workflow-guard, phase-boundary, prompt-guard）— 现有
 - ✓ Phase 2 Analysis 支持 WAVE 子任务机制 — 现有
 - ✓ 研究类型模板（RCT, cohort, case_control, cross_sectional, descriptive）— 现有
+- ✓ Phase 前调研流程标准化（FLOW-01）：轨道选择 + Track A/B 搜索 + RESEARCH.md 模板 — Phase 5
 
 ### Active
 
@@ -29,7 +30,7 @@ clinpub 是一个临床数据分析与稿件自动生成管线。它扮演资深
 - [ ] **FEAT-03**: Phase/Wave 结束后提示 `clear` 压缩上下文
 - [ ] **FEAT-04**: 手稿由 IMRAD 各段独立撰写引用后拼接为终稿（非重写）
 - [ ] **FEAT-05**: 未知统计方法自动搜索（调用 web 技能查询后与用户讨论）
-- [ ] **FEAT-06**: 每个 Phase 前先调研→以建议方式与用户讨论→再执行
+- [x] **FEAT-06**: 每个 Phase 前先调研→以建议方式与用户讨论→再执行 — Phase 5
 - [ ] **FEAT-07**: 引用管理：默认 50 篇/近 5 年，引用前与用户讨论数量/时间/IF
 - [ ] **FEAT-08**: 组间对比方法固化（两组/三组的标准检验流程）
 - [ ] **FEAT-09**: 图表质量优化，参考优质技能案例
@@ -83,4 +84,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-05 after initialization*
+*Last updated: 2026-05-11 after Phase 5 completion*
