@@ -49,14 +49,14 @@ Success criteria:
 3. 引用在合并时统一整理，不重复不遗漏
 4. 默认引用策略 30-55 篇范围，分段建议+总量兜底
 5. 开始撰写前与用户讨论各段引用数量、时间范围、IF 偏好
-**Plans:** 4 plans
+**Plans:** 5 plans
 
 Plans:
 - [x] 03-01-PLAN.md — 分段撰写流程改造: workflow 改造为逐段顺序撰写 + reference-agent 预搜索 + 用户审阅 pause
 - [x] 03-02-PLAN.md — 引用管理与交叉引用: shared reference library JSON schema + placeholder 约定 + 去重规则
 - [x] 03-03-PLAN.md — 终稿拼接输出: 7 步拼接协议（段落合并 + 占位符替换 + 引用统一编号 + YAML frontmatter + MANIFEST.yaml）
 - [x] 03-04-PLAN.md — 命令入口适配: 更新 commands/clinpub/writing.md 描述和引用
-- [ ] 03-05-PLAN.md — 引用策略标准化: 策略参考文档 + writing workflow 插入讨论步 + reference-agent 搜索支持 IF/年份过滤
+- [x] 03-05-PLAN.md — 引用策略标准化: 策略参考文档 + writing workflow 插入讨论步 + reference-agent 搜索支持 IF/年份过滤
 
 **Phase 4: 方法增强**
 Goal: 处理未知方法和标准组间对比
