@@ -4,11 +4,11 @@
 
 | # | Phase | Goal | Requirements | 工作量 |
 |---|-------|------|-------------|--------|
-| 1 | Bug Fixes | ✅ Complete | 2026-05-05 |
-| 2 | 断点续做 | ✅ Complete | 2026-05-05 |
-| 3 | 手稿拼接 | IMRAD 各段独立撰写 + 拼接为终稿 + 引用策略标准化 | WRITE-01, WRITE-02, CITE-01, CITE-02 | 大 |
-| 4 | 方法增强 | 未知方法搜索 + 组间对比方法固化 | METH-01, METH-02 | 中 |
-| 5 | Phase 前调研流程 | 2/2 | Complete    | 2026-05-11 |
+| 1 | Bug Fixes | ✅ Complete | 2026-05-05 | |
+| 2 | 断点续做 | ✅ Complete | 2026-05-05 | |
+| 3 | 手稿拼接+引用策略 | ✅ Complete | 2026-05-11 | 大 |
+| 4 | 方法增强 | ✅ Complete | 2026-05-07 | |
+| 5 | Phase 前调研流程 | ✅ Complete | 2026-05-11 | |
 | 6 | 图表+文档优化 | 图表质量 + WAVE 说明中文/改名 | CHART-01, DOC-01, DOC-02 | 小 |
 
 ---
@@ -67,8 +67,8 @@ Success criteria:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — 组间对比方法决策树文档（comparison-methods.md），覆盖 2组/3+组×连续/分类+配对 全覆盖 + 效应量标准
-- [ ] 04-02-PLAN.md — reference-agent method_search 未知方法搜索模式 + 分析工作流集成
+- [x] 04-01-PLAN.md — 组间对比方法决策树文档（comparison-methods.md），覆盖 2组/3+组×连续/分类+配对 全覆盖 + 效应量标准
+- [x] 04-02-PLAN.md — reference-agent method_search 未知方法搜索模式 + 分析工作流集成
 
 **Phase 5: Phase 前调研流程**
 Goal: 调研→建议→讨论→执行 的标准化流程
