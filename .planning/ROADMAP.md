@@ -1,16 +1,15 @@
 # Roadmap: clinpub
 
-**7 phases** | **17 requirements mapped** | All v1 requirements covered ✓
+**6 phases** | **17 requirements mapped** | All v1 requirements covered ✓
 
 | # | Phase | Goal | Requirements | 工作量 |
 |---|-------|------|-------------|--------|
 | 1 | Bug Fixes | ✅ Complete | 2026-05-05 |
 | 2 | 断点续做 | ✅ Complete | 2026-05-05 |
-| 3 | 手稿拼接 | IMRAD 各段独立撰写 + 拼接为终稿 | WRITE-01, WRITE-02 | 大 |
+| 3 | 手稿拼接 | IMRAD 各段独立撰写 + 拼接为终稿 + 引用策略标准化 | WRITE-01, WRITE-02, CITE-01, CITE-02 | 大 |
 | 4 | 方法增强 | 未知方法搜索 + 组间对比方法固化 | METH-01, METH-02 | 中 |
-| 5 | Phase 前调研流程 | 调研→建议→讨论→执行 的标准化流程 | FLOW-01 | 中 |
-| 6 | 引用策略 | 默认 50 篇/近 5 年 + 引用前讨论 | CITE-01, CITE-02 | 小 |
-| 7 | 图表+文档优化 | 图表质量 + WAVE 说明中文/改名 | CHART-01, DOC-01, DOC-02 | 小 |
+| 5 | Phase 前调研流程 | 2/2 | Complete    | 2026-05-11 |
+| 6 | 图表+文档优化 | 图表质量 + WAVE 说明中文/改名 | CHART-01, DOC-01, DOC-02 | 小 |
 
 ---
 
@@ -42,12 +41,14 @@ Plans:
 - [x] 02-02-PLAN.md — `/clinpub-next-step` 命令 + clear 提示标准化
 
 **Phase 3: 手稿拼接**
-Goal: IMRAD 各段独立撰写引用后拼接为终稿
-Requirements: WRITE-01, WRITE-02
+Goal: IMRAD 各段独立撰写引用后拼接为终稿 + 引用策略标准化
+Requirements: WRITE-01, WRITE-02, CITE-01, CITE-02
 Success criteria:
 1. Introduction/Methods/Results/Discussion 各段独立完成引用和撰写
 2. 终稿由各段拼接生成，非重写
 3. 引用在合并时统一整理，不重复不遗漏
+4. 默认引用策略 30-55 篇范围，分段建议+总量兜底
+5. 开始撰写前与用户讨论各段引用数量、时间范围、IF 偏好
 **Plans:** 4 plans
 
 Plans:
@@ -55,6 +56,7 @@ Plans:
 - [x] 03-02-PLAN.md — 引用管理与交叉引用: shared reference library JSON schema + placeholder 约定 + 去重规则
 - [x] 03-03-PLAN.md — 终稿拼接输出: 7 步拼接协议（段落合并 + 占位符替换 + 引用统一编号 + YAML frontmatter + MANIFEST.yaml）
 - [x] 03-04-PLAN.md — 命令入口适配: 更新 commands/clinpub/writing.md 描述和引用
+- [ ] 03-05-PLAN.md — 引用策略标准化: 策略参考文档 + writing workflow 插入讨论步 + reference-agent 搜索支持 IF/年份过滤
 
 **Phase 4: 方法增强**
 Goal: 处理未知方法和标准组间对比
@@ -80,14 +82,7 @@ Plans:
 - [x] 05-01-PLAN.md — 创建 pre-phase-research.md 参考文档（轨道选择、Track A/B 协议、RESEARCH.md 模板）
 - [x] 05-02-PLAN.md — 扩展 reference-agent 添加 phase_research 模式
 
-**Phase 6: 引用策略**
-Goal: 文献引用策略标准化
-Requirements: CITE-01, CITE-02
-Success criteria:
-1. 默认引用约 50 篇、近 5 年文献
-2. 引用前与用户讨论各部分引用数量、时间范围、IF 偏好
-
-**Phase 7: 图表+文档优化**
+**Phase 6: 图表+文档优化**
 Goal: 图表美观 + 文档中文本地化
 Requirements: CHART-01, DOC-01, DOC-02
 Success criteria:
@@ -102,23 +97,21 @@ Success criteria:
 |----------|-------|--------|----------|
 | Bug Fixes | 2 | 2 (Phase 1) | 0 ✓ |
 | 断点续做 | 3 | 3 (Phase 2) | 0 ✓ |
-| 手稿拼接 | 2 | 2 (Phase 3) | 0 ✓ |
+| 手稿拼接 | 4 | 4 (Phase 3) | 0 ✓ |
 | 方法增强 | 2 | 2 (Phase 4) | 0 ✓ |
 | Phase 前调研 | 1 | 1 (Phase 5) | 0 ✓ |
-| 引用策略 | 2 | 2 (Phase 6) | 0 ✓ |
-| 图表+文档 | 3 | 3 (Phase 7) | 0 ✓ |
-| **Total** | **17** | **17** | **0 ✓** |
+| 图表+文档 | 3 | 3 (Phase 6) | 0 ✓ |
+| **Total** | **15** | **15** | **0 ✓** |
 
 ## Phases
 
 ```mermaid
 flowchart LR
     P1[Phase 1: Bug Fixes] --> P2[Phase 2: 断点续做]
-    P2 --> P3[Phase 3: 手稿拼接]
+    P2 --> P3[Phase 3: 手稿拼接+引用策略]
     P3 --> P4[Phase 4: 方法增强]
     P4 --> P5[Phase 5: Phase前调研]
-    P5 --> P6[Phase 6: 引用策略]
-    P6 --> P7[Phase 7: 图表+文档优化]
+    P5 --> P6[Phase 6: 图表+文档优化]
 ```
 
 ---

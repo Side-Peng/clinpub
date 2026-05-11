@@ -2,22 +2,22 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Executing Phase 5
-last_updated: "2026-05-11T06:02:51.000Z"
+status: active
+last_updated: "2026-05-11T06:08:30.891Z"
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
-  percent: 100
+  total_plans: 13
+  completed_plans: 10
+  percent: 77
 ---
 
 # STATE.md — clinpub 优化进度
 
 **最后更新**: 2026-05-11
-**当前状态**: Phase 5 全部 2 个计划执行完成
+**当前状态**: Phase 6（旧 Phase 7: 图表+文档优化）待规划
 
-- 阶段：Phase 5（已规划，待执行）
+- 阶段：Phase 6（图表+文档优化，待开始）
 
 ---
 
@@ -26,7 +26,7 @@ progress:
 - `.planning/PROJECT.md` (updated 2026-05-05 after initialization)
 
 **核心价值**: 用户提供原始临床数据，clinpub 输出结构化的分析结果和可投稿的 IMRAD 手稿
-**当前聚焦**: Phase 5 — Phase 前调研流程（已规划，待执行）
+**当前聚焦**: Phase 6 — 图表+文档优化（待开始）
 
 ---
 
@@ -36,22 +36,24 @@ progress:
 |---|-------|------|------|
 | 1 | Bug Fixes | ✅ 完成 | 100% |
 | 2 | 断点续做 | ✅ 完成 | 100% |
-| 3 | 手稿拼接 | ✅ 完成 | 100% |
+| 3 | 手稿拼接+引用策略 | ✅ 完成（待扩展引用策略） | 80% |
 | 4 | 方法增强 | ✅ 完成 | 100% |
-| 5 | Phase 前调研流程 | ⚡ 进行中 | 50% |
-| 6 | 引用策略 | ⏳ 待开始 | 0% |
-| 7 | 图表+文档优化 | ⏳ 待开始 | 0% |
+| 5 | Phase 前调研流程 | ✅ 完成 | 100% |
+| 6 | 图表+文档优化 | ⏳ 待开始 | 0% |
 
 ## 已完成
 
 - Phase 3 (手稿拼接) 全部 4 个计划执行完成
 - Phase 4 (方法增强) 全部 2 个计划执行完成
-- Phase 5 Plan 01 (创建调研参考文档) 执行完成
-- Phase 5 Plan 02 (扩展 reference-agent 添加 phase_research 模式) 执行完成
 - Phase 5 (Phase 前调研流程) 全部 2 个计划执行完成
+
+## 变更记录
+
+- Phase 6 (引用策略) 合并入 Phase 3 — 2026-05-11
+- Roadmap 从 7 Phase 缩减为 6 Phase
 
 ## 下一步
 
-- 进入 Phase 6 (引用策略) 的 discuss 和规划流程
+- Phase 3 需创建 03-05-PLAN.md（引用策略标准化），然后讨论/规划 Phase 6（图表+文档优化）
 
 ---

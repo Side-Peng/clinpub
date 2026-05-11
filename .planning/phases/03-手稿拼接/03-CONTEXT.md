@@ -115,5 +115,34 @@ None — discussion stayed within phase scope
 
 ---
 
+---
+
+<expanded_scope>
+
+## Phase 3 引用策略扩展（CITE-01, CITE-02）
+
+**来源:** Phase 6 (引用策略) 于 2026-05-11 讨论后合并入 Phase 3
+
+### 引用总量
+
+- **D-17:** 引用总量为 30-55 篇范围制，不设硬性 50 篇目标，讨论时根据实际情况确定
+- **D-18:** 各段保留 Phase 3 原有参考配比（Intro 10-15, Methods 3-5, Results 0-3, Discussion 15-25），但作为弹性建议，总量 30-55 为硬约束
+- **D-19:** FlO-01（来自旧 Phase 6）规则写入 writing workflow 前置步骤
+
+### 讨论时机
+
+- **D-20:** 引用策略讨论发生在写手稿前（Phase 3 writing.md workflow 的前置步骤），而非作为一个独立 Phase
+- **D-21:** 讨论内容涵盖各段引用数量、时间范围（近 5 年）、IF 偏好
+- **D-22:** 讨论结果写入 `project_config.yml` 或共享引用库配置，供后续各段引用用
+
+### 实施范围
+
+- Phase 3 新增 plan `03-05-PLAN.md` 涵盖：
+  - 引用策略参考文档（默认规则、讨论流程）
+  - writing workflow 插入讨论步骤
+  - reference-agent 搜索支持 IF/年份过滤参数
+
+</expanded_scope>
+
 *Phase: 03-手稿拼接*
-*Context gathered: 2026-05-06*
+*Context gathered: 2026-05-06 (expanded 2026-05-11 for citation strategy)*

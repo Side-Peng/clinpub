@@ -20,6 +20,8 @@
 
 - [ ] **WRITE-01**: IMRAD 各段（Introduction/Methods/Results/Discussion）独立撰写，各自完成引用
 - [ ] **WRITE-02**: 终稿由各段拼接而成，非重写，引用在合并时统一整理
+- [ ] **CITE-01**: 默认引用约 50 篇、近 5 年文献（实施时转为 30-55 篇范围，各段建议+总量兜底）
+- [ ] **CITE-02**: 开始撰写前与用户讨论各段引用数量、时间范围、影响因子偏好
 
 ### 未知方法处理
 
@@ -30,12 +32,9 @@
 
 - [x] **FLOW-01**: 每个 Phase 前先调研，以建议方式与用户讨论，结合用户反馈再执行
 
-### 引用策略
-
-- [ ] **CITE-01**: 默认引用约 50 篇、近 5 年文献
-- [ ] **CITE-02**: 引用前与用户讨论各部分引用数量、时间范围、影响因子偏好
-
 ### 图表优化
+
+- [ ] **CHART-01**: 参考优质图表技能案例，优化作图质量
 
 - [ ] **CHART-01**: 参考优质图表技能案例，优化作图质量
 
@@ -68,14 +67,14 @@
 | NEXT-03 | Phase 2 | Pending |
 | WRITE-01 | Phase 3 | Pending |
 | WRITE-02 | Phase 3 | Pending |
+| CITE-01 | Phase 3 | Pending |
+| CITE-02 | Phase 3 | Pending |
 | METH-01 | Phase 4 | Pending |
 | METH-02 | Phase 4 | Pending |
 | FLOW-01 | Phase 5 | Complete |
-| CITE-01 | Phase 6 | Pending |
-| CITE-02 | Phase 6 | Pending |
-| CHART-01 | Phase 7 | Pending |
-| DOC-01 | Phase 7 | Pending |
-| DOC-02 | Phase 7 | Pending |
+| CHART-01 | Phase 6 | Pending |
+| DOC-01 | Phase 6 | Pending |
+| DOC-02 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total
