@@ -50,11 +50,14 @@ If `TAVILY_API_KEY` is missing, inform user and provide setup instructions. Do n
 # 从 project_config.yml 读取过滤参数
 # year_range.max_years_ago: 5
 # if_preference.min_if: 3.0
-# 搜索时应用过滤
-python scripts/pubmed_search.py "{keywords}" --max 10 --max_year 5 --min_if 3.0
+# 搜索时应用年限过滤（pubmed_search.py 支持 --years 参数）
+python scripts/pubmed_search.py "{keywords}" --max 10 --years 5
+# IF 过滤暂在 reference-agent 审阅摘要时手动筛选：
+# - 保留 IF >= min_if 的文献
+# - 无 IF 信息的标记为 "IF unavailable" 供用户判断
 ```
 
-如果 `citation_strategy.if_preference.min_if` 为 null 或未设置，则不传 `--min_if`（保持向后兼容）。
+如果 `citation_strategy.if_preference.min_if` 为 null 或未设置，则跳过 IF 筛选（保持向后兼容）。
 
 Search strategies by trigger phase:
 
