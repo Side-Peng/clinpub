@@ -18,7 +18,7 @@ pipeline/
   references/*.md      → Reference documents (standards, methods, patterns, gates)
   templates/*.md       → Study type templates + project config + verification
   contexts/*.md        → Context configurations
-scripts/*.py           → Tool scripts (data profiling, literature search, PDF reading)
+scripts/*.py           → Tool scripts (data profiling, PDF reading)
 hooks/*.js/*.sh        → Claude Code hooks (workflow guard, phase boundary, prompt guard)
 ```
 
@@ -79,5 +79,5 @@ hooks/*.js/*.sh        → Claude Code hooks (workflow guard, phase boundary, pr
 
 - **R**: dplyr, tidyr, stringr, readr, readxl, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx, ggplot2, ggpubr, patchwork, survminer, ggsurvfit, ggsignif, here, fs
 - **Python**: pandas, numpy, requests, openpyxl
-- **Claude Code skills**: ncbi-search, tavily, pdf-reader
-- **Env vars**: `NCBI_API_KEY` (optional), `TAVILY_API_KEY` (required for Tavily)
+- **Claude Code skills**: ncbi-search (文献检索，用户自行安装), pdf-reader
+- **Env vars**: `NCBI_API_KEY` (optional, improves PubMed rate)

@@ -74,7 +74,7 @@ hooks/*.js/*.sh        → Workflow enforcement hooks
 
 - **R**: dplyr, ggplot2, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx
 - **Python**: pandas, numpy, pymupdf, requests, openpyxl
-- **Env vars**: `NCBI_API_KEY` (optional, improves PubMed rate), `TAVILY_API_KEY` (required for Tavily search)
+- **Env vars**: `NCBI_API_KEY` (optional, improves PubMed rate)
 
 ## Detailed Documentation
 

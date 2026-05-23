@@ -70,9 +70,15 @@ The profile includes:
 </step>
 
 <step name="literature_scan" priority="high">
-Based on the data profile, conduct PubMed literature search to identify research gaps:
+Based on the data profile, conduct PubMed literature search to identify research gaps.
 
-1. **Disease domain search**: Extract disease keywords from variable names and user description → PubMed search
+**Prerequisite — ncbi-search skill check:**
+1. Verify `ncbi-search` skill is available in current environment
+2. If NOT available → inform user to install ncbi-search skill and stop
+3. If available → use `skill("ncbi-search")` to load and follow its instructions
+
+**Search process:**
+1. **Disease domain search**: Extract disease keywords from variable names and user description → PubMed search via ncbi-search
 2. **Biomarker/exposure search**: Biomarker variables in data → PubMed search for each marker's research status in target disease
 3. **Population matching**: Match demographic characteristics to locate closest existing studies
 
@@ -81,12 +87,7 @@ Based on the data profile, conduct PubMed literature search to identify research
 - 🔶 **Considerable**: some existing research but room for differentiation
 - ✅ **Not recommended**: well-studied area with limited publication space
 
-**API check before search**:
-```bash
-if [ -z "$NCBI_API_KEY" ]; then
-  echo "⚠️ NCBI_API_KEY not set. PubMed at 3req/s rate limit."
-fi
-```
+**Optional**: Set `NCBI_API_KEY` env var for faster rate limiting (3req/s → 10req/s). ncbi-search works without it.
 
 **Output**: Write to `idea/literature_scan.md` — search queries, key references, research gap analysis.
 </step>
@@ -253,7 +254,7 @@ analysis:
 - Generate `idea/to_project_config.yml` after topic selection — user must review and confirm variable mappings before use
 - Do NOT overwrite existing `project_config.yml` — always write to `idea/to_project_config.yml`
 - If critical config fields cannot be determined from data (e.g., outcome variable is ambiguous), flag them with `# TODO: user confirmation needed` in the generated YAML
-- Check NCBI_API_KEY before any PubMed search; inform user if missing
+- Verify ncbi-search skill is available before any PubMed search; if missing, prompt user to install
 </critical_rules>
 
 <success_criteria>
