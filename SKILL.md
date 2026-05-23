@@ -18,7 +18,7 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 
 | Command | What it does |
 |---------|-------------|
-| `/clinpub-clinpub` | **Main entry** — Full 5-phase pipeline (init → data-prep → analysis → writing → review) |
+| `/clinpub-clinpub` | **Command reference** — Overview of all phase commands. Each phase invoked individually |
 | `/clinpub-data2idea <filepath>` | **Topic mining** — Analyze data structure + PubMed search → 3-5 candidate paper topics |
 | `/clinpub-init-project` | Phase 0 — Set up project directory, config, research framework |
 | `/clinpub-data-prep` | Phase 1 — Data cleaning, EDA, generate cleaned.csv |
