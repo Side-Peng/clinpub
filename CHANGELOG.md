@@ -4,6 +4,19 @@ All notable changes to the clinpub project will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-05-25
+
+### Changed
+- **README**: 命令参考移除被废弃的 `clinpub` 一键入口，改为独立 Phase 命令参考
+- **文献检索**：移除内置 ncbi_search.py/pubmed_search.py，统一使用 ncbi-search skill
+
+### Removed
+- **`/clinpub` 一键五阶段执行**：改为独立 Phase 命令参考（见 commit 0866e2b）
+- **内置文献检索脚本**：ncbi_search.py, pubmed_search.py, ncbi_client.py, tavily_search.py — 统一由外部 skill 替代
+
+### Docs
+- `docs/getting-started.md` 泛化：移除示例数据具体引用，教程改为通用描述
+
 ## [1.1.0] - 2026-04-27
 
 ### Added — Must Have 补全

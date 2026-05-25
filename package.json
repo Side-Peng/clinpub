@@ -1,6 +1,6 @@
 {
   "name": "clinpub-cc",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Clinical data analysis and publication pipeline for Claude Code — SCI Q1/Q2 journals",
   "keywords": ["clinical", "biostatistics", "publication", "IMRAD", "R", "medical", "claude-code", "claude-code-skill"],
   "license": "MIT",

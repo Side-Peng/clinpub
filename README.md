@@ -84,16 +84,19 @@ Project_Root/
 
 ## 命令参考
 
+每个 Phase 独立调用，不再提供一键运行入口。
+
 | 命令 | 用途 |
 |------|------|
-| `clinpub` | 主入口：启动完整 5 阶段管线 |
-| `clinpub:data2idea` | 选题挖掘：从数据中找论文思路 |
+| `clinpub:data2idea <file>` | 选题挖掘：从数据中找论文思路 |
 | `clinpub:init-project` | Phase 0：项目初始化 |
 | `clinpub:data-prep` | Phase 1：数据准备 |
 | `clinpub:analysis` | Phase 2：统计分析 |
 | `clinpub:writing` | Phase 3：论文撰写 |
 | `clinpub:review` | Phase 4：审稿修稿 |
 | `clinpub:milestone <N>` | Phase 关卡评审：验证成功标准、记录决策、用户签字放行 |
+
+> 如需查看各 Phase 的完整命令用法和前置条件，运行 `/clinpub` 查看命令参考。
 
 ## 质量门控
 
@@ -127,7 +130,7 @@ Project_Root/
 ## 依赖
 
 ### 关联技能
-- ncbi-search — PubMed 文献检索
+- ncbi-search — PubMed 文献检索（v1.2 起为唯一检索入口，内置脚本已移除）
 - tavily — 补充信息检索
 - pdf-reader — PDF 全文阅读
 
@@ -139,7 +142,7 @@ Project_Root/
 - **路径**：here, fs
 
 ### Python 包
-pandas, numpy, requests, pathlib, openpyxl, tavily-python
+pandas, numpy, requests, openpyxl
 
 ## 出版级图表标准
 
