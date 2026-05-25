@@ -31,7 +31,7 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 
 ```bash
 # 1. Install (one-line, see INSTALL.md for details)
-npx clinpub-cc@latest
+npx clinpub@latest
 
 # 2. Start a new project
 #    Place your CSV/XLSX data in the working directory, then:

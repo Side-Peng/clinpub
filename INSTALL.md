@@ -3,7 +3,7 @@
 ## One-Line Install (Recommended)
 
 ```bash
-npx clinpub-cc@latest
+npx clinpub@latest
 ```
 
 The installer prompts you to choose:
@@ -13,8 +13,8 @@ The installer prompts you to choose:
 ### Non-interactive (CI / Scripts)
 
 ```bash
-npx clinpub-cc --global    # Global install
-npx clinpub-cc --local     # Local install
+npx clinpub --global    # Global install
+npx clinpub --local     # Local install
 ```
 
 ### What Gets Installed
@@ -92,14 +92,14 @@ export TAVILY_API_KEY="your_key"     # Required for Tavily search
 ## Updating
 
 ```bash
-npx clinpub-cc@latest       # Re-run installer with latest version
+npx clinpub@latest       # Re-run installer with latest version
 ```
 
 ## Uninstalling
 
 ```bash
-npx clinpub-cc --global --uninstall
-npx clinpub-cc --local --uninstall
+npx clinpub --global --uninstall
+npx clinpub --local --uninstall
 ```
 
 ## Troubleshooting
@@ -107,7 +107,7 @@ npx clinpub-cc --local --uninstall
 | Problem | Solution |
 |---------|----------|
 | Skills not found after install | Restart Claude Code to reload skills |
-| `/clinpub` not appearing | Run `npx clinpub-cc@latest` again, then restart |
+| `/clinpub` not appearing | Run `npx clinpub@latest` again, then restart |
 | R package errors | Run the `install.packages()` command above |
 | Python import errors | Run `pip install -r requirements.txt` |
 | PubMed search fails | Set `NCBI_API_KEY` env var |

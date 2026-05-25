@@ -460,7 +460,7 @@ async function main() {
 ${bold}${cyan}clinpub v${pkg.version}${reset} — Clinical Data Analysis Pipeline
 
 ${bold}Usage:${reset}
-  npx clinpub-cc [options]
+  npx clinpub [options]
 
 ${bold}Options:${reset}
   --version, -v     Show version number
@@ -470,9 +470,9 @@ ${bold}Options:${reset}
   --uninstall, -u   Remove clinpub installation
 
 ${bold}Examples:${reset}
-  npx clinpub-cc --global        # Global install
-  npx clinpub-cc --local         # Local install
-  npx clinpub-cc --uninstall     # Uninstall
+  npx clinpub --global        # Global install
+  npx clinpub --local         # Local install
+  npx clinpub --uninstall     # Uninstall
 `);
     process.exit(0);
   }

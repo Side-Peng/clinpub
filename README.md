@@ -11,7 +11,7 @@
 ## 快速开始
 
 ```bash
-npx clinpub-cc@latest        # 一键安装
+npx clinpub@latest        # 一键安装
 /clinpub                     # 启动完整管线
 ```
 

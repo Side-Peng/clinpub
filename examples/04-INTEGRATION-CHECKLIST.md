@@ -19,7 +19,7 @@
 - [ ] **Python >= 3.9 已安装** — 验证命令：`python3 --version 2>/dev/null || python --version`
 - [ ] **Node.js >= 22.0.0 已安装** — 验证命令：`node --version`
 - [ ] **Claude Code >= 2.1.88 已安装** — 验证命令：`claude --version`
-- [ ] **clinpub skill 已安装** — 验证命令：`npx clinpub-cc --version`
+- [ ] **clinpub skill 已安装** — 验证命令：`npx clinpub --version`
 
 > ⚠️ 如果项目目录已有旧的 pipeline 产出（`01_RawData/` 到 `05_Manuscript/` 目录有内容），建议先备份或清空再开始测试，避免新旧文件混淆。
 

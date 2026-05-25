@@ -30,7 +30,7 @@ export UNPAYWALL_EMAIL="your@email.com" # Unpaywall PDF 全文获取
 ## 2. 安装
 
 ```bash
-npx clinpub-cc@latest
+npx clinpub@latest
 ```
 
 安装器会提示选择全局安装（`~/.claude/`）或本地安装（`./.claude/`）。选全局安装后重启 Claude Code，即可在任意项目使用 `/clinpub` 命令。
