@@ -1,6 +1,6 @@
 # Getting Started with clinpub
 
-从零到投稿，用示例数据跑通完整 5 阶段管线。
+从零到投稿，用你的临床数据跑通完整 5 阶段管线。
 
 > **预计时间**：安装 2 分钟 + 管线运行 20-60 分钟（取决于分析复杂度）
 
@@ -10,12 +10,12 @@
 
 ### 系统要求
 
-| 组件 | 最低版本 | 用途 |
-|------|---------|------|
-| Claude Code | >= 2.1.88 | Skill 宿主环境 |
-| Node.js | >= 22.0.0 | Hook 执行 |
-| R | >= 4.2 | 统计分析 |
-| Python | >= 3.9 | 数据画像、文献检索 |
+| 组件        | 最低版本  | 用途               |
+| ----------- | --------- | ------------------ |
+| Claude Code | >= 2.1.88 | Skill 宿主环境     |
+| Node.js     | >= 22.0.0 | Hook 执行          |
+| R           | >= 4.2    | 统计分析           |
+| Python      | >= 3.9    | 数据画像、文献检索 |
 
 ### API 密钥（可选但推荐）
 
@@ -44,36 +44,15 @@ npx clinpub-cc@latest
 
 ---
 
-## 3. 用示例数据开始第一个项目
+## 3. 开始第一个项目
 
-### 3.1 准备示例数据
+### 3.1 准备数据
 
-```bash
-# 将示例 CSV 复制到你的项目目录
-cp clinpub/examples/sample_data/rct_depression.csv ./01_RawData/
-```
-
-示例数据集 `rct_depression.csv` 包含：
-
-| 特征 | 说明 |
-|------|------|
-| 研究设计 | 随机对照试验 (RCT) |
-| 样本量 | 86 人 |
-| 分组 | Sham (n=43) / cTBS (n=43) |
-| 时间点 | baseline / post_treatment / follow_up (3 个) |
-| 主要结局 | HAMD_total (抑郁量表) |
-| 次要结局 | HAMA_total (焦虑量表)、CGI_S (临床总体印象) |
-| 生物标志物 | BDNF、IL6、TNF_alpha、Cortisol |
-| 协变量 | Age、Sex、BMI |
+将你的临床数据 CSV 放入 `01_RawData/` 目录。
 
 ### 3.2 创建项目配置
 
-```bash
-# 复制示例配置并改名
-cp clinpub/examples/project_config.example.yml ./project_config.yml
-```
-
-打开 `project_config.yml`，检查变量映射是否与你的数据一致。如果你用的是自己的数据，根据实际列名调整 `variables` 段。
+在项目根目录创建 `project_config.yml`，根据实际列名填写 `variables` 映射。可参考 `pipeline/templates/` 下的研究类型模板。
 
 ### 3.3 启动管线
 
@@ -88,6 +67,7 @@ cp clinpub/examples/project_config.example.yml ./project_config.yml
 **命令**：`/clinpub-init-project`
 
 Claude 会与你讨论：
+
 - 研究类型（RCT/Cohort/Case-Control 等）
 - 核心变量（结局、暴露、协变量）
 - 分析方法候选列表
@@ -147,21 +127,7 @@ Analyst Agent 执行：
 4. **逐波执行** — 每波完成后暂停等你确认，再进入下一波
 5. **生成产出** — 每个方法产生 figure + table + README + MANIFEST.yaml
 
-以示例数据 `rct_depression.csv` 为例，推荐的分析方案大致为：
-
-```
-Wave 1 — 基线描述
-  01_BaselineTable      基线特征表（cTBS vs Sham）
-  02_TimepointSummary   各时间点 HAMD/HAMA 描述统计
-
-Wave 2 — 组间比较
-  03_TwoGroupComparison 基线 HAMD 组间差异 (Wilcoxon)
-  04_RepeatedMeasures   重复测量混合模型 (lme4, time×group)
-
-Wave 3 — 多因素分析
-  05_BiomarkerCorr      生物标志物与临床量表 Spearman 相关
-  06_LinearRegression   调整年龄、性别后 Treatment 对 HAMD 变化的影响
-```
+分析方案将基于你的数据特征动态构建（非固定模板）。
 
 产出：
 
@@ -228,16 +194,16 @@ Writer Agent 模拟同行评审：
 
 ## 9. 常用命令速查
 
-| 命令 | 用途 |
-|------|------|
-| `/clinpub` | 主入口，启动完整管线 |
+| 命令                            | 用途                       |
+| ------------------------------- | -------------------------- |
+| `/clinpub`                    | 主入口，启动完整管线       |
 | `/clinpub-data2idea data.csv` | 不做分析，先从数据挖掘选题 |
-| `/clinpub-init-project` | 初始化项目目录和配置 |
-| `/clinpub-data-prep` | 仅跑 Phase 1 数据清洗 |
-| `/clinpub-analysis` | 仅跑 Phase 2 统计分析 |
-| `/clinpub-writing` | 仅跑 Phase 3 论文撰写 |
-| `/clinpub-review` | 仅跑 Phase 4 审稿修稿 |
-| `/clinpub-milestone N` | 查看 Phase N 关卡状态 |
+| `/clinpub-init-project`       | 初始化项目目录和配置       |
+| `/clinpub-data-prep`          | 仅跑 Phase 1 数据清洗      |
+| `/clinpub-analysis`           | 仅跑 Phase 2 统计分析      |
+| `/clinpub-writing`            | 仅跑 Phase 3 论文撰写      |
+| `/clinpub-review`             | 仅跑 Phase 4 审稿修稿      |
+| `/clinpub-milestone N`        | 查看 Phase N 关卡状态      |
 
 ---
 
@@ -245,12 +211,12 @@ Writer Agent 模拟同行评审：
 
 clinpub 内置 4 道质量门控（详见 `pipeline/references/gates.md`）：
 
-| Gate | Phase 间 | 检查项 |
-|------|---------|--------|
-| IRB / Ethics | 0→1 | 伦理审批、数据脱敏 |
-| Data Quality | 1→2 | 缺失率受控、样本量充足 |
-| Analysis Validity | 2→3 | 效应量+CI+p 值完整、假设检验 |
-| Submission Readiness | 4→终稿 | IMRAD 完整、图表≥300 DPI、DOI 齐全 |
+| Gate                 | Phase 间 | 检查项                              |
+| -------------------- | -------- | ----------------------------------- |
+| IRB / Ethics         | 0→1     | 伦理审批、数据脱敏                  |
+| Data Quality         | 1→2     | 缺失率受控、样本量充足              |
+| Analysis Validity    | 2→3     | 效应量+CI+p 值完整、假设检验        |
+| Submission Readiness | 4→终稿  | IMRAD 完整、图表≥300 DPI、DOI 齐全 |
 
 每道门控不通过则无法进入下一阶段。
 
@@ -298,7 +264,6 @@ font_add("SimHei", "simhei.ttf")
 
 - 阅读 `pipeline/references/analysis_methods.md` — 了解完整分析方法库
 - 阅读 `pipeline/references/journal_standards.md` — 了解期刊格式要求
-- 用你自己的临床数据替换示例 CSV
 - 探索 `agents/` 目录了解各 Agent 详细能力
 
 有问题？检查 `.planning/STATE.md` 了解当前进度，或重新运行 `/clinpub` 继续。
