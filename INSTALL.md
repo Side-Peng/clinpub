@@ -112,3 +112,24 @@ npx clinpub --local --uninstall
 | Python import errors | Run `pip install -r requirements.txt` |
 | PubMed search fails | Set `NCBI_API_KEY` env var |
 | Tavily search fails | Set `TAVILY_API_KEY` env var |
+
+## Development
+
+For developers contributing to clinpub:
+
+- **Development Guide**: See `docs/DEVELOPMENT.md` for coding standards and architecture
+- **Contributing**: See `CONTRIBUTING.md` for contribution guidelines
+- **Testing**: See `docs/TESTING.md` for testing procedures
+
+### Code Independence Rule
+
+Each script must be self-contained with all variables defined locally:
+
+```r
+# ✓ Correct: All variables defined in script
+data_path <- "01_RawData/data.csv"
+output_dir <- "04_Outputs/Results"
+
+# ✗ Wrong: Using global variables
+data <- read.csv(global_path)
+```
