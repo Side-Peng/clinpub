@@ -51,11 +51,11 @@
 | Check | Required | Pass Condition |
 |-------|----------|----------------|
 | All confirmed methods executed | Yes | Every method in project_config.yml has output in `04_Outputs/` |
-| Each method has figure + table + README | Yes | Three artifacts per method directory |
+| Each method has figure + table + 方法说明 | Yes | Three artifacts per method directory |
 | Effect size + 95% CI reported | Yes | Every analysis includes effect size, CI, and exact p-value |
 | Assumptions tested | Yes | Normality, homoscedasticity, PH assumptions checked and reported |
 | Multiple comparison correction | Conditional | Applied when >3 tests in single analysis |
-| Software versions documented | Yes | R/Python version + key packages in method README |
+| Software versions documented | Yes | R/Python version + key packages in method 方法说明 |
 | Code reproducible | Yes | Analysis runs from cleaned.csv without manual intervention |
 
 **Gate passage**: All checks pass.
