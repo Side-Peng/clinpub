@@ -110,7 +110,7 @@
 ## Success Criteria
 
 - [ ] All 10 analysis methods executed per wave order
-- [ ] Each method produces figure + table + README
+- [ ] Each method produces figure + table + 方法说明
 - [ ] All figures ≥300 DPI (FIGURE_DPI), English labels, color-blind friendly
 - [ ] All statistical reports include effect size + 95% CI + exact p-value
 - [ ] Assumptions tested and documented for each method

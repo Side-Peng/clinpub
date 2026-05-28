@@ -121,8 +121,8 @@ See `@./agents/reference-agent.md` for detailed search protocol.
 | 段落 | 上下文来源（D-03 自动读取） |
 |------|---------------------------|
 | Introduction | Reference/reference_library.json（已有引用）、Reference/citation_map.md、Reference/literature_notes/ |
-| Methods | project_config.yml（study_type, variables）、pipeline/templates/study_types/{type}.md、03_AnalysisMethods/*/README.md |
-| Results | 04_Outputs/*/（所有 figure + table + README，其中 README 必须有「Results」subsection）|
+| Methods | project_config.yml（study_type, variables）、pipeline/templates/study_types/{type}.md、03_AnalysisMethods/*/方法说明.md |
+| Results | 04_Outputs/*/（所有 figure + table + 方法说明，其中 方法说明 必须有「输出结果」subsection）|
 | Discussion | Reference/reference_library.json、Reference/citation_map.md、project_config.yml（target_journal, scope）|
 
 撰写规则：

@@ -58,7 +58,7 @@ Check all success criteria for the completed phase:
 - [ ] Cleaning code independently reproducible
 
 **Phase 2 (analysis):**
-- [ ] Each confirmed method has figure + table + README in 04_Outputs/
+- [ ] Each confirmed method has figure + table + 方法说明 in 04_Outputs/
 - [ ] All figures ≥300 DPI, English labels, publication-grade theme
 - [ ] Statistical reports include effect size + 95%CI + exact p-value
 - [ ] Code reads from cleaned.csv, independently runnable

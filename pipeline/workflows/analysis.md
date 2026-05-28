@@ -1,6 +1,6 @@
 ---
 name: analysis
-description: "Phase 2 orchestration: Diagnose data structure → discuss with user → propose dynamic analysis plan → execute in dependency order. Each method produces figure + table + README with publication-grade standards."
+description: "Phase 2 orchestration: Diagnose data structure → discuss with user → propose dynamic analysis plan → execute in dependency order. Each method produces figure + table + 方法说明 with publication-grade standards."
 ---
 
 <purpose>
@@ -194,7 +194,7 @@ The plan has `N` waves (N could be 1, 3, 5 — whatever was agreed with the user
 for wave_num in sorted(analysis_plan.waves.keys()):
     wave = analysis_plan.waves[wave_num]
     for method in wave.methods:
-        execute_method(method)         # code → run → verify → README
+        execute_method(method)         # code → run → verify → 方法说明
     checkpoint(f"Wave {wave_num} complete — {wave.label}")
     # User confirms before next wave
 ```
@@ -202,7 +202,7 @@ for wave_num in sorted(analysis_plan.waves.keys()):
 Each method execution:
 1. Creates directory `03_AnalysisMethods/{id}/` and `04_Outputs/{id}/` (see r_patterns.md §1.7)
 2. Generates R/Python code based on the method's `type`, `method`, and `formula` fields
-3. Runs the code, verifies outputs exist, writes README.md
+3. Runs the code, verifies outputs exist, writes 方法说明.md
 
 **Wave frequency is not fixed.** If the plan has 1 wave, execute 1. If it has 6 waves, execute 6.
 
@@ -224,7 +224,7 @@ Each method execution:
 <step name="verify_outputs" priority="medium">
 After all waves complete, final verification:
 
-1. Each method's figure(s) + table(s) + README exist
+1. Each method's figure(s) + table(s) + 方法说明 exist
 2. Figures ≥300 DPI, English labels, publication-grade theme
 3. Statistical reports include effect size + 95%CI + exact p-value
 4. Code independently runnable from cleaned.csv
@@ -263,7 +263,7 @@ See @./pipeline/workflows/milestone.md for full protocol.
 <success_criteria>
 - Data structure diagnosed and documented
 - Analysis plan proposed, discussed, and user-confirmed
-- Each confirmed method has complete figure + table + README
+- Each confirmed method has complete figure + table + 方法说明
 - All figures meet publication-grade standards (≥300 DPI, theme_pub)
 - Statistical reports complete with effect size + 95%CI + p-value
 - Dependency-aware execution order respected (wave N+1 waits for wave N user confirmation)

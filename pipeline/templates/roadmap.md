@@ -10,7 +10,7 @@
 |-------|------|------|---------|------|
 | 0 | init | 确定研究框架 | 用户确认研究类型和分析方法 | ⬜ |
 | 1 | data-prep | 数据清洗 & EDA | cleaned.csv + 数据质量报告 | ⬜ |
-| 2 | analysis | 统计分析 & 出图出表 | 每个方法输出图+表+README | ⬜ |
+| 2 | analysis | 统计分析 & 出图出表 | 每个方法输出图+表+方法说明 | ⬜ |
 | 3 | writing | 论文撰写 | IMRAD 各章节 draft.md 完成 | ⬜ |
 | 4 | review | 审稿修稿 | response letter + 修订稿 | ⬜ |
 
