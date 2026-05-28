@@ -88,7 +88,7 @@
 1. Count total number of tests within each analysis family
 2. If > 3 tests: verify FDR or Bonferroni correction applied
 3. Check corrected p-values <= raw p-values
-4. Verify correction method documented in README
+4. Verify correction method documented in 方法说明
 5. Confirm significant results survive correction (or note which do not)
 
 **Failure indicators:**
@@ -183,7 +183,7 @@
 **Purpose**: Ensure missing data strategy was applied correctly and transparently.
 
 **Steps:**
-1. Check high-missingness variables (>20%) have user-confirmed handling strategy documented in README
+1. Check high-missingness variables (>20%) have user-confirmed handling strategy documented in 方法说明
 2. For MICE imputed variables: verify imputation model is documented (method, iterations, predictor variables)
 3. Verify imputed values are flagged or tracked (separate column or imputation log)
 4. For deletion strategy (<5%): confirm number of rows removed matches expected
@@ -191,7 +191,7 @@
 6. Confirm missing value report in data quality report matches actual cleaned data
 
 **Required evidence:**
-- Missing value handling strategy documented in method directory README
+- Missing value handling strategy documented in method directory 方法说明
 - Imputation log or flag column present in cleaned data structure
 - Cleaning code shows correct deletion/imputation decision flow
 
