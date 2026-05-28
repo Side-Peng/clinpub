@@ -475,3 +475,36 @@ ggsurvplot(fit, data = df,
 - 非生存数据（连续结局用箱线图/散点图）
 - 仅关注终点事件发生率而非时间过程（用 Logistic 回归 + 柱状图）
 - 样本量极小（<10 per group）时 KM 曲线不稳定，需谨慎解读
+
+---
+
+## 2.10 相关性矩阵热图
+
+### 意图
+展示多个连续变量间的相关性结构，快速识别强关联变量对，辅助回归建模的变量筛选。
+
+### 模式
+```r
+library(ggcorrplot)
+
+corr_matrix <- cor(data, method = "spearman", use = "pairwise.complete.obs")
+ggcorrplot(corr_matrix,
+  type = "lower",
+  lab = TRUE, lab_size = 3,
+  colors = c("#0072B5", "white", "#BC3C29"),  # 蓝白红三色
+  ggtheme = theme_pub())
+```
+
+### 方法选择
+- **Spearman**（默认）：适用于偏态分布或有序变量，不需要正态性假设
+- **Pearson**：仅当所有变量均满足正态分布时使用
+
+### 适用条件
+- 多变量关联探索（≥3 个连续变量）
+- 回归建模前的变量筛选（识别多重共线性）
+- 展示相关系数的方向和强度
+
+### 不适用条件
+- 仅两个变量：用散点图更直观（可叠加回归线和 CI）
+- 分类变量间的关联：用卡方检验或 mosaic plot
+- 因果推断需要：相关不等于因果
