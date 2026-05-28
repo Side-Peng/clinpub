@@ -9,7 +9,7 @@
 
 - 全部读取 `cleaned.csv`，写入 `04_Outputs/XX_MethodName/`
 - 统一应用 `theme_pub()`（见 `r_patterns.md §1.2`）
-- 每方法生成 `README.md`（注明图例、表注、方法参数）
+- 每方法生成 `方法说明.md`（注明图例、表注、方法参数，使用模板 `pipeline/templates/method-readme.md`）
 - 报告效应量 + 95%CI + 精确 p 值
 - 目录编号按协议顺序动态编号（`01_`, `02_`, ...）
 
