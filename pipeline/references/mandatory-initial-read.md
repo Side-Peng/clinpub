@@ -42,7 +42,7 @@ Depending on the current phase, also load:
 |-------|--------------------------|
 | Phase 0 — init | `.planning/PROJECT.md`, `.planning/ROADMAP.md` |
 | Phase 1 — data-prep | `01_RawData/data_profile.json`, variable dictionary |
-| Phase 2 — analysis | `02_PreprocessedData/data/cleaned.csv` (header only), `03_AnalysisMethods/` README list |
+| Phase 2 — analysis | `02_PreprocessedData/data/cleaned.csv` (header only), `03_AnalysisMethods/` 方法说明 list |
 | Phase 3 — writing | `Reference/citation_map.md`, `04_Outputs/` directory listing, study type template |
 | Phase 4 — review | `05_Manuscript/manuscript.md`, `Reference/references.bib` |
 

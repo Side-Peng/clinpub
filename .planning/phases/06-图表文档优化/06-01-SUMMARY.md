@@ -95,3 +95,13 @@ None - no external service configuration required.
 ---
 *Phase: 06-图表文档优化*
 *Completed: 2026-05-28*
+
+## Self-Check: PASSED
+
+- ✅ pipeline/references/r_patterns.md exists
+- ✅ 06-01-SUMMARY.md exists
+- ✅ Commit 18843a7 (Task 1) found
+- ✅ Commit 0fa79f9 (Task 2) found
+- ✅ Commit 88ea628 (Task 3) found
+- ✅ Commit c0f3d0b (Task 4) found
+- ✅ Commit dc6e4e2 (SUMMARY) found
