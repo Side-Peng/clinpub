@@ -442,3 +442,36 @@ if (nrow(train_set) == 0 || nrow(validation_set) == 0) {
 - 容错匹配（大小写不敏感，支持缩写）
 - 随机分割必须设 `set.seed()` 并记录种子值
 - 分割信息写入 README
+
+---
+
+## 2.9 KM 生存曲线美化
+
+### 意图
+展示生存函数随时间的变化，比较两组或多组的生存率差异。生存分析（§3.4）的标准可视化输出。
+
+### 模式
+```r
+library(survival)
+library(survminer)
+
+fit <- survfit(Surv(time, event) ~ group, data = df)
+
+ggsurvplot(fit, data = df,
+  pval = TRUE, pval.method = TRUE,
+  risk.table = TRUE, risk.table.col = "strata",
+  palette = c("#0072B5", "#BC3C29"),  # Nature 双色，色盲友好
+  xlab = "Time (months)", ylab = "Survival probability",
+  legend.title = "Group",
+  ggtheme = theme_pub())
+```
+
+### 适用条件
+- 时间-事件数据（生存时间 + 事件状态）
+- 两组或多组生存率比较
+- 需要同时展示风险表（number at risk）
+
+### 不适用条件
+- 非生存数据（连续结局用箱线图/散点图）
+- 仅关注终点事件发生率而非时间过程（用 Logistic 回归 + 柱状图）
+- 样本量极小（<10 per group）时 KM 曲线不稳定，需谨慎解读
