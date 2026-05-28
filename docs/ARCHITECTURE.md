@@ -27,8 +27,8 @@ clinpub/
 │   └── clinpub-verifier.md    # 统计验证 Agent
 ├── pipeline/                  # 管线配置
 │   ├── workflows/             # 阶段编排逻辑（6 个）
-│   ├── references/            # 参考文档（8 个）
-│   ├── templates/             # 模板文件（13 个）
+│   ├── references/            # 参考文档（11 个）
+│   ├── templates/             # 模板文件（14 个，含 method-readme）
 │   └── contexts/              # 上下文配置
 ├── scripts/                   # 工具脚本
 │   └── data_profiler.py       # 数据画像
@@ -80,6 +80,10 @@ clinpub/
 - **Clinpub Planner**：研究规划 → PLAN.md 生成
 - **Clinpub Executor**：分析执行 → 原子提交 → SUMMARY.md
 - **Clinpub Verifier**：跨阶段验证 → 15 种验证模式
+
+### 方法说明模板
+
+Phase 2 的每个分析方法产出三件套：figure + table + 方法说明。方法说明使用中文模板 `pipeline/templates/method-readme.md`，包含：目的、方法、输入数据、输出结果、参数设置、注意事项、软件版本。
 
 ## 数据流
 

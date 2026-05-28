@@ -24,8 +24,8 @@ commands/clinpub/*.md — Thin entry points (user-facing)
 agents/*.md            — Specialized AI agent role cards (7 agents)
 pipeline/
   workflows/*.md       — Phase orchestration logic
-  references/*.md      — Reference documents (8 files)
-  templates/*.md       — Templates (13 files including study types)
+  references/*.md      — Reference documents (11 files)
+  templates/*.md       — Templates (14 files including study types + method-readme)
   contexts/*.md        — Context configurations
 scripts/*.py           — Tool scripts (profiling, search, PDF)
 hooks/*.js/*.sh        — Claude Code hooks (workflow guard, phase boundary, prompt guard)
@@ -64,9 +64,20 @@ USER → COMMANDS (commands/clinpub/clinpub.md)
 |-------|------|------|
 | 0 | init | 研究框架、目录结构、项目配置 |
 | 1 | data-prep | cleaned.csv + 数据质量报告 |
-| 2 | analysis | 按数据特征动态定制的分析方案（图 + 表 + 统计报告） |
+| 2 | analysis | 按数据特征动态定制的分析方案（图 + 表 + 方法说明） |
 | 3 | writing | IMRAD 各章节 draft.md |
 | 4 | review | 审稿意见 + response letter + 修订稿 |
+
+### 优化阶段（v1.1+）
+
+| Phase | 名称 | 产出 |
+|-------|------|------|
+| — | Bug Fixes | Hook 正则修复 + 数据联动更新 |
+| — | 断点续做 | `/clinpub-do` + `/clinpub-next-step` 命令 |
+| — | 手稿拼接 | IMRAD 分段撰写 + 引用策略标准化 |
+| — | 方法增强 | 组间对比决策树 + 未知方法搜索 |
+| — | Phase 前调研 | 调研→建议→讨论→执行 标准化流程 |
+| — | 图表+文档优化 | theme_pub() 升级 + 方法说明模板 + 文档中文本地化 |
 
 ### 项目目录结构
 
@@ -150,9 +161,10 @@ pandas, numpy, requests, openpyxl
 |------|------|
 | 分辨率 | ≥300 DPI |
 | 格式 | PNG / PDF / TIFF (LZW) |
-| 字体 | Arial ≥8pt |
-| 配色 | viridis / RColorBrewer（色盲友好） |
-| 尺寸 | 单栏 8 cm，双栏 17 cm |
+| 字体 | Arial ≥8pt（`theme_pub(base_family = "sans")`） |
+| 配色 | Nature 双色 `#0072B5` / `#BC3C29`（色盲友好） |
+| 尺寸 | 单栏 89mm，双栏 183mm（Nature 系列） |
+| 主题 | `theme_pub()` 统一风格（详见 `pipeline/references/r_patterns.md`） |
 
 ## 许可证
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working with the `clinpub` proje
 
 ## Overview
 
-`clinpub` is a structured clinical data analysis and publication pipeline. It acts as a **senior medical statistician + academic writing consultant**, processing patient-level data through 5 phases to produce publication-ready manuscripts targeting SCI Q1/Q2 journals.
+`clinpub` is a structured clinical data analysis and publication pipeline. It acts as a **senior medical statistician + academic writing consultant**, processing patient-level data through 5 phases to produce publication-ready manuscripts targeting SCI Q1/Q2 journals. Optimized in v1.1+ with publication-grade chart standards, method documentation localization (方法说明), and pre-phase research workflow.
 
 ## Architecture
 
@@ -40,7 +40,11 @@ hooks/*.js/*.sh        → Claude Code hooks (workflow guard, phase boundary, pr
 | `pipeline/workflows/` | Phase 0-4 orchestration + data2idea |
 | `pipeline/references/analysis_methods.md` | Statistical method specifications |
 | `pipeline/references/journal_standards.md` | SCI Q1/Q2 publication standards |
-| `pipeline/references/r_patterns.md` | R visualization patterns |
+| `pipeline/references/r_patterns.md` | R visualization patterns (theme_pub() + KM curves + heatmap) |
+| `pipeline/references/citation-strategy.md` | Citation strategy (30-55 papers, section-based) |
+| `pipeline/references/comparison-methods.md` | Group comparison decision tree |
+| `pipeline/references/pre-phase-research.md` | Pre-phase research workflow |
+| `pipeline/templates/method-readme.md` | 方法说明 template |
 | `pipeline/references/checkpoints.md` | Checkpoint & milestone protocol |
 | `pipeline/references/gates.md` | Quality gates (IRB, data, analysis, submission) |
 | `pipeline/references/verification-patterns.md` | Statistical verification patterns |
@@ -52,6 +56,7 @@ hooks/*.js/*.sh        → Claude Code hooks (workflow guard, phase boundary, pr
 | `pipeline/templates/VALIDATION.md` | Statistical validation checklist |
 | `pipeline/templates/verification-report.md` | Reproducibility verification report |
 | `pipeline/templates/spec.md` | Analysis specification template |
+| `pipeline/templates/method-readme.md` | 方法说明 template (replaces README for analysis methods) |
 | `pipeline/templates/context.md` | Research context template |
 | `pipeline/contexts/` | Analysis and writing context configs |
 | **Hooks** | |

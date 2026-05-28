@@ -125,14 +125,14 @@ Analyst Agent 执行：
 2. **推荐方案** — 基于数据特征动态构建分析波次（非固定模板！）
 3. **与你讨论** — 确认每个波次的方法、参数、配色
 4. **逐波执行** — 每波完成后暂停等你确认，再进入下一波
-5. **生成产出** — 每个方法产生 figure + table + README + MANIFEST.yaml
+5. **生成产出** — 每个方法产生 figure + table + 方法说明 + MANIFEST.yaml
 
 分析方案将基于你的数据特征动态构建（非固定模板）。
 
 产出：
 
 ```
-03_AnalysisMethods/       # 代码 + README（每个方法一个子目录）
+03_AnalysisMethods/       # 代码 + 方法说明（每个方法一个子目录）
 04_Outputs/               # 图表（每个方法一个子目录）
   ├── 01_BaselineTable/
   ├── 02_TimepointSummary/
