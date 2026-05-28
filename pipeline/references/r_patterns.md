@@ -126,8 +126,29 @@ ggsave("figure.pdf", p, width = 7, height = 6)
 | 单栏图 | 8 cm (~3.15 in) | ≤ 20 cm | TIFF/PDF |
 | 双栏图 | 17 cm (~6.7 in) | ≤ 20 cm | TIFF/PDF |
 | 森林图/长图 | 17 cm | 自适应 | PDF |
+| Nature 单栏 | 89 mm (~3.5 in) | 自适应 | TIFF/PDF |
+| Nature 双栏 | 183 mm (~7.2 in) | 自适应 | TIFF/PDF |
 
 所有输出必须 **≥300 DPI**，**Arial ≥8pt**。
+
+### 字体族说明
+
+`theme_pub(base_family = "sans")` 的字体族在不同平台上映射不同：
+
+- **Windows**：`"sans"` 默认映射到 **Arial**，无需额外配置
+- **Linux / macOS**：`"sans"` 可能映射到 DejaVu Sans 或 Helvetica，**不是 Arial**。如需严格使用 Arial：
+
+```r
+# 安装 extrafont（首次使用时）
+install.packages("extrafont")
+extrafont::font_import()   # 扫描系统字体（耗时较长，仅需一次）
+extrafont::loadfonts()     # 加载字体到 R 会话
+
+# 然后在 theme_pub() 中使用
+theme_pub(base_family = "Arial")
+```
+
+> **注意：** `font_import()` 首次运行会扫描整个系统字体目录，可能需要几分钟。后续会话只需 `loadfonts()` 即可。在 Linux 上如果系统未安装 Arial，需先通过包管理器安装（如 `apt install ttf-mscorefonts-installer`）。
 
 ---
 
