@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Filesystem-only handoffs have no type checking. The manifest provides a lightweight contract: "I wrote these files, with these properties, for these consumers." If the manifest says a file has `statistics: [effect_size, ci_95, p_value]` but the actual README is missing effect sizes, the downstream agent catches it at handoff time, not at submission time.
+Filesystem-only handoffs have no type checking. The manifest provides a lightweight contract: "I wrote these files, with these properties, for these consumers." If the manifest says a file has `statistics: [effect_size, ci_95, p_value]` but the actual 方法说明 is missing effect sizes, the downstream agent catches it at handoff time, not at submission time.
 
 ## Schema
 
