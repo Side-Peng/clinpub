@@ -68,23 +68,38 @@ scale_color_viridis_d(option = "D", begin = 0.1, end = 0.9)
 所有 ggplot2 图表**必须**应用此主题。
 
 ```r
-theme_pub <- function(base_size = 14) {
-  theme_minimal(base_size = base_size) %+replace%
+theme_pub <- function(base_size = 10, base_family = "sans") {
+  # base_size=10 更适合出版级图表（约 7-8pt 在最终排版中）
+  # base_family="sans" 在 Windows 上默认映射到 Arial
+  theme_minimal(base_size = base_size, base_family = base_family) %+replace%
     theme(
-      legend.position = "none",
-      plot.title = element_text(hjust = 0.5, size = rel(1.2), face = "bold"),
+      # 图例
+      legend.position = "right",
+      legend.title = element_text(face = "bold", size = rel(0.9)),
+      legend.text = element_text(size = rel(0.85)),
+      # 标题
+      plot.title = element_text(hjust = 0.5, size = rel(1.1), face = "bold"),
+      # 轴
       axis.title = element_text(size = rel(1), face = "bold"),
-      axis.text = element_text(size = rel(1), face = "bold"),
+      axis.text = element_text(size = rel(0.9), face = "bold"),
+      axis.line = element_line(color = "black", linewidth = 0.5),
+      # 网格
       panel.grid = element_blank(),
       panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
-      axis.ticks = element_line(color = "black"),
+      # 刻度
+      axis.ticks = element_line(color = "black", linewidth = 0.5),
+      # 分面
       strip.background = element_rect(fill = "grey95", color = "black"),
-      strip.text = element_text(face = "bold")
+      strip.text = element_text(face = "bold", size = rel(0.9))
     )
 }
 ```
 
-**应用方式：** `+ theme_pub()`。如需图例，覆盖 `legend.position`。
+**应用方式：** `+ theme_pub()`。
+
+- 默认显示右侧图例（`legend.position = "right"`）。如需隐藏图例（如单组柱状图），覆盖为 `theme(legend.position = "none")`。
+- 如需图例放在顶部：`theme(legend.position = "top")`。
+- 字体族 `"sans"` 在 Windows 上映射到 Arial；Linux/macOS 可能需要 `extrafont` 包（见 §1.3）。
 
 ---
 
