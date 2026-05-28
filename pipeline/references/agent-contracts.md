@@ -24,11 +24,11 @@ Each agent contract defines:
 | **Role** | Senior medical statistician for R/Python data analysis and publication-grade visualization |
 | **Scope** | Phase 1 (data prep) + Phase 2 (statistical analysis). NOT responsible for writing or literature. |
 | **Inputs** | `01_RawData/*.csv`, `project_config.yml`, `pipeline/references/r_patterns.md`, `pipeline/references/analysis_methods.md` |
-| **Outputs** | `02_PreprocessedData/data/cleaned.csv`, `02_PreprocessedData/reports/data_quality.html`, `04_Outputs/XX_MethodName/` (figures + tables), `03_AnalysisMethods/XX_MethodName/README.md` |
+| **Outputs** | `02_PreprocessedData/data/cleaned.csv`, `02_PreprocessedData/reports/data_quality.html`, `04_Outputs/XX_MethodName/` (figures + tables), `03_AnalysisMethods/XX_MethodName/方法说明.md` |
 | **Communication** | Writes to filesystem only. No direct agent-to-agent messaging. Writes MANIFEST.yaml in output directories after completion. |
-| **Output naming conventions** | Figures: `figure_N.png` (N from 1, sequential per method). Tables: `table_N.docx`. README: must contain `Results` subsection. Data quality report: `data_quality.html`. All outputs in `04_Outputs/XX_MethodName/`. MANIFEST.yaml written to method directory root. |
-| **Pre-conditions** | `project_config.yml` exists with confirmed variable mappings and method list. For Phase 2: `02_PreprocessedData/data/cleaned.csv` exists and is validated. |
-| **Completion markers** | `cleaned.csv` exists, each method directory has figure + table + README, all figures ≥300 DPI (FIGURE_DPI) |
+| **Output naming conventions** | Figures: `figure_N.png` (N from 1, sequential per method). Tables: `table_N.docx`. 方法说明: must contain `输出结果` subsection, use template at `pipeline/templates/method-readme.md`. Data quality report: `data_quality.html`. All outputs in `04_Outputs/XX_MethodName/`. MANIFEST.yaml written to method directory root. |
+| **Pre-conditions** | `project_config.yml` exists with confirmed variable mappings and method list. For Phase 2: `02_PreprocessedData/data/cleaned.csv` exists and is validated. `方法说明` is the Chinese method documentation (replaces `README.md` for WAVE directories). |
+| **Completion markers** | `cleaned.csv` exists, each method directory has figure + table + 方法说明, all figures ≥300 DPI (FIGURE_DPI) |
 
 ---
 
