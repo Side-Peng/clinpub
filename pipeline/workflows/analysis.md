@@ -1,4 +1,4 @@
----
+﻿---
 name: analysis
 description: "Phase 2 orchestration: Diagnose data structure → discuss with user → propose dynamic analysis plan → execute in dependency order. Each method produces figure + table + 方法说明 with publication-grade standards."
 ---
@@ -41,7 +41,7 @@ Diagnose these characteristics from the data:
 
 **Record diagnosis as structured notes:**
 ```yaml
-# Written to .planning/phases/02-analysis/00-DIAGNOSIS.md
+# Written to .clinpub/phases/02-analysis/00-DIAGNOSIS.md
 data_diagnosis:
   n_patients: 86
   n_rows: 258
@@ -141,7 +141,7 @@ Discuss the proposed plan with user and finalize:
 1. 对比方法已标准化到 `pipeline/references/comparison-methods.md`
 2. 给出标准检验树（正态性→方差齐性→具体方法→效应量）
 
-**Write confirmed plan** to `.planning/phases/02-analysis/01-PLAN.md`:
+**Write confirmed plan** to `.clinpub/phases/02-analysis/01-PLAN.md`:
 
 ```yaml
 analysis_plan:
@@ -243,7 +243,7 @@ Execute the milestone workflow to formally close Phase 2 and gate into Phase 3:
 # The milestone workflow will:
 # 1. Verify success criteria for Phase 2
 # 2. Collect analysis decisions (method selection, parameters)
-# 3. Generate .planning/phases/02-analysis/MILESTONE.md
+# 3. Generate .clinpub/phases/02-analysis/MILESTONE.md
 # 4. Update ROADMAP.md: Phase 2 → ✅ Complete, Phase 3 → 🔄 In Progress
 # 5. Update STATE.md: current_phase → 3
 # 6. Request user sign-off

@@ -1,11 +1,11 @@
-# Checkpoint & Milestone Protocol
+﻿# Checkpoint & Milestone Protocol
 
 ## 设计原则
 
 - **Claude 自动完成一切可自动化的工作** — checkpoint 仅用于验证和决策，不做手动操作
 - **每个 checkpoint 必须有明确的恢复信号** — user 输入 approved/continue 即可继续
 - **每个 milestone 必须有完整的成功标准验证** — 不满足不可进入下一 Phase
-- **所有状态持久化** — checkpoint/milestone 记录写入 `.planning/`
+- **所有状态持久化** — checkpoint/milestone 记录写入 `.clinpub/`
 
 ## Checkpoint 类型
 
@@ -76,7 +76,7 @@ Phase 完成时，正式验证所有成功标准并记录。
 
 ## Milestone 记录格式
 
-每次 Phase 完成时，写入 `.planning/phases/NN-phase-name/MILESTONE.md`：
+每次 Phase 完成时，写入 `.clinpub/phases/NN-phase-name/MILESTONE.md`：
 
 ```markdown
 # Milestone: Phase N — [Name]

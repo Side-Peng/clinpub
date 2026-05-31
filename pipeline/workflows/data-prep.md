@@ -1,4 +1,4 @@
----
+﻿---
 name: data-prep
 description: "Phase 1 orchestration: Load raw data, discuss cleaning strategy with user, execute data preparation pipeline, produce cleaned.csv and data quality report."
 ---
@@ -85,7 +85,7 @@ Before cleaning, detect data structure characteristics that affect downstream an
    - For Table 1/BaselineTable: **must filter to a single timepoint** (typically baseline) to avoid duplicate patient counting
    - For repeated measures analysis: note that mixed models (lme4) will be needed instead of standard t-tests
 
-**Recording**: Write structural notes to `.planning/phases/01-data-prep/00-STRUCTURE.md`:
+**Recording**: Write structural notes to `.clinpub/phases/01-data-prep/00-STRUCTURE.md`:
 ```yaml
 data_structure:
   type: longitudinal | cross-sectional
@@ -161,7 +161,7 @@ Execute the milestone workflow to formally close Phase 1 and gate into Phase 2:
 # The milestone workflow will:
 # 1. Verify success criteria for Phase 1
 # 2. Collect data cleaning decisions
-# 3. Generate .planning/phases/01-data-prep/MILESTONE.md
+# 3. Generate .clinpub/phases/01-data-prep/MILESTONE.md
 # 4. Update ROADMAP.md: Phase 1 → ✅ Complete, Phase 2 → 🔄 In Progress
 # 5. Update STATE.md: current_phase → 2
 # 6. Request user sign-off

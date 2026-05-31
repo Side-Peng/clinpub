@@ -1,4 +1,4 @@
-# Agent Contracts
+﻿# Agent Contracts
 
 > Each clinpub agent has a defined role, scope, inputs, outputs, and completion markers.
 
@@ -83,11 +83,11 @@ Each agent contract defines:
 |-------|------------|
 | **Role** | Research analysis planning agent (analogous to gsd-planner) |
 | **Scope** | Creates executable phase plans for analysis workflows. NOT responsible for executing analysis. |
-| **Inputs** | `project_config.yml`, `.planning/STATE.md`, `.planning/ROADMAP.md`, phase-specific context |
-| **Outputs** | `.planning/phases/XX-name/XX-01-PLAN.md` (executable plans with tasks) |
+| **Inputs** | `project_config.yml`, `.clinpub/STATE.md`, `.clinpub/ROADMAP.md`, phase-specific context |
+| **Outputs** | `.clinpub/phases/XX-name/XX-01-PLAN.md` (executable plans with tasks) |
 | **Communication** | Plans consumed by clinpub-executor. Writes MANIFEST.yaml alongside PLAN.md. |
-| **Output naming conventions** | Plan file: `{phase-number}-{plan-number}-PLAN.md` (e.g., `02-01-PLAN.md`) in `.planning/phases/XX-name/`. Follows frontmatter format: phase, plan, type, wave, depends_on. |
-| **Pre-conditions** | `project_config.yml` exists with confirmed methods. `.planning/STATE.md` and `.planning/ROADMAP.md` exist. User-confirmed method list available. |
+| **Output naming conventions** | Plan file: `{phase-number}-{plan-number}-PLAN.md` (e.g., `02-01-PLAN.md`) in `.clinpub/phases/XX-name/`. Follows frontmatter format: phase, plan, type, wave, depends_on. |
+| **Pre-conditions** | `project_config.yml` exists with confirmed methods. `.clinpub/STATE.md` and `.clinpub/ROADMAP.md` exist. User-confirmed method list available. |
 | **Completion markers** | PLAN.md exists with frontmatter, tasks, verification criteria, and success criteria |
 
 ---
@@ -98,10 +98,10 @@ Each agent contract defines:
 |-------|------------|
 | **Role** | Analysis execution agent with atomic commits (analogous to gsd-executor) |
 | **Scope** | Executes PLAN.md files, creates per-task commits, handles checkpoints. NOT responsible for planning or verification. |
-| **Inputs** | PLAN.md from clinpub-planner, `project_config.yml`, `.planning/STATE.md` |
+| **Inputs** | PLAN.md from clinpub-planner, `project_config.yml`, `.clinpub/STATE.md` |
 | **Outputs** | Analysis files per plan tasks, SUMMARY.md per plan, updated STATE.md |
 | **Communication** | Writes analysis outputs, creates git commits. Writes MANIFEST.yaml per output directory. Results verified by clinpub-verifier. |
-| **Output naming conventions** | SUMMARY: `{phase-number}-{plan-number}-SUMMARY.md` in `.planning/phases/XX-name/`. Git commits: `analysis({phase}-{plan}): {task description}`. |
+| **Output naming conventions** | SUMMARY: `{phase-number}-{plan-number}-SUMMARY.md` in `.clinpub/phases/XX-name/`. Git commits: `analysis({phase}-{plan}): {task description}`. |
 | **Pre-conditions** | PLAN.md exists and is parsed. `02_PreprocessedData/data/cleaned.csv` exists. Git repo initialized. |
 | **Completion markers** | All plan tasks committed, SUMMARY.md created with deviation record, STATE.md updated |
 
@@ -116,7 +116,7 @@ Each agent contract defines:
 | **Inputs** | SUMMARY.md from clinpub-executor, `pipeline/references/verification-patterns.md`, `pipeline/references/gates.md`, analysis output files, cleaned.csv, manuscript files |
 | **Outputs** | `VERIFICATION.md` with pass/fail verdicts per verification pattern |
 | **Communication** | Reads outputs from executor, validates MANIFEST.yaml against actual files, writes VERIFICATION.md. Orchestrator handles routing. |
-| **Output naming conventions** | Report: `{phase-number}-VERIFICATION.md` in `.planning/phases/XX-name/`. Status: passed / gaps_found / human_needed. |
+| **Output naming conventions** | Report: `{phase-number}-VERIFICATION.md` in `.clinpub/phases/XX-name/`. Status: passed / gaps_found / human_needed. |
 | **Pre-conditions** | Phase 1: `cleaned.csv` and `data_quality.html` exist. Phase 2: SUMMARY.md and all method output dirs exist. Phase 3: `05_Manuscript/manuscript.md` and `Reference/citation_map.md` exist. |
 | **Completion markers** | VERIFICATION.md exists, all patterns checked, overall status is pass/gaps_found/human_needed |
 
@@ -137,7 +137,7 @@ Each agent contract defines:
 
 Shows which agent reads (R) and writes (W) to each directory. Agents only read from directories they have R access to and write to directories they have W access to.
 
-| Agent \ Directory | `01_RawData` | `02_Preprocessed` | `03_AnalysisMethods` | `04_Outputs` | `05_Manuscript` | `Reference/` | `.planning/` | `idea/` |
+| Agent \ Directory | `01_RawData` | `02_Preprocessed` | `03_AnalysisMethods` | `04_Outputs` | `05_Manuscript` | `Reference/` | `.clinpub/` | `idea/` |
 |---|---|---|---|---|---|---|---|---|
 | **analyst-agent** | R | W | W | W | - | - | - | - |
 | **reference-agent** | - | - | - | - | - | W | - | - |

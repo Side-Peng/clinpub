@@ -1,4 +1,4 @@
-/**
+﻿/**
  * clinpub-workflow-guard.js
  *
  * Claude Code hook that enforces analysis workflow stage ordering.
@@ -15,7 +15,7 @@ const PROJECT_DIR = process.env.PROJECT_DIR || process.cwd();
 
 // clinpub canonical project directory layout per phase
 const PHASE_MAP = {
-  0: { name: "init", allowed_dirs: [".planning", "project_config.yml"] },
+  0: { name: "init", allowed_dirs: [".clinpub", "project_config.yml"] },
   1: { name: "data-prep", allowed_dirs: ["01_RawData", "02_PreprocessedData"] },
   2: { name: "analysis", allowed_dirs: ["03_AnalysisMethods", "04_Outputs"] },
   3: { name: "writing", allowed_dirs: ["05_Manuscript", "Reference"] },
@@ -23,7 +23,7 @@ const PHASE_MAP = {
 };
 
 function getCurrentPhase() {
-  const statePath = path.join(PROJECT_DIR, ".planning", "STATE.md");
+  const statePath = path.join(PROJECT_DIR, ".clinpub", "STATE.md");
   if (!fs.existsSync(statePath)) return -1;
 
   const content = fs.readFileSync(statePath, "utf-8");
@@ -45,7 +45,7 @@ function getTargetDir(filePath) {
 function validatePhaseAccess(currentPhase, targetDir) {
   // Allow always-accessible directories
   const alwaysAllowed = [
-    ".planning",
+    ".clinpub",
     "scripts",
     "hooks",
     "pipeline",

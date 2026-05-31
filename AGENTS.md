@@ -1,4 +1,4 @@
-# AGENTS.md — clinpub
+﻿# AGENTS.md — clinpub
 
 ## What This Is
 
@@ -36,7 +36,7 @@ data <- read.csv(global_path)
 
 ### Phase Ordering Enforcement
 
-Hooks in `hooks/` block writes to directories belonging to future phases. The workflow guard reads `.planning/STATE.md` for current phase (`阶段：Phase\s*(\d)`). Always-accessible dirs: `.planning`, `scripts`, `hooks`, `pipeline`, `agents`, `commands`.
+Hooks in `hooks/` block writes to directories belonging to future phases. The workflow guard reads `.clinpub/STATE.md` for current phase (`阶段：Phase\s*(\d)`). Always-accessible dirs: `.clinpub`, `scripts`, `hooks`, `pipeline`, `agents`, `commands`.
 
 ### Agent Independence
 
@@ -115,6 +115,6 @@ clinpub depends on Claude Code skills installed separately:
 
 - The `commands/clinpub/do.md` and `commands/clinpub/next-step.md` exist but aren't in the main command table — they're routing/advancement helpers
 - `.gitignore` blocks all patient data files (CSV, XLSX, SAV, DTA, SAS7BDAT) — never commit clinical data
-- `.planning/` is the GSD project state directory (PROJECT.md, ROADMAP.md, STATE.md)
+- `.clinpub/` is the GSD project state directory (PROJECT.md, ROADMAP.md, STATE.md)
 - The hook reads phase from STATE.md using regex `阶段：Phase\s*(\d)` — if you change STATE.md format, update the hook
 - Literature search scripts were removed in v1.2 — now uses external `ncbi-search` skill exclusively

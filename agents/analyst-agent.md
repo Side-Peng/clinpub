@@ -1,4 +1,4 @@
----
+﻿---
 name: analyst-agent
 description: "R primary / Python secondary. Data cleaning, statistical analysis, publication-grade figure and table generation. Handles: baseline tables, group comparisons, regression, survival, ROC, LASSO panels, and machine learning."
 tools: Read, Write, Edit, Bash, Glob, Grep
@@ -43,7 +43,7 @@ All ambiguous handling points must be confirmed with user.
 </step>
 
 <step name="statistical_analysis" priority="high">
-Phase 2 tasks. Execute the **user-confirmed analysis plan** from `.planning/phases/02-analysis/01-PLAN.md`.
+Phase 2 tasks. Execute the **user-confirmed analysis plan** from `.clinpub/phases/02-analysis/01-PLAN.md`.
 
 **Do NOT use a fixed method list.** The analysis plan was dynamically built during `diagnose → propose → confirm` and is unique to this project.
 

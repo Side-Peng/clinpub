@@ -51,25 +51,71 @@ Profile includes:
 Present profile to user. Confirm variable roles before proceeding.
 </step>
 
-<step name="literature_scan" priority="high">
-Based on data profile, conduct PubMed literature search:
+<step name="literature_scan_parallel" priority="high">
+Based on data profile, dispatch parallel PubMed literature searches — one subagent per variable group.
 
-1. Extract disease keywords from variable names and user description
-2. Search PubMed for existing research on: disease + exposure/biomarker + outcome
-3. For multi-biomarker data: search each biomarker's research status
-4. **Gap annotation**:
-   - 🟢 **Recommended**: variable combination rarely seen (high novelty)
-   - 🔶 **Considerable**: some existing research (differentiation needed)
-   - ✅ **Not recommended**: well-studied, limited publication space
+### Phase 1: Variable Grouping
+
+From `idea/data_profile.json`, extract searchable variable groups:
+
+1. **Disease context**: from user description + variable names → base disease keywords
+2. **Biomarker/exposure variables**: each detected biomarker or exposure variable → one search task
+3. **Outcome variable**: outcome-related search
+4. **Combination search**: top 2-3 variable pairs (e.g., biomarker + outcome) → cross-reference search
+
+Group variables into search tasks (typically 3-8 tasks). Skip variables with <5% prevalence or purely descriptive (ID, date).
+
+### Phase 2: Parallel Dispatch
+
+For each search task, dispatch a **parallel subagent** using the Task tool:
+
+```
+Subagent prompt template (one per variable):
+─────────────────────────────
+You are a PubMed research scout. Search for existing literature on:
+
+**Variable**: {variable_name}
+**Disease context**: {disease_keywords}
+**Search query**: "{variable_name}" AND "{disease}" AND ("cohort" OR "RCT" OR "observational" OR "association")
+**Additional filters**: Last 5 years, English, Human
+
+Tasks:
+1. Run PubMed search using ncbi-search skill
+2. Count relevant papers (last 5 years)
+3. Identify top 3 high-impact papers (journal IF, citation count if available)
+4. Note research trends: increasing/decreasing/stable publication rate
+5. Identify research gaps: what has NOT been studied
+
+Return structured summary:
+- Variable: {name}
+- Search query used: ...
+- Papers found (5yr): N
+- Top papers: [PMID, title, journal, year]
+- Research trend: ↑/↓/→
+- Gap identified: one-sentence description
+- Novelty score: 🟢/🔶/✅
+─────────────────────────────
+```
+
+Dispatch all subagents **in parallel** (use single message with multiple Task calls).
+
+### Phase 3: Aggregate Results
+
+After all subagents return:
+
+1. Collect all summaries into `idea/literature_scan.md`
+2. Cross-reference gaps across variables — identify **compound novelty** (variable A studied alone, variable B studied alone, but A+B never combined)
+3. Rank variables by novelty score
+4. Flag any variables with ✅ (well-studied) — suggest differentiation strategy
 
 Check API key before search:
 ```bash
 if [ -z "$NCBI_API_KEY" ]; then
-  echo "⚠️ NCBI_API_KEY not set. PubMed at 3req/s rate limit."
+  echo "⚠️ NCBI_API_KEY not set. PubMed at 3req/s rate limit. Parallel search may be slower."
 fi
 ```
 
-Write scan results to `idea/literature_scan.md`: search queries, key references, gap analysis.
+Write aggregated results to `idea/literature_scan.md`: per-variable summaries, cross-variable gap analysis, compound novelty findings.
 </step>
 
 <step name="generate_topics" priority="high">

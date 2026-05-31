@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # clinpub-phase-boundary.sh
 #
 # Claude Code hook that enforces phase boundary conditions.
@@ -14,8 +14,8 @@
 set -euo pipefail
 
 PROJECT_DIR="${PROJECT_DIR:-$(pwd)}"
-STATE_FILE="$PROJECT_DIR/.planning/STATE.md"
-ROADMAP_FILE="$PROJECT_DIR/.planning/ROADMAP.md"
+STATE_FILE="$PROJECT_DIR/.clinpub/STATE.md"
+ROADMAP_FILE="$PROJECT_DIR/.clinpub/ROADMAP.md"
 
 # clinpub canonical project layout
 RAW_DATA_DIR="01_RawData"
@@ -41,7 +41,7 @@ check_phase_boundary() {
   fi
 
   if [ ! -f "$STATE_FILE" ]; then
-    echo -e "${RED}BLOCK: .planning/STATE.md not found. Run '/clinpub init' first.${NC}"
+    echo -e "${RED}BLOCK: .clinpub/STATE.md not found. Run '/clinpub init' first.${NC}"
     return 1
   fi
 
@@ -50,7 +50,7 @@ check_phase_boundary() {
     return 0
   fi
 
-  local milestone_dir="$PROJECT_DIR/.planning/phases/"
+  local milestone_dir="$PROJECT_DIR/.clinpub/phases/"
   if [ -d "$milestone_dir" ]; then
     local prev_milestone
     prev_milestone=$(find "$milestone_dir" -name "MILESTONE.md" -path "*$prev_phase*" 2>/dev/null | head -1)

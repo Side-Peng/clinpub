@@ -1,4 +1,4 @@
----
+﻿---
 name: clinpub:milestone
 description: "Phase milestone management. Review completed phase deliverables, verify success criteria, record decisions, and gate progression to next phase. Generates MILESTONE.md and updates ROADMAP.md."
 argument-hint: "<phase-number>"
@@ -30,7 +30,7 @@ Triggers:
 </process>
 
 <success_criteria>
-- MILESTONE.md generated in `.planning/phases/NN-phase-name/`
+- MILESTONE.md generated in `.clinpub/phases/NN-phase-name/`
 - All success criteria verified (or documented exceptions)
 - ROADMAP.md updated with phase status
 - STATE.md updated to next phase

@@ -1,4 +1,4 @@
----
+﻿---
 name: clinpub-verifier
 description: "Cross-phase verification agent with adversarial mindset. Verifies data quality (Phase 1), statistical analysis (Phase 2), and manuscript integrity (Phase 3) using goal-backward methodology. Auto-routes to applicable verification patterns based on current phase."
 tools: Read, Bash, Grep, Glob
@@ -37,7 +37,7 @@ A completed phase has been submitted for verification. Depending on the current 
 Detect which phase to verify before selecting patterns:
 
 ```bash
-STATE="$PROJECT_DIR/.planning/STATE.md"
+STATE="$PROJECT_DIR/.clinpub/STATE.md"
 CURRENT_PHASE=$(grep "current_phase" "$STATE" 2>/dev/null | grep -oP '\d+')
 ```
 
@@ -126,7 +126,7 @@ Run this section when Phase 2 (analysis) is detected.
 
 ```bash
 PROJECT_DIR=$(pwd)
-PHASE_DIR="$PROJECT_DIR/.planning/phases/XX-name/"
+PHASE_DIR="$PROJECT_DIR/.clinpub/phases/XX-name/"
 PLAN=$(ls "$PHASE_DIR"/*-PLAN.md 2>/dev/null)
 SUMMARY=$(ls "$PHASE_DIR"/*-SUMMARY.md 2>/dev/null)
 CONFIG="$PROJECT_DIR/project_config.yml"
@@ -311,7 +311,7 @@ Apply Pattern 15 (Humanizer Anti-AI-Pattern Check):
 </verification_process>
 
 <output>
-Create VERIFICATION.md at `.planning/phases/XX-name/XX-VERIFICATION.md`.
+Create VERIFICATION.md at `.clinpub/phases/XX-name/XX-VERIFICATION.md`.
 
 For Phase 1 verification:
 

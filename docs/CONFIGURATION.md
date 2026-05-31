@@ -1,4 +1,4 @@
-# clinpub 配置指南
+﻿# clinpub 配置指南
 
 ## 项目配置
 
@@ -190,7 +190,7 @@ Hooks 自动注册在 `.claude/settings.json`：
 
 ```
 Project_Root/
-├── .planning/                  # 规划层
+├── .clinpub/                  # 规划层
 │   ├── PROJECT.md              # 研究框架
 │   ├── ROADMAP.md              # 路线图
 │   ├── STATE.md                # 当前状态

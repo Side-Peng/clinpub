@@ -42,13 +42,13 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 </interfaces>
 
 <execution_context>
-@./commands/clinpub/init-project.md
-@./commands/clinpub/data-prep.md
-@./commands/clinpub/analysis.md
-@./commands/clinpub/writing.md
-@./commands/clinpub/review.md
-@./commands/clinpub/next-step.md
-@./commands/clinpub/milestone.md
+@./pipeline/workflows/init-project.md
+@./pipeline/workflows/data-prep.md
+@./pipeline/workflows/analysis.md
+@./pipeline/workflows/writing.md
+@./pipeline/workflows/review.md
+@./pipeline/workflows/next-step.md
+@./pipeline/workflows/milestone.md
 @./pipeline/references/checkpoints.md
 </execution_context>
 

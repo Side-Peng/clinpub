@@ -28,7 +28,7 @@ Execute the data2idea workflow from @./pipeline/workflows/data2idea.md end-to-en
 The dedicated **topic-miner-agent** (@./agents/topic-miner-agent.md) handles execution:
 
 1. **Data profiling**: Run data_profiler.py → variable inventory, distributions, missing patterns, study type prediction
-2. **Literature scan**: PubMed search based on data profile → research gap analysis
+2. **Parallel literature scan**: Dispatch multiple subagents to search PubMed simultaneously — one per variable group — ensuring deep coverage and compound novelty detection
 3. **Topic generation**: 3-5 structured candidate topics with feasibility scores
 
 After user selects a topic, guide them to use `clinpub` for full analysis pipeline.

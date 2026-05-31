@@ -1,6 +1,6 @@
----
+﻿---
 name: clinpub:init-project
-description: "Phase 0: Initialize clinical research project. Discuss study design, variables, analysis methods with user; generate project_config.yml, directory structure, and .planning/ artifacts."
+description: "Phase 0: Initialize clinical research project. Discuss study design, variables, analysis methods with user; generate project_config.yml, directory structure, and .clinpub/ artifacts."
 argument-hint: ""
 allowed-tools:
   - Read
@@ -27,7 +27,7 @@ Execute the init-project workflow from @./pipeline/workflows/init-project.md end
 
 <success_criteria>
 - Research framework discussed and documented
-- Project directory structure created (.planning/, 01_RawData/, 02_PreprocessedData/, etc.)
+- Project directory structure created (.clinpub/, 01_RawData/, 02_PreprocessedData/, etc.)
 - project_config.yml generated with all user decisions
-- User decisions logged in .planning/
+- User decisions logged in .clinpub/
 </success_criteria>

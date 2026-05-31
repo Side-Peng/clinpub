@@ -30,12 +30,12 @@ data <- read.csv(global_data_path)  # 全局变量
 
 ### 系统要求
 
-| 组件 | 版本 | 用途 |
-|------|------|------|
-| Claude Code | >= 2.1.88 | Skill 宿主环境 |
-| Node.js | >= 22.0.0 | Hook 执行 |
-| R | >= 4.2 | 统计分析 |
-| Python | >= 3.9 | 数据画像、文献检索 |
+| 组件        | 版本      | 用途               |
+| ----------- | --------- | ------------------ |
+| Claude Code | >= 2.1.88 | Skill 宿主环境     |
+| Node.js     | >= 22.0.0 | Hook 执行          |
+| R           | >= 4.2    | 统计分析           |
+| Python      | >= 3.9    | 数据画像、文献检索 |
 
 ### R 开发环境
 
@@ -132,14 +132,14 @@ SIGNIFICANCE_LEVEL = 0.05
 def profile_data(data_path: str) -> dict:
     """生成数据画像"""
     df = pd.read_csv(data_path)
-    
+  
     profile = {
         "shape": df.shape,
         "dtypes": df.dtypes.to_dict(),
         "missing": df.isnull().sum().to_dict(),
         "describe": df.describe().to_dict()
     }
-    
+  
     return profile
 
 # 4. 主函数
@@ -181,6 +181,7 @@ if __name__ == "__main__":
 ### Agent 独立性
 
 每个 Agent 必须：
+
 - 拥有独立的上下文（不共享状态）
 - 通过文件系统传递数据（不通过内存）
 - 输出标准化的 MANIFEST.yaml

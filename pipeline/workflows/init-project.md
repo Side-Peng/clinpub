@@ -1,4 +1,4 @@
----
+﻿---
 name: init-project
 description: "Phase 0 orchestration: Discuss research framework with user, infer study type if needed, generate project directory structure and project_config.yml."
 ---
@@ -41,7 +41,7 @@ After discussion, create the project directory structure:
 
 ```
 Project_Root/
-├── .planning/
+├── .clinpub/
 │   ├── PROJECT.md              ← from project.md template
 │   ├── ROADMAP.md              ← from roadmap.md template
 │   ├── STATE.md                ← from state.md template
@@ -78,7 +78,7 @@ Key sections:
 </step>
 
 <step name="log_decisions" priority="medium">
-Record all user decisions in `.planning/phases/00-init/00-CONTEXT.md`:
+Record all user decisions in `.clinpub/phases/00-init/00-CONTEXT.md`:
 - Study type and rationale
 - Variable roles and definitions
 - Selected analysis methods
@@ -103,7 +103,7 @@ Execute the milestone workflow to formally close Phase 0 and gate into Phase 1:
 # The milestone workflow will:
 # 1. Verify success criteria for Phase 0
 # 2. Collect decisions from 00-CONTEXT.md
-# 3. Generate .planning/phases/00-init/MILESTONE.md
+# 3. Generate .clinpub/phases/00-init/MILESTONE.md
 # 4. Update ROADMAP.md: Phase 0 → ✅ Complete, Phase 1 → 🔄 In Progress
 # 5. Update STATE.md: current_phase → 1
 # 6. Request user sign-off
@@ -116,7 +116,7 @@ See @./pipeline/workflows/milestone.md for full protocol.
 
 <success_criteria>
 - Study framework fully discussed and documented
-- Project directory structure created with .planning/ layer
+- Project directory structure created with .clinpub/ layer
 - project_config.yml reflects all user decisions
 - Only user-confirmed analysis method directories created
 - Decision log written to 00-CONTEXT.md

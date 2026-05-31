@@ -1,4 +1,4 @@
----
+﻿---
 name: milestone
 description: "Phase gate review workflow. Verify success criteria, record decisions and outputs, generate MILESTONE.md, update ROADMAP.md and STATE.md, obtain user sign-off."
 ---
@@ -20,7 +20,7 @@ Load the current phase and project context:
 ```bash
 PHASE="$ARGUMENTS"  # e.g., "0", "1", "2"
 PROJECT_DIR=$(pwd)
-PLANNING_DIR="$PROJECT_DIR/.planning"
+PLANNING_DIR="$PROJECT_DIR/.clinpub"
 PHASE_DIR="$PLANNING_DIR/phases/$(printf '%02d' $PHASE)-*"
 ```
 
@@ -43,7 +43,7 @@ Determine phase name from ROADMAP:
 Check all success criteria for the completed phase:
 
 **Phase 0 (init):**
-- [ ] Project directory structure created (.planning/, 01_RawData/, etc.)
+- [ ] Project directory structure created (.clinpub/, 01_RawData/, etc.)
 - [ ] project_config.yml generated and reflects user decisions
 - [ ] Study type confirmed by user
 - [ ] Analysis methods selected by user
@@ -84,7 +84,7 @@ Use `checkpoint:verify` to present results to user.
 Gather all key decisions made during the phase:
 
 Source from:
-- Phase discussion logs (`.planning/phases/NN-phase-name/00-CONTEXT.md`)
+- Phase discussion logs (`.clinpub/phases/NN-phase-name/00-CONTEXT.md`)
 - STATE.md decision log
 - Shell history of user confirmations during execution
 
@@ -94,7 +94,7 @@ Format as a decision table:
 </step>
 
 <step name="generate_milestone" priority="high">
-Write MILESTONE.md to `.planning/phases/NN-phase-name/MILESTONE.md`:
+Write MILESTONE.md to `.clinpub/phases/NN-phase-name/MILESTONE.md`:
 
 Use the milestone template from `@./pipeline/templates/milestone.md` with filled fields:
 

@@ -1,4 +1,4 @@
----
+﻿---
 name: clinpub-executor
 description: "Analysis execution agent with atomic commits. Executes PLAN.md files for clinical analysis workflows, creates per-task commits, handles checkpoints, and produces SUMMARY.md. Analogous to gsd-executor but specialized for R/Python clinical analysis."
 tools: Read, Write, Edit, Bash, Grep, Glob
@@ -22,7 +22,7 @@ Load execution context:
 ```bash
 PROJECT_DIR=$(pwd)
 CONFIG="$PROJECT_DIR/project_config.yml"
-STATE="$PROJECT_DIR/.planning/STATE.md"
+STATE="$PROJECT_DIR/.clinpub/STATE.md"
 DATA="$PROJECT_DIR/02_PreprocessedData/data/cleaned.csv"
 ```
 
@@ -95,7 +95,7 @@ After each task completes:
 </task_commit_protocol>
 
 <summary_creation>
-After all tasks complete, create `{phase}-{plan}-SUMMARY.md` at `.planning/phases/XX-name/`.
+After all tasks complete, create `{phase}-{plan}-SUMMARY.md` at `.clinpub/phases/XX-name/`.
 
 Include:
 - Frontmatter (phase, plan, metrics)

@@ -1,4 +1,4 @@
----
+﻿---
 name: writing
 description: "Phase 3 orchestration: IMRAD sequential pipeline (Introduction → Methods → Results → Discussion). Each section: reference-agent pre-search → writer-agent draft → user review pause. Shared reference library (JSON) for cross-section deduplication. Placeholders for cross-references. Final concatenation in Plan 03-03."
 ---
@@ -294,7 +294,7 @@ Execute the milestone workflow to formally close Phase 3 and gate into Phase 4:
 # The milestone workflow will:
 # 1. Verify success criteria for Phase 3
 # 2. Collect writing decisions (study type template, target journal)
-# 3. Generate .planning/phases/03-writing/MILESTONE.md
+# 3. Generate .clinpub/phases/03-writing/MILESTONE.md
 # 4. Update ROADMAP.md: Phase 3 → ✅ Complete, Phase 4 → 🔄 In Progress
 # 5. Update STATE.md: current_phase → 4
 # 6. Request user sign-off

@@ -1,4 +1,4 @@
-# Mandatory Initial Read
+﻿# Mandatory Initial Read
 
 > Every clinpub agent MUST read this file at the start of execution before performing any action.
 
@@ -11,7 +11,7 @@ Before any analysis, writing, or planning action, load these files in order:
 ```bash
 PROJECT_DIR=$(pwd)
 CONFIG="$PROJECT_DIR/project_config.yml"
-STATE="$PROJECT_DIR/.planning/STATE.md"
+STATE="$PROJECT_DIR/.clinpub/STATE.md"
 ```
 
 ### 1. Project Configuration (`project_config.yml`)
@@ -25,7 +25,7 @@ Read the full project config to understand:
 - **Data path**: location of raw and cleaned data files
 - **Output settings**: language, figure format, table style
 
-### 2. Pipeline State (`.planning/STATE.md`)
+### 2. Pipeline State (`.clinpub/STATE.md`)
 
 Read the state file to understand:
 
@@ -40,7 +40,7 @@ Depending on the current phase, also load:
 
 | Phase | Additional Context Files |
 |-------|--------------------------|
-| Phase 0 — init | `.planning/PROJECT.md`, `.planning/ROADMAP.md` |
+| Phase 0 — init | `.clinpub/PROJECT.md`, `.clinpub/ROADMAP.md` |
 | Phase 1 — data-prep | `01_RawData/data_profile.json`, variable dictionary |
 | Phase 2 — analysis | `02_PreprocessedData/data/cleaned.csv` (header only), `03_AnalysisMethods/` 方法说明 list |
 | Phase 3 — writing | `Reference/citation_map.md`, `04_Outputs/` directory listing, study type template |
@@ -82,4 +82,4 @@ If any mandatory file is missing or corrupted:
 1. **Log the error** with the exact file path
 2. **Report to user** with a clear message explaining what is missing
 3. **Do NOT proceed** with partial context — clinical analysis requires complete configuration
-4. **Suggest remediation**: "Run `/clinpub init` to create project configuration" or "Check `.planning/STATE.md` for current phase"
+4. **Suggest remediation**: "Run `/clinpub init` to create project configuration" or "Check `.clinpub/STATE.md` for current phase"

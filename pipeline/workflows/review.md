@@ -1,4 +1,4 @@
----
+﻿---
 name: review
 description: "Phase 4 orchestration: Simulated peer review and iterative manuscript revision. Generate review, confirm items with user, revise, produce response letter. Loop until user satisfaction."
 ---
@@ -111,7 +111,7 @@ Execute the milestone workflow to formally close Phase 4 (project completion):
 # The milestone workflow will:
 # 1. Verify success criteria for Phase 4
 # 2. Collect review decisions (comments addressed, response letter)
-# 3. Generate .planning/phases/04-review/MILESTONE.md
+# 3. Generate .clinpub/phases/04-review/MILESTONE.md
 # 4. Update ROADMAP.md: Phase 4 → ✅ Complete
 # 5. Update STATE.md: current_phase → complete
 # 6. Present project completion summary to user

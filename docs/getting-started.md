@@ -1,4 +1,4 @@
-# Getting Started with clinpub
+﻿# Getting Started with clinpub
 
 从零到投稿，用你的临床数据跑通完整 5 阶段管线。
 
@@ -77,7 +77,7 @@ Claude 会与你讨论：
 
 ```
 Project_Root/
-├── .planning/
+├── .clinpub/
 │   ├── PROJECT.md          # 研究框架
 │   ├── ROADMAP.md          # 5 阶段路线图
 │   ├── STATE.md            # 当前进度
@@ -266,4 +266,4 @@ font_add("SimHei", "simhei.ttf")
 - 阅读 `pipeline/references/journal_standards.md` — 了解期刊格式要求
 - 探索 `agents/` 目录了解各 Agent 详细能力
 
-有问题？检查 `.planning/STATE.md` 了解当前进度，或重新运行 `/clinpub` 继续。
+有问题？检查 `.clinpub/STATE.md` 了解当前进度，或重新运行 `/clinpub` 继续。

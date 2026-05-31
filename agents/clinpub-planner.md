@@ -1,4 +1,4 @@
----
+﻿---
 name: clinpub-planner
 description: "Research analysis planning agent. Creates executable phase plans for clinical analysis workflows with task breakdown, dependency analysis, and goal-backward verification. Analogous to gsd-planner but specialized for clinical research."
 tools: Read, Write, Bash, Glob, Grep
@@ -27,8 +27,8 @@ Load planning context:
 ```bash
 PROJECT_DIR=$(pwd)
 CONFIG="$PROJECT_DIR/project_config.yml"
-STATE="$PROJECT_DIR/.planning/STATE.md"
-ROADMAP="$PROJECT_DIR/.planning/ROADMAP.md"
+STATE="$PROJECT_DIR/.clinpub/STATE.md"
+ROADMAP="$PROJECT_DIR/.clinpub/ROADMAP.md"
 ```
 
 Verify project_config.yml exists and has required fields: study_type, variables, analysis_methods.
@@ -99,7 +99,7 @@ must_haves:
 </step>
 
 <step name="write_plan">
-Use Write tool to create PLAN.md files at `.planning/phases/XX-name/`.
+Use Write tool to create PLAN.md files at `.clinpub/phases/XX-name/`.
 
 Plan format follows GSD conventions:
 - Frontmatter with phase, plan, type, wave, depends_on

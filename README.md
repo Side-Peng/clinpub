@@ -1,4 +1,4 @@
-# clinpub — 临床数据分析与发表管线
+﻿# clinpub — 临床数据分析与发表管线
 
 [clínica + publish] 面向 SCI Q1/Q2 期刊的端到端临床数据分析和发表加速器。
 
@@ -83,7 +83,7 @@ USER → COMMANDS (commands/clinpub/clinpub.md)
 
 ```
 Project_Root/
-├── .planning/                  # 规划层（PROJECT.md / ROADMAP.md / STATE.md）
+├── .clinpub/                  # 规划层（PROJECT.md / ROADMAP.md / STATE.md）
 ├── 01_RawData/                 # 原始数据（只读）
 ├── 02_PreprocessedData/        # Phase 1 产出
 ├── 03_AnalysisMethods/         # Phase 2 方法目录

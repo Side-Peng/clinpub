@@ -340,7 +340,7 @@ function install(isGlobal) {
 
   // 2. Copy shared resources (agents, pipeline, scripts, hooks)
   console.log(`${dim}Copying resources...${reset}`);
-  const resourceDirs = ['agents', 'pipeline', 'scripts', 'hooks'];
+  const resourceDirs = ['agents', 'pipeline', 'scripts', 'hooks', 'commands'];
   for (const dir of resourceDirs) {
     const src = path.join(SOURCE_DIR, dir);
     if (fs.existsSync(src)) {
