@@ -12,7 +12,7 @@ The project follows the GSD (Get Shit Done) layered architecture:
 
 ```
 commands/clinpub/*.md → Thin entry points (user-facing)
-agents/*.md            → Specialized AI agent role cards (7 agents)
+agents/*.md            → Specialized AI agent role cards (8 agents)
 pipeline/
   workflows/*.md       → Phase orchestration logic
   references/*.md      → Reference documents (standards, methods, patterns, gates)
@@ -36,8 +36,9 @@ hooks/*.js/*.sh        → Claude Code hooks (workflow guard, phase boundary, pr
 | `agents/clinpub-planner.md` | Research analysis planning agent |
 | `agents/clinpub-executor.md` | Analysis execution agent (atomic commits) |
 | `agents/clinpub-verifier.md` | Statistical verification agent (adversarial) |
+| `agents/modify-agent.md` | Analysis output modification agent |
 | **Pipeline** | |
-| `pipeline/workflows/` | Phase 0-4 orchestration + data2idea |
+| `pipeline/workflows/` | Phase 0-4 orchestration + data2idea + modify |
 | `pipeline/references/analysis_methods.md` | Statistical method specifications |
 | `pipeline/references/journal_standards.md` | SCI Q1/Q2 publication standards |
 | `pipeline/references/r_patterns.md` | R visualization patterns (theme_pub() + KM curves + heatmap) |
@@ -79,6 +80,7 @@ hooks/*.js/*.sh        → Claude Code hooks (workflow guard, phase boundary, pr
 | Research analysis planning (PLAN.md creation) | `clinpub-planner` |
 | Analysis execution with atomic commits | `clinpub-executor` |
 | Statistical verification (adversarial) | `clinpub-verifier` |
+| Analysis output modification | `modify-agent` | R primary |
 
 ## Dependencies
 

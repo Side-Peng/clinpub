@@ -26,6 +26,7 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 | `/clinpub-writing` | Phase 3 — Literature search + IMRAD manuscript drafting |
 | `/clinpub-review` | Phase 4 — Simulated peer review + revision + response letter |
 | `/clinpub-milestone <N>` | Phase gate — Verify success criteria, record decisions, user sign-off |
+| `/clinpub-modify` | **Modify** — Adjust analysis outputs (figure style, statistical method, variables) post-analysis |
 
 ## Quick Start
 
@@ -47,7 +48,7 @@ npx clinpub@latest
 
 ```
 commands/clinpub/*.md  → Slash command entry points
-agents/*.md            → 7 specialized agents (analyst, writer, reference, topic-miner, planner, executor, verifier)
+agents/*.md            → 8 specialized agents (analyst, writer, reference, topic-miner, planner, executor, verifier, modify)
 pipeline/
   workflows/*.md       → Phase orchestration (DISCUSS → PLAN → EXECUTE → VERIFY)
   references/*.md      → Standards, methods, patterns, gates

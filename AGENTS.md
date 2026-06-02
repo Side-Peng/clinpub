@@ -13,7 +13,7 @@ Commands (commands/clinpub/*.md)  → Slash command entry points
   ↓
 Workflows (pipeline/workflows/*.md) → Phase orchestration (DISCUSS→PLAN→EXECUTE→VERIFY)
   ↓
-Agents (agents/*.md)               → 7 specialized AI role cards
+Agents (agents/*.md)               → 8 specialized AI role cards
   ↓
 Scripts (scripts/*.py)             → R/Python analysis tools
 Hooks (hooks/*.js/*.sh)            → Workflow enforcement
@@ -55,7 +55,7 @@ Each agent gets fresh context — no shared memory. Data passes through the file
 | `hooks/clinpub-workflow-guard.js` | Phase ordering enforcement logic |
 | `scripts/data_profiler.py` | Data profiling for topic mining |
 
-## Commands (8 skills installed)
+## Commands (9 skills installed)
 
 | Command | Phase | What It Does |
 |---------|-------|-------------|
@@ -67,6 +67,7 @@ Each agent gets fresh context — no shared memory. Data passes through the file
 | `/clinpub-writing` | 3 | IMRAD manuscript drafting |
 | `/clinpub-review` | 4 | Peer review simulation + revision |
 | `/clinpub-milestone` | gate | Phase gate verification with user sign-off |
+| `/clinpub-modify` | — | Modify analysis outputs (figure style, method, variables) |
 
 ## Agent Routing
 
@@ -79,6 +80,7 @@ Each agent gets fresh context — no shared memory. Data passes through the file
 | Research analysis planning | `clinpub-planner` | — |
 | Analysis execution (atomic commits) | `clinpub-executor` | R/Python |
 | Statistical verification (adversarial) | `clinpub-verifier` | — |
+| Analysis output modification | `modify-agent` | R primary |
 
 ## Development
 
