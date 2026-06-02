@@ -234,6 +234,22 @@ After all waves complete, final verification:
 If manifest is missing, write it here: `04_Outputs/MANIFEST.yaml` documenting each method's outputs and statistics.
 </step>
 
+<step name="user_satisfaction_check" priority="high">
+所有 waves 执行完毕、即将进入 milestone 关闭 Phase 2 之前，先向用户确认对当前分析结果是否满意：
+
+```
+✅ Phase 2 分析已完成全部 wave，结果已保存至 04_Outputs/。
+
+请确认：
+- 满意 → 继续执行 `/clinpub-milestone` 关闭 Phase 2，进入 Phase 3 写作
+- 不满意 → 使用 `/clinpub-correct` 调整分析方法、变量、图表样式等
+```
+
+按用户反馈分支：
+- 选择「满意」→ 继续 `milestone` 步骤
+- 选择「不满意」→ 引导用户调用 `/clinpub-correct`；修改完成后回到 `verify_outputs` 复检
+</step>
+
 </process>
 
 <step name="milestone" priority="high">

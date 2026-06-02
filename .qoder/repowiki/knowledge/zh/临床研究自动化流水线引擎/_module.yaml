@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: pipeline_engine
+title: 临床研究自动化流水线引擎
+scope:
+    - pipeline/
+source_files: []
+depends_on: []
+related_to:
+    - path: cli_commands
+    - path: agent_specs
+    - path: hooks

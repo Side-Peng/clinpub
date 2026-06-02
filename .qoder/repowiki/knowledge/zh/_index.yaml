@@ -1,0 +1,225 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: zh-CN
+branch: main
+exported_at: "2026-06-02T09:36:56Z"
+modules:
+    "":
+        dir_name: 临床科研自动化管线编排引擎
+        title: 临床科研自动化管线编排引擎
+        scope:
+            - README.md
+            - INSTALL.md
+            - CLAUDE.md
+            - SKILL.md
+            - AGENTS.md
+            - .gitignore
+            - .npmignore
+            - package.json
+            - requirements.txt
+            - bin/
+            - scripts/
+            - .github/
+            - .clinpub/
+            - .clinpub\PROJECT.md
+            - .clinpub\REQUIREMENTS.md
+            - .clinpub\ROADMAP.md
+            - .clinpub\STATE.md
+            - .clinpub\codebase\ARCHITECTURE.md
+            - .clinpub\codebase\CONCERNS.md
+            - .clinpub\codebase\CONVENTIONS.md
+            - .clinpub\codebase\INTEGRATIONS.md
+            - .clinpub\codebase\STACK.md
+            - .clinpub\codebase\STRUCTURE.md
+            - .clinpub\codebase\TESTING.md
+            - .clinpub\config.json
+            - .clinpub\phases\01-bug-fixes\01-01-PLAN.md
+            - .clinpub\phases\01-bug-fixes\01-01-SUMMARY.md
+            - .clinpub\phases\01-bug-fixes\01-02-PLAN.md
+            - .clinpub\phases\01-bug-fixes\01-02-SUMMARY.md
+            - .clinpub\phases\01-bug-fixes\01-CONTEXT.md
+            - .clinpub\phases\01-bug-fixes\01-DISCUSSION-LOG.md
+            - .clinpub\phases\01-bug-fixes\01-RESEARCH.md
+            - .clinpub\phases\02-断点续做\02-01-PLAN.md
+            - .clinpub\phases\02-断点续做\02-01-SUMMARY.md
+            - .clinpub\phases\02-断点续做\02-02-PLAN.md
+            - .clinpub\phases\02-断点续做\02-02-SUMMARY.md
+            - .clinpub\phases\02-断点续做\02-CONTEXT.md
+            - .clinpub\phases\02-断点续做\02-DISCUSSION-LOG.md
+            - .clinpub\phases\02-断点续做\02-RESEARCH.md
+            - .clinpub\phases\02-断点续做\02-REVIEW.md
+            - .clinpub\phases\02-断点续做\02-VERIFICATION.md
+            - .clinpub\phases\03-手稿拼接\03-01-PLAN.md
+            - .clinpub\phases\03-手稿拼接\03-01-SUMMARY.md
+            - .clinpub\phases\03-手稿拼接\03-02-PLAN.md
+            - .clinpub\phases\03-手稿拼接\03-02-SUMMARY.md
+            - .clinpub\phases\03-手稿拼接\03-03-PLAN.md
+            - .clinpub\phases\03-手稿拼接\03-03-SUMMARY.md
+            - .clinpub\phases\03-手稿拼接\03-04-PLAN.md
+            - .clinpub\phases\03-手稿拼接\03-04-SUMMARY.md
+            - .clinpub\phases\03-手稿拼接\03-05-PLAN.md
+            - .clinpub\phases\03-手稿拼接\03-05-SUMMARY.md
+            - .clinpub\phases\03-手稿拼接\03-06-discussion-log.md
+            - .clinpub\phases\03-手稿拼接\03-CONTEXT.md
+            - .clinpub\phases\03-手稿拼接\03-DISCUSSION-LOG.md
+            - .clinpub\phases\03-手稿拼接\03-REVIEW.md
+            - .clinpub\phases\04-方法增强\04-01-PLAN.md
+            - .clinpub\phases\04-方法增强\04-01-SUMMARY.md
+            - .clinpub\phases\04-方法增强\04-02-PLAN.md
+            - .clinpub\phases\04-方法增强\04-02-SUMMARY.md
+            - .clinpub\phases\04-方法增强\04-CONTEXT.md
+            - .clinpub\phases\04-方法增强\04-DISCUSSION-LOG.md
+            - .clinpub\phases\05-pre-phase-research\05-01-PLAN.md
+            - .clinpub\phases\05-pre-phase-research\05-01-SUMMARY.md
+            - .clinpub\phases\05-pre-phase-research\05-02-PLAN.md
+            - .clinpub\phases\05-pre-phase-research\05-02-SUMMARY.md
+            - .clinpub\phases\05-pre-phase-research\05-CONTEXT.md
+            - .clinpub\phases\05-pre-phase-research\05-DISCUSSION-LOG.md
+            - .clinpub\phases\05-pre-phase-research\05-VERIFICATION.md
+            - .clinpub\phases\06-图表文档优化\06-01-PLAN.md
+            - .clinpub\phases\06-图表文档优化\06-01-SUMMARY.md
+            - .clinpub\phases\06-图表文档优化\06-02-PLAN.md
+            - .clinpub\phases\06-图表文档优化\06-02-SUMMARY.md
+            - .clinpub\phases\06-图表文档优化\06-CONTEXT.md
+            - .clinpub\phases\06-图表文档优化\06-DISCUSSION-LOG.md
+            - .clinpub\phases\06-图表文档优化\06-RESEARCH.md
+            - .clinpub\phases\06-图表文档优化\06-VERIFICATION.md
+            - .clinpub\tmp\docs-work-manifest.json
+            - .github\workflows\release.yml
+            - CHANGELOG.md
+            - CONTRIBUTING.md
+            - agents\analyst-agent.md
+            - agents\clinpub-executor.md
+            - agents\clinpub-planner.md
+            - agents\clinpub-verifier.md
+            - agents\modify-agent.md
+            - agents\reference-agent.md
+            - agents\topic-miner-agent.md
+            - agents\writer-agent.md
+            - bin\install.js
+            - commands\clinpub\analysis.md
+            - commands\clinpub\clinpub.md
+            - commands\clinpub\data-prep.md
+            - commands\clinpub\data2idea.md
+            - commands\clinpub\do.md
+            - commands\clinpub\init-project.md
+            - commands\clinpub\milestone.md
+            - commands\clinpub\modify.md
+            - commands\clinpub\next-step.md
+            - commands\clinpub\review.md
+            - commands\clinpub\writing.md
+            - docs\ARCHITECTURE.md
+            - docs\CONFIGURATION.md
+            - docs\DEVELOPMENT.md
+            - docs\TESTING.md
+            - docs\getting-started.md
+            - docs\superpowers\plans\2026-06-02-modify-agent.md
+            - docs\superpowers\specs\2026-06-02-modify-agent-design.md
+            - examples\04-INTEGRATION-CHECKLIST.md
+            - examples\project_config.example.yml
+            - examples\sample_data\84例-认知-0120.xlsx
+            - examples\sample_data\认知因子对应.xlsx
+            - hooks\clinpub-phase-boundary.sh
+            - hooks\clinpub-prompt-guard.js
+            - hooks\clinpub-workflow-guard.js
+            - image\开发日志\1780376478771.png
+            - pipeline\contexts\analysis.md
+            - pipeline\contexts\writing.md
+            - pipeline\references\agent-contracts.md
+            - pipeline\references\analysis_methods.md
+            - pipeline\references\checkpoints.md
+            - pipeline\references\citation-strategy.md
+            - pipeline\references\comparison-methods.md
+            - pipeline\references\concatenation-protocol.md
+            - pipeline\references\gates.md
+            - pipeline\references\journal_standards.md
+            - pipeline\references\mandatory-initial-read.md
+            - pipeline\references\manifest-format.md
+            - pipeline\references\pre-phase-research.md
+            - pipeline\references\r_patterns.md
+            - pipeline\references\reference-library.md
+            - pipeline\references\verification-patterns.md
+            - pipeline\templates\UAT.md
+            - pipeline\templates\VALIDATION.md
+            - pipeline\templates\context.md
+            - pipeline\templates\idea_report.md
+            - pipeline\templates\method-readme.md
+            - pipeline\templates\milestone.md
+            - pipeline\templates\project.md
+            - pipeline\templates\project_config.yml
+            - pipeline\templates\roadmap.md
+            - pipeline\templates\spec.md
+            - pipeline\templates\state.md
+            - pipeline\templates\study_types\case_control.md
+            - pipeline\templates\study_types\cohort.md
+            - pipeline\templates\study_types\cross_sectional.md
+            - pipeline\templates\study_types\descriptive.md
+            - pipeline\templates\study_types\rct.md
+            - pipeline\templates\verification-report.md
+            - pipeline\workflows\analysis.md
+            - pipeline\workflows\data-prep.md
+            - pipeline\workflows\data2idea.md
+            - pipeline\workflows\init-project.md
+            - pipeline\workflows\milestone.md
+            - pipeline\workflows\modify.md
+            - pipeline\workflows\next-step.md
+            - pipeline\workflows\review.md
+            - pipeline\workflows\writing.md
+            - scripts\data_profiler.py
+            - 开发日志.md
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    agent_specs:
+        dir_name: 临床科研自动化管线智能体规范
+        title: 临床科研自动化管线智能体规范
+        scope:
+            - agents/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: pipeline_engine
+    cli_commands:
+        dir_name: 临床科研全流程指令集
+        title: 临床科研全流程指令集
+        scope:
+            - commands/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: pipeline_engine
+    docs_and_examples:
+        dir_name: clinpub 管线文档与示例配置
+        title: clinpub 管线文档与示例配置
+        scope:
+            - docs/
+            - examples/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    hooks:
+        dir_name: Claude Code 工作流防护钩子
+        title: Claude Code 工作流防护钩子
+        scope:
+            - hooks/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: pipeline_engine
+    pipeline_engine:
+        dir_name: 临床研究自动化流水线引擎
+        title: 临床研究自动化流水线引擎
+        scope:
+            - pipeline/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: cli_commands
+            - path: agent_specs
+            - path: hooks
