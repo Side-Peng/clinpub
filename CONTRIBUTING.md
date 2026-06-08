@@ -1,284 +1,172 @@
-# 贡献指南
+# Contributing to clinpub
 
-感谢你对 clinpub 项目的关注！本指南帮助你参与项目开发。
+感谢你关注 clinpub！本文档说明如何参与贡献。
 
-## 快速开始
+## 核心原则：自包含
 
-### 1. Fork 并克隆
+> **clinpub 产出的任何代码，必须自包含、可独立运行。**
 
-```bash
-# Fork 项目到你的 GitHub 账号
-# 然后克隆
-git clone https://github.com/YOUR_USERNAME/clinpub.git
-cd clinpub
-```
+clinpub 是一个 AI Agent 驱动的科研流水线。每个 Agent 在**隔离的上下文**中工作——没有共享内存、没有全局环境、没有隐式依赖。因此，无论是分析脚本、数据处理、图表生成还是工具函数，都必须满足：
 
-### 2. 安装依赖
+1. **所有依赖在文件内声明**：library/import 写在文件顶部
+2. **所有变量在文件内定义**：路径、参数、配置不外求
+3. **所有辅助函数在文件内实现**：不 source/import 项目内其他文件
+4. **丢到任意机器上，装好依赖包即可运行**
 
-```bash
-# Node.js 依赖
-npm install
+这条原则适用于所有语言：
 
-# R 依赖
-Rscript -e 'install.packages(c("dplyr", "tidyr", "ggplot2", "gtsummary"))'
-
-# Python 依赖
-pip install -r requirements.txt
-```
-
-### 3. 创建分支
-
-```bash
-git checkout -b feature/your-feature-name
-```
-
-## 开发规范
-
-### 代码独立性原则
-
-**每段代码必须独立运行，不依赖其他代码。**
-
-- 所有变量必须在单个代码文件内定义
-- 禁止使用全局变量或跨文件依赖
-- 每个脚本必须可直接运行
+<details>
+<summary>R 示例</summary>
 
 ```r
 # ✓ 正确
-data_path <- "01_RawData/data.csv"  # 脚本内定义
+library(dplyr)
+library(ggplot2)
+
+data_path <- "01_RawData/data.csv"
 data <- read.csv(data_path)
 
-# ✗ 错误
-data <- read.csv(global_path)  # 依赖全局变量
-```
-
-### 代码风格
-
-#### R 代码
-
-- 使用 `snake_case` 命名变量
-- 使用 `camelCase` 命名函数
-- 每个函数不超过 50 行
-- 添加注释说明意图
-
-```r
-# 计算基线特征表
-generate_baseline_table <- function(data, group_var) {
-  # 参数验证
-  stopifnot(is.data.frame(data))
-  stopifnot(group_var %in% names(data))
-  
-  # 核心逻辑
-  table <- data %>%
-    group_by(across(all_of(group_var))) %>%
-    summarise(
-      n = n(),
-      mean_age = mean(age, na.rm = TRUE)
-    )
-  
-  return(table)
+# 辅助函数直接写在文件里
+format_pvalue <- function(p) {
+  if (p < 0.001) return("<0.001")
+  sprintf("%.3f", p)
 }
+
+# ✗ 错误
+source("scripts/utils.R")           # 跨文件依赖
+data <- read.csv(global_path)        # 未定义的外部变量
 ```
 
-#### Python 代码
+</details>
 
-- 使用 `snake_case` 命名变量和函数
-- 使用 `UPPER_SNAKE_CASE` 命名常量
-- 添加 docstring 说明功能
-- 使用类型注解
+<details>
+<summary>Python 示例</summary>
 
 ```python
-def profile_data(data: pd.DataFrame) -> dict:
-    """生成数据画像
-    
-    Args:
-        data: 输入数据框
-        
-    Returns:
-        包含数据统计信息的字典
-    """
-    return {
-        'shape': data.shape,
-        'dtypes': data.dtypes.to_dict()
-    }
+# ✓ 正确
+import pandas as pd
+import numpy as np
+
+DATA_PATH = "01_RawData/data.csv"
+df = pd.read_csv(DATA_PATH)
+
+# 辅助函数直接写在文件里
+def format_pvalue(p: float) -> str:
+    return "<0.001" if p < 0.001 else f"{p:.3f}"
+
+# ✗ 错误
+from clinpub.utils import helpers    # 跨模块依赖
+df = pd.read_csv(config.data_path)   # 未定义的外部状态
 ```
 
-### 提交规范
+</details>
 
-#### Commit Message 格式
+<details>
+<summary>JavaScript / Shell 示例</summary>
 
+```javascript
+// ✓ 正确 — Node.js 脚本
+const fs = require('fs');
+const path = require('path');
+
+const STATE_FILE = path.join('.clinpub', 'STATE.md');
+const state = fs.readFileSync(STATE_FILE, 'utf8');
+
+// ✗ 错误
+const utils = require('./lib/utils');  // 跨文件依赖
 ```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-#### Type 类型
-
-- `feat`: 新功能
-- `fix`: 修复 bug
-- `docs`: 文档更新
-- `style`: 代码格式调整
-- `refactor`: 重构
-- `test`: 测试相关
-- `chore`: 构建/工具相关
-
-#### 示例
-
-```
-feat(analysis): 添加生存分析模块
-
-- 实现 Kaplan-Meier 曲线
-- 实现 Cox 回归分析
-- 添加 Log-rank 检验
-
-Closes #123
-```
-
-## 贡献流程
-
-### 1. 报告 Bug
-
-使用 GitHub Issues 报告 Bug，包含：
-
-- 问题描述
-- 复现步骤
-- 期望行为
-- 实际行为
-- 环境信息
-
-### 2. 提交代码
 
 ```bash
-# 1. 确保代码符合规范
-Rscript tests/test_all.R
+# ✓ 正确 — Shell 脚本自包含所有逻辑
+STATE_FILE=".clinpub/STATE.md"
+PHASE=$(grep -oP '阶段：Phase\s*\K\d' "$STATE_FILE")
 
-# 2. 提交更改
-git add .
-git commit -m "feat(analysis): 添加生存分析模块"
-
-# 3. 推送到远程
-git push origin feature/your-feature-name
-
-# 4. 创建 Pull Request
+# ✗ 错误
+source ./shared/helpers.sh            # 跨文件依赖
 ```
 
-### 3. Pull Request 规范
-
-PR 描述应包含：
-
-- 变更说明
-- 相关 Issue 编号
-- 测试结果
-- 截图（如适用）
+</details>
 
 ## 开发环境
 
-### 推荐工具
+```bash
+git clone https://github.com/Side-Peng/clinpub.git
+cd clinpub
 
-- **R**: RStudio 或 VS Code + R 扩展
-- **Python**: VS Code + Python 扩展
-- **Git**: GitHub Desktop 或命令行
-- **编辑器**: VS Code
+# Node.js >= 22
+npm install
 
-### 调试技巧
+# R
+Rscript -e 'install.packages(c("dplyr","tidyr","ggplot2","gtsummary","survival","lme4","glmnet","pROC","ggpubr","patchwork","survminer","ggsurvfit","ggsignif","flextable","openxlsx","here","fs","stringr","readr","readxl"))'
 
-```r
-# R 调试
-options(error = recover)  # 错误时进入调试
-browser()                  # 设置断点
-
-# 查看函数定义
-args(function_name)
-body(function_name)
-```
-
-```python
-# Python 调试
-import pdb; pdb.set_trace()  # 设置断点
-
-# 使用 logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# Python
+pip install -r requirements.txt
 ```
 
 ## 项目结构
 
 ```
 clinpub/
-├── commands/          # 用户命令入口
-├── agents/            # AI Agent 角色卡片
-├── pipeline/          # 管线配置
-│   ├── workflows/     # 阶段编排
-│   ├── references/    # 参考文档
-│   ├── templates/     # 模板文件
-│   └── contexts/      # 上下文配置
-├── scripts/           # 工具脚本
-├── hooks/             # Claude Code Hooks
-├── docs/              # 文档
-├── examples/          # 示例数据
-└── tests/             # 测试文件
+├── commands/clinpub/   # 命令入口（YAML frontmatter + @-references）
+├── agents/             # AI Agent 角色卡片（每个 Agent 独立上下文）
+├── pipeline/
+│   ├── workflows/      # 阶段编排（DISCUSS → PLAN → EXECUTE → VERIFY）
+│   ├── references/     # 参考文档（标准、方法、模式）
+│   ├── templates/      # 研究类型模板 + 项目配置
+│   └── contexts/       # 上下文配置
+├── scripts/            # 工具脚本（必须自包含）
+├── hooks/              # 工作流守卫钩子（必须自包含）
+├── bin/                # 安装脚本
+└── docs/               # 项目文档
 ```
 
-## 发布流程
+## 提交规范
 
-### 版本号规范
-
-使用语义化版本：`MAJOR.MINOR.PATCH`
-
-- `MAJOR`: 不兼容的 API 变更
-- `MINOR`: 向后兼容的功能添加
-- `PATCH`: 向后兼容的 Bug 修复
-
-### 发布步骤
-
-```bash
-# 1. 更新版本号
-npm version patch  # 或 minor, major
-
-# 2. 更新 CHANGELOG
-# 手动编辑 CHANGELOG.md
-
-# 3. 提交并推送
-git push origin main --tags
-
-# 4. 发布到 npm
-npm publish
+```
+<type>(<scope>): <subject>
 ```
 
-## 社区
+| Type | 用途 |
+|------|------|
+| `feat` | 新功能 |
+| `fix` | Bug 修复 |
+| `docs` | 文档更新 |
+| `refactor` | 重构（不改行为） |
+| `test` | 测试相关 |
+| `chore` | 构建/工具/CI |
 
-### 沟通渠道
+示例：
+```
+feat(r_patterns): 添加森林图模板
+fix(workflow-guard): 修复 Phase 2 目录判定逻辑
+docs(agents): 更新 analyst-agent 的方法选择说明
+```
 
-- **GitHub Issues**: Bug 报告和功能请求
-- **GitHub Discussions**: 一般讨论和问题
+## 贡献流程
 
-### 行为准则
+1. **Fork → 克隆 → 创建分支**
+   ```bash
+   git checkout -b feat/your-feature
+   ```
 
-- 尊重他人
-- 建设性反馈
-- 包容不同观点
-- 专注技术讨论
+2. **开发**
+   - 写代码前先问自己：这个文件能独立运行吗？
+   - 新增了辅助函数？确认它在同一个文件内
+   - 修改了现有脚本？确认改完仍能独立运行
+   - 改了 Agent / Workflow？确认 `@-references` 路径正确
 
-## 常见问题
+3. **提交 & 推送**
+   ```bash
+   git add .
+   git commit -m "feat(scope): description"
+   git push origin feat/your-feature
+   ```
 
-### 如何添加新的分析方法？
+4. **创建 Pull Request**，说明变更内容
 
-1. 在 `pipeline/templates/study_types/` 添加模板
-2. 在 `agents/analyst-agent.md` 添加方法说明
-3. 在 `pipeline/references/analysis_methods.md` 添加文档
-4. 添加测试用例
+## 注意事项
 
-### 如何添加新的 Agent？
-
-1. 在 `agents/` 创建 Agent 角色卡片
-2. 更新相关 Workflow 的 Agent 引用
-3. 在 `pipeline/references/agent-contracts.md` 添加契约
-4. 添加集成测试
-
-### 如何修改质量门控？
-
-1. 在 `pipeline/references/gates.md` 修改门控规则
-2. 更新相关 Workflow 的检查逻辑
-3. 添加测试验证门控行为
+- **不要提交患者数据**：`.gitignore` 已排除 CSV/XLSX/SAV/DTA 等格式
+- **不要修改已发布版本的 API**：破坏性变更请先开 Issue 讨论
+- **Agent 间只通过文件通信**：一个 Agent 读另一个 Agent 的输出文件，不做内存级协作
+- **单目录单写者**：每个输出目录只由一个 Agent 负责写入

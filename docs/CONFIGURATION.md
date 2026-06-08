@@ -8,10 +8,29 @@
 
 ```yaml
 # 基本信息
-study:
-  title: "研究标题"
-  type: "cohort"  # rct, cohort, case_control, cross_sectional, descriptive
-  target_journal: "Alzheimer's & Dementia"
+project:
+  name: "项目名称"
+  design: "cohort"  # RCT / 队列研究 / 病例对照 / 横断面 / 描述性
+  sample_size: 0
+  target_journal: "SCI Q1/Q2"
+  reporting_standard: "STROBE"  # CONSORT / STROBE / PRISMA
+
+# 期刊配置
+journal:
+  name: ""                        # 期刊名
+  tier: "Q1"                      # Q1/Q2/Q3/Q4
+  word_limit: 5000                # 正文字数限制
+  abstract_limit: 300             # 摘要字数限制
+  reference_style: "vancouver"    # 参考文献格式
+  figure_limit: 6                 # 图表数量限制
+  data_sharing: "required"        # 数据共享要求
+  specific_requirements: []       # 期刊特定要求
+
+# 语言配置
+language:
+  manuscript: "zh-CN"             # 论文语言 (zh-CN / en-US)
+  figures_tables: "en"            # 图表语言
+  statistics: "R"                 # 统计主语言
 
 # 变量映射
 variables:
@@ -37,19 +56,17 @@ paths:
 # 分析配置
 analysis:
   significance_level: 0.05
-  confidence_level: 0.95
-  multiple_comparison: "bonferroni"  # bonferroni, fdr, holm
-  imputation_method: "mice"          # mice, mean, median, listwise
+  multiple_comparison: "fdr"  # fdr, bonferroni, none
+  missing_threshold_low: 0.05
+  missing_threshold_mid: 0.20
 
 # 图表配置
-figures:
-  dpi: 300
-  format: "png"              # png, pdf, tiff
-  font: "Arial"
-  font_size: 8
-  color_palette: "viridis"   # viridis, RColorBrewer
-  width_single: 8            # 单栏宽度 (cm)
-  width_double: 17           # 双栏宽度 (cm)
+quality:
+  journal_level: "Q1"
+  figure_dpi: 300
+  figure_format: "png"              # png, pdf, tiff
+  figure_font: "Arial"
+  figure_font_size: 10
 ```
 
 ## 环境变量
@@ -77,6 +94,35 @@ echo 'export NCBI_API_KEY="your_key"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+## 期刊配置说明
+
+`journal:` 段用于指定目标期刊及其发表要求。`tier` 字段对应 `journal_standards.md` 中的四级分层标准（Q1/Q2/Q3/Q4），系统会自动应用对应级别的默认要求。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `name` | string | 期刊名称 |
+| `tier` | string | Q1/Q2/Q3/Q4 — 决定应用哪级默认标准 |
+| `word_limit` | int | 正文字数限制 |
+| `abstract_limit` | int | 摘要字数限制 |
+| `reference_style` | string | 参考文献格式（vancouver / apa / harvard） |
+| `figure_limit` | int | 图表数量限制 |
+| `data_sharing` | string | 数据共享要求（required / optional / none） |
+| `specific_requirements` | list | 期刊特定要求，覆盖默认标准 |
+
+如果未配置 `journal:` 段，默认应用 Q2 标准。
+
+## 语言配置说明
+
+`language:` 段控制论文撰写语言：
+
+| 字段 | 支持值 | 说明 |
+|------|---------|------|
+| `manuscript` | `zh-CN` / `en-US` | 正文语言。`zh-CN` 中文正文 + 英文图表，`en-US` 全英文 |
+| `figures_tables` | `en`（默认） | 图表语言，通常保持英文 |
+| `statistics` | `R` / `Python` | 统计主语言 |
+
+> **注意**：`mixed` 模式为预留功能，暂未实现。
+
 ## R 配置
 
 ### 必需 R 包
@@ -89,8 +135,16 @@ install.packages(c(
   # 统计分析
   "survival", "lme4", "glmnet", "pROC",
   
+  # 因果推断 & 高级方法
+  "MatchIt", "WeightIt", "cobalt", "cmprsk", "rms",
+  "mice", "mediation", "emmeans", "interactions",
+  
+  # 聚类 & 潜在类
+  "poLCA", "factoextra", "mclust",
+  
   # 可视化
-  "ggplot2", "ggpubr", "patchwork", "survminer", "ggsurvfit", "ggsignif",
+  "ggplot2", "ggpubr", "patchwork", "survminer", "ggsurvfit",
+  "ggsignif", "ggcorrplot", "consort", "ComplexUpset", "ggalluvial",
   
   # 输出
   "gtsummary", "flextable", "openxlsx",

@@ -1,6 +1,6 @@
 ﻿---
 name: writing
-description: "Phase 3 orchestration: IMRAD sequential pipeline (Introduction → Methods → Results → Discussion). Each section: reference-agent pre-search → writer-agent draft → user review pause. Shared reference library (JSON) for cross-section deduplication. Placeholders for cross-references. Final concatenation in Plan 03-03."
+description: "Phase 3 orchestration: IMRAD manuscript pipeline with two modes. Sequential mode: each section → reference-agent pre-search → writer-agent draft → user review pause. Batch mode (一键成稿): bulk reference search for all sections → bulk writing without pause → single final review. Shared reference library (JSON) for cross-section deduplication. Placeholders for cross-references. Final concatenation produces manuscript.md."
 ---
 
 <purpose>
@@ -60,21 +60,50 @@ citation_strategy:
 Discuss with user before drafting:
 
 1. **Core argument**: main finding and novelty angle
-2. **Target journal**: confirm alignment with journal_standards.md
-3. **Manuscript structure**: any journal-specific section requirements
+2. **Target journal**: read `journal.name` and `journal.tier` from `project_config.yml`; apply corresponding tier standards from `journal_standards.md`
+3. **Manuscript structure**: any journal-specific section requirements (from `journal.specific_requirements`)
 4. **Reference Agent pre-search**: confirm search terms and strategy
 5. **Figures/tables**: which outputs to include, order, and integration
+</step>
+
+<step name="choose_writing_mode" priority="high">
+在引用策略和写作计划确认后，询问用户选择写作模式：
+
+**向用户呈现选择**：
+
+```
+## 写作模式选择
+
+写作大纲已确认。请选择写作模式：
+
+### 1. 一键成稿（batch）
+- 自动批量完成全部 4 段文献搜索
+- 自动批量撰写全部 4 段（无中间审阅）
+- 最终统一呈现完整终稿供审阅
+- 适合：对写作框架有信心，希望快速出稿
+
+### 2. 逐步写作（sequential）
+- 每段独立执行：文献搜索 → 撰写 → 用户审阅
+- 每段确认后再进入下一段
+- 适合：需要逐段把控质量，随时调整方向
+```
+
+根据用户选择：
+- 选择 `一键成稿` → 跳过 `reference_pre_search` 和 `sequential_section_writing`，执行 `batch_writing`
+- 选择 `逐步写作` → 执行现有 `reference_pre_search` + `sequential_section_writing` 流程
 </step>
 
 <step name="reference_pre_search" priority="high">
 Reference Agent performs comprehensive literature search:
 
-1. Search PubMed for: disease domain + exposure/biomarker + outcome + population
-2. Build citation_map.md with PMID, DOI, location, citation reason, supported argument
-3. Build references.bib in Vancouver format with DOIs
-4. Retrieve full text for key references via Unpaywall/pdf-reader
-5. Write all outputs to `Reference/` directory
-6. Write MANIFEST.yaml in `Reference/` listing writer-agent as consumer
+1. Check search tool availability (see reference-agent.md §check_skill_availability 三级降级)
+2. If in fallback mode (Mode B), inform user and confirm before proceeding
+3. Search PubMed (or Tavily/WebSearch fallback) for: disease domain + exposure/biomarker + outcome + population
+4. Build citation_map.md with PMID, DOI, location, citation reason, supported argument (mark `source: fallback` if in Mode B)
+5. Build references.bib in Vancouver format with DOIs
+6. Retrieve full text for key references via Unpaywall/pdf-reader
+7. Write all outputs to `Reference/` directory
+8. Write MANIFEST.yaml in `Reference/` listing writer-agent as consumer
 
 See `@./agents/reference-agent.md` for detailed search protocol.
 </step>
@@ -160,6 +189,91 @@ See `@./agents/reference-agent.md` for detailed search protocol.
 当用户确认后（`通过` 或 `继续`），进入下一段循环。
 </step>
 
+<step name="batch_writing" priority="high">
+一键成稿模式：批量文献搜索 + 批量撰写，无中间用户审阅暂停。
+
+**前置条件**: 用户在 `choose_writing_mode` 中选择了"一键成稿"。
+
+**流程路由**:
+- 如果用户选择了"逐步写作"，跳过此步骤，执行 `reference_pre_search` + `sequential_section_writing`
+- 如果用户选择了"一键成稿"，跳过 `reference_pre_search` 和 `sequential_section_writing`，执行本步骤
+
+---
+
+### Phase A: 批量文献搜索
+
+按顺序为 4 段执行 reference-agent 文献搜索（共享 reference_library.json 自动去重）：
+
+1. **Introduction 文献搜索**: disease + exposure + outcome + population, 目标 10-15 篇
+2. **Methods 文献搜索**: methodology + standard guidelines + published protocols, 目标 3-5 篇
+3. **Results 文献搜索**: 仅在有对比需求时搜索, 目标 0-3 篇
+4. **Discussion 文献搜索**: 对比同类研究 + 机制解释 + 临床意义, 目标 15-25 篇
+
+每次搜索后更新 `Reference/reference_library.json`（读取→去重→分配ID→写入）。
+
+搜索全部完成后输出进度：
+```
+✅ 文献搜索全部完成
+- Introduction: {n1} 篇新引用
+- Methods: {n2} 篇新引用  
+- Results: {n3} 篇新引用
+- Discussion: {n4} 篇新引用
+- 引用库总计: {total} 篇（已去重）
+
+正在进入批量撰写...
+```
+
+---
+
+### Phase B: 批量撰写
+
+按 IMRAD 顺序连续撰写 4 段，不暂停：
+
+1. **Introduction**: 读取 Reference/reference_library.json + citation_map.md
+2. **Methods**: 读取 project_config.yml + study_type template + 03_AnalysisMethods/*/方法说明.md
+3. **Results**: 读取 04_Outputs/* (figures + tables + 方法说明)
+4. **Discussion**: 读取 Reference/reference_library.json + citation_map.md + project_config.yml
+
+撰写规则与 `sequential_section_writing` Step B 完全一致（D-02~D-13 约束均适用）。
+
+每段写入 `05_Manuscript/sections/` 对应文件。
+
+---
+
+### Phase C: 批量完成通知 + 统一审阅
+
+全部 4 段撰写完成后，执行拼接（同 `concatenate_manuscript` 步骤逻辑），然后统一呈现：
+
+```
+## 一键成稿完成 — 请审阅
+
+已生成完整 IMRAD 手稿：
+- 05_Manuscript/manuscript.md — 完整终稿（{word_count} 字, {reference_count} 篇引用）
+- 05_Manuscript/sections/ — 各段独立文件
+
+### 各段概要
+| 段落 | 字数 | 引用数 | 文件 |
+|------|------|--------|------|
+| Introduction | {n} | {n} | sections/01-introduction.md |
+| Methods | {n} | {n} | sections/02-methods.md |
+| Results | {n} | {n} | sections/03-results.md |
+| Discussion | {n} | {n} | sections/04-discussion.md |
+
+### 审阅要点
+- [ ] 各段结构和内容是否符合预期
+- [ ] 引用是否准确，引用量是否合适
+- [ ] 占位符替换是否正确
+- [ ] 语言风格是否自然
+- [ ] 段落间逻辑衔接是否流畅
+
+### 下一步
+- 提出修改意见 → 针对性调整（可指定具体段落）
+- 输入 `通过` → 进入 verify + milestone
+```
+
+当用户确认通过后，流程进入 `verify_manuscript` → `checkpoint_confirm` → `milestone`。
+</step>
+
 <step name="humanizer_review" priority="medium">
 Humanizer 自检在每个段落撰写时由 writer-agent 内嵌执行（见 writer-agent.md humanizer_rules 节），不再单独执行全篇 humanizer。
 
@@ -184,7 +298,7 @@ Final verification:
 2. All citations have DOIs
 3. All referenced figures/tables exist in 04_Outputs/
 4. STROBE/CONSORT checklist covered
-5. Language consistent: Chinese manuscript body, English figures/tables
+5. Language consistent: per `language.manuscript` config (default: Chinese body, English figures/tables)
 6. No AI-template patterns detected
 7. Word count within target journal limits
 8. References de-duplicated
@@ -301,6 +415,14 @@ Execute the milestone workflow to formally close Phase 3 and gate into Phase 4:
 ```
 
 See @./pipeline/workflows/milestone.md for full protocol.
+
+<output name="signoff_prompt" format="user_facing">
+────────────────────────────────
+✅ Phase 3 核验完成
+
+请确认：输入 "approved" 进入 Phase 4（审稿模拟），或描述需要调整的地方。
+────────────────────────────────
+</output>
 </step>
 
 </process>

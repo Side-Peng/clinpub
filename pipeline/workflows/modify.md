@@ -83,6 +83,16 @@ If verification fails for any modification:
 - Offer to re-run that modification or skip it
 </step>
 
+<step name="cascade_manuscript_update" priority="medium">
+If `05_Manuscript/` exists, delegate to modify-agent step `cascade_to_manuscript`:
+
+1. Patch affected numerical values in Results section (effect sizes, p-values, CI bounds)
+2. Update Methods section if statistical method changed
+3. Report which manuscript sections were updated
+
+If `05_Manuscript/` does not exist, skip silently.
+</step>
+
 <step name="update_plan_history" priority="high">
 Delegate to modify-agent step `update_plan`:
 
@@ -115,9 +125,7 @@ Output completion summary:
 Succeeded: {N} modification(s)
 Failed: {M} modification(s)
 PLAN.md updated with modification history
-
-Note: Manuscript (05_Manuscript/) was NOT updated.
-      Run /clinpub-writing to update affected sections.
+Manuscript cascade: {K} section(s) updated / Skipped (no manuscript found)
 ─────────────────────────────────────────
 ```
 </step>
@@ -130,6 +138,6 @@ Note: Manuscript (05_Manuscript/) was NOT updated.
 - Each modification executed with success/failure reporting
 - Modified outputs meet publication standards
 - Modification history appended to PLAN.md
+- Affected manuscript sections patched if manuscript exists (numerical values and method descriptions)
 - STATE.md last activity updated
-- User informed that manuscript needs manual update
 </success_criteria>

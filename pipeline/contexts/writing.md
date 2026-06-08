@@ -4,9 +4,16 @@ Use this context during Phase 3 manuscript writing.
 
 ## Language Policy
 
-- **Manuscript body**: Chinese
-- **Figures and tables**: English
+- **Manuscript body**: per `language.manuscript` config (default: Chinese)
+- **Figures and tables**: per `language.figures_tables` config (default: English)
 - **References**: Vancouver format with DOIs
+
+Language modes:
+| `language.manuscript` | 正文语言 | 图表语言 | 说明 |
+|----------------------|---------|---------|------|
+| `zh-CN`（默认） | 中文 | 英文 | 中文正文 + 英文图表 |
+| `en-US` | 英文 | 英文 | 全英文论文 |
+| `mixed` | — | — | 预留，暂未实现 |
 
 ## Chapter Writing Order
 
@@ -40,9 +47,9 @@ Before finalizing each chapter, check:
 
 ## Target Journal Standards
 
-- Alzheimer's & Dementia (IF ~14)
-- Molecular Psychiatry (IF ~11)
-- Effect size + 95%CI required alongside p-values
+- Target journal and tier read from `project_config.yml` → `journal.name` and `journal.tier`
+- Apply corresponding tier standards from `pipeline/references/journal_standards.md`
+- Effect size + 95%CI required alongside p-values (Q3+ mandatory)
 - Exact p-values (not just "p < 0.05")
 - FDR/Bonferroni for multiple comparisons
 - Software versions reported

@@ -57,8 +57,16 @@ Each agent contract defines:
 | **Outputs** | `05_Manuscript/manuscript.md`, `05_Manuscript/abstract.md`, `05_Manuscript/review_v1.md`, `05_Manuscript/response_letter.md`, `05_Manuscript/final/` |
 | **Communication** | Reads from `04_Outputs/` and `Reference/` (validates their MANIFEST.yaml first). Writes to `05_Manuscript/` (writes MANIFEST.yaml after completion). |
 | **Output naming conventions** | Chapter drafts: `draft-{chapter}.md` (one per IMRAD section). Compiled manuscript: `manuscript.md`. Review output: `review_v{N}.md`. Response letter: `response_letter.md`. Final: `final/manuscript.md`. |
-| **Pre-conditions** | `04_Outputs/` non-empty with at least BaselineTable and GroupComparison outputs. `Reference/citation_map.md` exists with >= 10 entries. `project_config.yml` has target_journal set. |
+| **Pre-conditions** | `04_Outputs/` non-empty with study-type-appropriate minimum outputs (see table below). `Reference/citation_map.md` exists with >= 10 entries. `project_config.yml` has target_journal set. |
 | **Completion markers** | Complete IMRAD structure, all citations have DOIs, Humanizer checklist passed, simulated review completed |
+
+#### Writer Agent Pre-condition Minimums by Study Type
+
+| Study Type | Minimum Required Outputs in `04_Outputs/` |
+|------------|------------------------------------------|
+| RCT, Cohort, Case-Control | BaselineTable + at least one comparison/regression output |
+| Cross-Sectional | BaselineTable + at least one association analysis |
+| Descriptive | BaselineTable only (figures/tables per descriptive template) |
 
 ---
 
@@ -146,10 +154,14 @@ Shows which agent reads (R) and writes (W) to each directory. Agents only read f
 | **clinpub-planner** | - | - | - | - | - | - | W | - |
 | **clinpub-executor** | - | R | R | W | - | - | W | - |
 | **clinpub-verifier** | - | R | R | R | R | R | R | - |
+| **modify-agent** | - | R | W | W | R/W (patch only) | - | R | - |
 
 **Rules:**
 - `-` = no access (agent should not read from or write to this directory)
 - **R** = read access (agent may read files from this directory)
 - **W** = write access (agent may create or modify files in this directory; implies read access)
+- **R/W (patch only)** = read access with limited write (may only patch numerical values and method descriptions, never rewrite entire sections)
 - Multi-agent write to the same directory is NOT allowed (single writer per directory)
 - Exception: `02_Preprocessed` is written by analyst-agent (Phase 1) and read by analyst-agent (Phase 2) — same agent, different phases
+- Exception: `03_AnalysisMethods` and `04_Outputs` are written by analyst-agent (Phase 2) and modify-agent (post-Phase 2 modification) — different phases, no concurrent write conflict
+- Exception: `05_Manuscript` may be patched (not rewritten) by modify-agent during cascade updates — limited to numerical value updates and method description patches in existing sections

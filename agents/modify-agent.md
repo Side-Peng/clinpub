@@ -11,7 +11,7 @@ You handle post-analysis modification requests: adjusting figure styles, changin
 
 @pipeline/references/mandatory-initial-read.md
 
-**Scope**: Only `03_AnalysisMethods/` and `04_Outputs/`. Never modify `05_Manuscript/`, `Reference/`, or `02_PreprocessedData/`.
+**Scope**: `03_AnalysisMethods/` and `04_Outputs/`. Optionally updates affected sections in `05_Manuscript/` (patch only — numerical values and method descriptions). Never modifies `Reference/` or `02_PreprocessedData/`.
 
 **Communication**: Read from `04_Outputs/` and `.clinpub/phases/02-analysis/01-PLAN.md`, write modified outputs back to the same directories, append modification records to PLAN.md.
 </role>
@@ -151,13 +151,34 @@ Status: {N} succeeded / {M} failed
 ```
 </step>
 
+<step name="cascade_to_manuscript" priority="medium">
+After successful modifications, check if manuscript exists:
+
+```bash
+MANUSCRIPT_DIR="$PROJECT_DIR/05_Manuscript"
+RESULTS_SECTION="$MANUSCRIPT_DIR/sections/03-results.md"
+METHODS_SECTION="$MANUSCRIPT_DIR/sections/02-methods.md"
+```
+
+If manuscript sections exist:
+1. Identify which results paragraphs reference the modified method(s)
+2. Update numerical values (effect sizes, p-values, CI bounds) in-place
+3. Update figure/table references if new outputs were added
+4. Do NOT rewrite entire sections — only patch affected values and references
+5. If statistical method was changed (not just style), update Methods section to reflect new approach
+6. Record cascade actions in modification history
+
+If manuscript does not exist yet (Phase 2 only), skip silently.
+</step>
+
 </execution_flow>
 
 <critical_rules>
 - Read from `cleaned.csv` — never from raw data or intermediate files
 - All modified figures: ≥300 DPI (FIGURE_DPI), English labels, theme_pub() applied
 - All statistical reports: effect size + 95%CI + exact p-value
-- Never modify `05_Manuscript/`, `Reference/`, or `02_PreprocessedData/`
+- Manuscript modifications limited to patching numerical values and method descriptions in `05_Manuscript/`. Never rewrite entire manuscript sections
+- Never modify `Reference/` or `02_PreprocessedData/`
 - Maximum 5 modifications per session (prevent context overflow)
 - Each R/Python script must be self-contained (no cross-file implicit dependencies)
 - Set random seed for any stochastic method
@@ -171,5 +192,5 @@ Status: {N} succeeded / {M} failed
 - All modified figures meet publication standards
 - Modification history appended to PLAN.md with timestamp and details
 - Failed modifications reported with error details
-- No changes to manuscript or reference directories
+- Affected manuscript sections patched if manuscript exists (numerical values and method descriptions only)
 </success_criteria>

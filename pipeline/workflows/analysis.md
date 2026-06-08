@@ -42,24 +42,25 @@ Diagnose these characteristics from the data:
 **Record diagnosis as structured notes:**
 ```yaml
 # Written to .clinpub/phases/02-analysis/00-DIAGNOSIS.md
+# 变量名和分组名来自用户的 cleaned.csv，以下为示例结构：
 data_diagnosis:
   n_patients: 86
   n_rows: 258
   structure: longitudinal  # or cross-sectional
   groups: 2
-  group_names: ["Sham", "cTBS"]
+  group_names: ["{group_A}", "{group_B}"]
   timepoints: ["baseline", "post_treatment", "follow_up"]
   analysis_timepoint: "baseline"  # from data-prep Phase 1 decision
   outcomes:
-    - variable: "HAMA_total"
+    - variable: "{outcome_1}"
       type: continuous
       distribution: "right-skewed"
-    - variable: "HAMD_total"
+    - variable: "{outcome_2}"
       type: continuous
       distribution: "right-skewed"
   outcome_type: continuous
   has_covariates: true
-  structural_missing: ["cg_factor1", "cg_factor2", "cg_factor3", "cg_factor4", "cg_factor5", "cg_Total_score"]
+  structural_missing: ["{variable_1}", "{variable_2}"]
 ```
 </step>
 
@@ -98,15 +99,15 @@ Based on data diagnosis, use the decision tree in `analysis_methods.md §二` to
 **示例（针对一项纵向 RCT 数据）：**
 ```
 ### Wave 1：基线描述
-1. 基线特征表——比较 cTBS vs Sham 组的人口学和临床特征
-2. 各时间点 HAMD 的 mean±SD 描述统计
+1. 基线特征表——比较 {group_A} vs {group_B} 组的人口学和临床特征
+2. 各时间点 {outcome} 的 mean±SD 描述统计
 
 ### Wave 2：组间比较
-3. HAMD 在 cTBS vs Sham 组的基线差异（Wilcoxon）
+3. {outcome} 在 {group_A} vs {group_B} 组的基线差异（Wilcoxon）
 4. 重复测量混合模型——time×group 交互效应 (lme4)
 
 ### Wave 3：多因素调整
-5. 调整年龄、性别后 Treatment 对 HAMD 变化的线性回归
+5. 调整年龄、性别后干预对 {outcome} 变化的线性回归
 
 ---
 
@@ -144,8 +145,9 @@ Discuss the proposed plan with user and finalize:
 **Write confirmed plan** to `.clinpub/phases/02-analysis/01-PLAN.md`:
 
 ```yaml
+# 变量名、分组名和文件名来自用户数据和 project_config.yml
 analysis_plan:
-  summary: "86例 cTBS vs Sham RCT，3时间点，连续结局。共 3 个波次。"
+  summary: "86例 {group_A} vs {group_B} RCT，3时间点，连续结局。共 3 个波次。"
   waves:
     1:
       label: "基线描述"
@@ -163,14 +165,14 @@ analysis_plan:
           data: "cleaned.csv"
           timepoint: "baseline"
           method: "wilcox.test"
-          grouping: "Treatment"
-          outcomes: ["HAMA_total", "HAMD_total"]
+          grouping: "{grouping_variable}"
+          outcomes: ["{outcome_1}", "{outcome_2}"]
           outputs: ["boxplot_*.png", "comparison_table.xlsx"]
         - id: "03_RepeatedMeasures"
           type: longitudinal
           data: "full_longitudinal.csv"
           method: "lme4::lmer()"
-          formula: "HAMD_total ~ Treatment * time + (1 | name)"
+          formula: "{outcome} ~ {grouping_variable} * time + (1 | id)"
           outputs: ["fixed_effects_table.docx", "interaction_plot.png"]
     3:
       label: "多因素分析"
@@ -179,7 +181,7 @@ analysis_plan:
           type: regression
           data: "cleaned.csv"
           timepoint: "baseline"
-          formula: "HAMD_total ~ Treatment + age + sex + BMI"
+          formula: "{outcome} ~ {grouping_variable} + age + sex + BMI"
           outputs: ["regression_table.docx", "forest_plot.png"]
 ```
 </step>
@@ -242,12 +244,12 @@ If manifest is missing, write it here: `04_Outputs/MANIFEST.yaml` documenting ea
 
 请确认：
 - 满意 → 继续执行 `/clinpub-milestone` 关闭 Phase 2，进入 Phase 3 写作
-- 不满意 → 使用 `/clinpub-correct` 调整分析方法、变量、图表样式等
+- 不满意 → 使用 `/clinpub-modify` 调整分析方法、变量、图表样式等
 ```
 
 按用户反馈分支：
 - 选择「满意」→ 继续 `milestone` 步骤
-- 选择「不满意」→ 引导用户调用 `/clinpub-correct`；修改完成后回到 `verify_outputs` 复检
+- 选择「不满意」→ 引导用户调用 `/clinpub-modify`；修改完成后回到 `verify_outputs` 复检
 </step>
 
 </process>
@@ -266,6 +268,14 @@ Execute the milestone workflow to formally close Phase 2 and gate into Phase 3:
 ```
 
 See @./pipeline/workflows/milestone.md for full protocol.
+
+<output name="signoff_prompt" format="user_facing">
+────────────────────────────────
+✅ Phase 2 核验完成
+
+请确认：输入 "approved" 进入 Phase 3（论文写作），或描述需要调整的地方。
+────────────────────────────────
+</output>
 </step>
 
 <statistical_reporting_standards>

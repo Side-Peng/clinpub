@@ -156,16 +156,17 @@ Project_Root/
 
 ## Agent Routing
 
-| Task | Agent | Language |
-|------|-------|----------|
-| Data cleaning, stats, figures | `analyst-agent` | R primary |
-| Literature search, citations | `reference-agent` | Python |
-| Manuscript drafting | `writer-agent` | — |
-| Topic mining from data | `topic-miner-agent` | Python |
-| Research analysis planning | `clinpub-planner` | — |
-| Analysis execution (atomic commits) | `clinpub-executor` | R/Python |
-| Statistical verification (adversarial) | `clinpub-verifier` | — |
-| Analysis output modification | `modify-agent` | R primary |
+| Task | Agent | Phase | Language | 备注 |
+|------|-------|-------|----------|------|
+| 数据清洗 + 质量报告 | `analyst-agent` | 1 | R primary | 默认执行者 |
+| 方法设计 + 代码执行 | `analyst-agent` | 2 | R primary | 默认执行者 |
+| 文献检索 + 引用 | `reference-agent` | 3 | Python | |
+| 论文撰写 | `writer-agent` | 3 | — | |
+| 选题挖掘 | `topic-miner-agent` | — | Python | |
+| 分析规划 | `clinpub-planner` | 2 | — | 可选高级模式 |
+| 计划执行 | `clinpub-executor` | 2 | R/Python | 可选高级模式 |
+| 统计验证 | `clinpub-verifier` | 1-3 | — | |
+| 分析修改 | `modify-agent` | post-2 | R primary | |
 
 ## Cross-Agent Communication Rules
 

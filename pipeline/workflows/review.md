@@ -18,7 +18,7 @@ Simulate rigorous peer review at target journal level, then iteratively revise t
 <step name="discuss_review_scope" priority="first">
 Discuss review standards with user:
 
-1. **Review rigor level** (default: target journal level — Alzheimer's & Dementia / Molecular Psychiatry)
+1. **Review rigor level** (default: target journal level — read from `project_config.yml` `journal.name` + `journal.tier`; if unconfigured, apply Q2 standards)
 2. **Focus areas**: any specific concerns the user wants reviewers to examine
 3. **Supplementary search**: any new literature to search based on review direction
 </step>
@@ -118,6 +118,14 @@ Execute the milestone workflow to formally close Phase 4 (project completion):
 ```
 
 See @./pipeline/workflows/milestone.md for full protocol.
+
+<output name="signoff_prompt" format="user_facing">
+────────────────────────────────
+✅ Phase 4 核验完成
+
+请确认：输入 "approved" 完成全部流程，或描述需要调整的地方。
+────────────────────────────────
+</output>
 </step>
 
 </process>

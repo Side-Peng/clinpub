@@ -110,6 +110,14 @@ Execute the milestone workflow to formally close Phase 0 and gate into Phase 1:
 ```
 
 See @./pipeline/workflows/milestone.md for full protocol.
+
+<output name="signoff_prompt" format="user_facing">
+────────────────────────────────
+✅ Phase 0 核验完成
+
+请确认：输入 "approved" 进入 Phase 1（数据准备），或描述需要调整的地方。
+────────────────────────────────
+</output>
 </step>
 
 </process>

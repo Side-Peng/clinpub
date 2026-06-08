@@ -192,7 +192,10 @@ reference_count: 0  # 引用条目总数
 
 计算方式：
 - `target_journal` → `project_config.yml` 的 `target_journal` 字段
-- `word_count` → 统计合并后正文（不含 YAML frontmatter 和 References 部分）的中文字符 + 英文单词数
+- `word_count` → 统计合并后正文（不含 YAML frontmatter 和 References 部分）的字数：
+  - `zh-CN` 模式：中文字符数 + 英文单词数
+  - `en-US` 模式：英文单词数
+  - 语言模式从 `project_config.yml` 的 `language.manuscript` 读取
 - `reference_count` → 最终 References 区的条目总数
 
 ### Step 5: 合并输出

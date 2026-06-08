@@ -28,16 +28,18 @@ data_structure:
   time_labels: ["baseline", "post_treatment", "follow_up"]
   groups:
     count: 2
-    names: ["cTBS", "Sham"]
+    names: ["{group_A}", "{group_B}"]  # 实际名称来自用户数据
   outcomes:
-    - name: "HAMA_total"
+    - name: "{outcome_1}"    # 实际变量名来自 cleaned.csv
       type: continuous       # binary / continuous / survival / categorical
       distribution: "略偏态"  # 正态 / 偏态 / 双峰
-    - name: "HAMD_total"
+    - name: "{outcome_2}"
       type: continuous
   has_id: true               # 有患者标识符
-  missing_pattern: "cg_factor 在 follow_up 缺失（结构性缺失）"
+  missing_pattern: "{variable} 在 follow_up 缺失（结构性缺失）"
 ```
+
+> **多领域示例**：上述结构适用于任何临床领域——肿瘤（group_A=化疗 vs group_B=安慰剂）、心血管（降压方案 A vs B）、内分泌（胰岛素 vs 口服药）、骨科（手术 vs 保守治疗）、精神科（干预 vs 对照）。实际变量名和分组来自用户的 `cleaned.csv`。
 
 ### Step 2: 按特征匹配分析策略
 
@@ -51,6 +53,15 @@ data_structure:
 | 多标志物 + 诊断 | ROC + LASSO + 分类模型 | 诊断价值评估 |
 | 无分组/无结局 | 描述性统计 + 相关性 | 仅可做相关性/聚类 |
 | 连续变量间关系 | 线性回归 + 相关性矩阵 | 关联分析 |
+| 观察性研究 + 混杂控制需求 | PSM/IPTW + 匹配后分析 (§3.8) | 减少选择偏倚 |
+| 生存数据 + 多种互斥事件 | 竞争风险模型 Fine-Gray (§3.8) | 标准 Cox 高估主要事件风险 |
+| 连续暴露 + 疑似非线性关系 | RCS 样条 + 非线性检验 (§3.9) | 避免线性假设偏差 |
+| 5%-20% 缺失率 | MICE 多重插补 (§3.10) | 比完整病例分析更优的效力和偏倚控制 |
+| 暴露→中介→结局路径 | 中介分析 causal mediation (§3.11) | 分解直接/间接效应 |
+| 暴露效应受第三变量影响 | 调节分析 交互项+简单斜率 (§3.11) | 识别效应异质性 |
+| 人群异质性 + 无预设分组 | 聚类分析 k-means/LCA (§3.12) | 发现潜在表型亚型 |
+| 计数结局（罕见事件） | Poisson / 负二项回归 | 事件率建模 |
+| 配对/匹配设计 | 条件 Logistic / 配对检验 | 控制匹配因素 |
 
 > **💡 未知方法？** 如果用户提到的统计方法不在本决策树中，系统会自动搜索方法概览并与用户讨论。
 > 参见 `agents/reference-agent.md` 的 `method_search` 模式。
@@ -84,15 +95,15 @@ data_structure:
 基于数据诊断，建议以下分析方案：
 
 ### Wave 1：基线特征描述
-1. **基线表** — 比较 cTBS vs Sham 组的人口学和临床特征（t检验 / 卡方）
-2. **描述性统计** — 各时间点 HAMA/HAMD 的 mean±SD
+1. **基线表** — 比较 {group_A} vs {group_B} 组的人口学和临床特征（t检验 / 卡方）
+2. **描述性统计** — 各时间点 {outcome_1}/{outcome_2} 的 mean±SD
 
 ### Wave 2：组间比较与纵向分析
-3. **基线组间比较** — HAMA/HAMD 在 cTBS vs Sham 的差异（Wilcoxon，因数据偏态）
-4. **重复测量混合模型** — time×group 交互效应（lme4），评估 cTBS 是否随时间改善更显著
+3. **基线组间比较** — {outcome_1}/{outcome_2} 在 {group_A} vs {group_B} 的差异（Wilcoxon，因数据偏态）
+4. **重复测量混合模型** — time×group 交互效应（lme4），评估干预是否随时间改善更显著
 
 ### Wave 3：多因素分析
-5. **线性回归** — 调整年龄、性别、BMI 后 Treatment 对 HAMD 变化的效应
+5. **线性回归** — 调整年龄、性别、BMI 后干预对 {outcome} 变化的效应
 
 ---
 
@@ -236,6 +247,179 @@ data_structure:
 - **用途**：预测建模（当预测而非解释为主要目标时）
 - **方法**：随机森林 / XGBoost / SVM
 - **输出**：特征重要性 + ROC + 混淆矩阵
+
+### 3.8 因果推断与混杂控制
+
+#### PropensityScoreMethods（倾向性评分方法）
+- **用途**：观察性研究中控制混杂偏倚
+- **子类型**：PSM（1:1 / 1:N 匹配）、IPTW（逆概率加权）、PS 分层
+- **输出**：Love plot（匹配前后 SMD 对比）+ 加权后基线表 + 处理效应估计
+- **R 代码模式**：
+  ```r
+  # PSM
+  library(MatchIt)
+  m_out <- matchit(treatment ~ age + sex + bmi + comorbidity,
+                   data = cleaned, method = "nearest", ratio = 1)
+  matched_data <- match.data(m_out)
+  # 平衡诊断
+  library(cobalt)
+  bal_tab <- bal.tab(m_out)
+  love.plot(bal_tab, threshold = 0.1)  # 见 r_patterns §2.12
+  # IPTW
+  library(WeightIt)
+  w_out <- weightit(treatment ~ age + sex + bmi, data = cleaned, method = "ps")
+  ```
+- **关键细节**：
+  - 匹配质量报告：SMD < 0.1 为平衡
+  - 加权后样本量变化
+  - 敏感性分析配合 E-value
+  - 参见图表：r_patterns §2.12 Love Plot
+
+#### CompetingRisks（竞争风险模型）
+- **用途**：当研究对象可能经历多种互斥事件时（如死亡 vs 复发 vs 失访）
+- **输出**：累积发生率函数（CIF）曲线 + Fine-Gray 回归表（SHR + 95%CI）
+- **R 代码模式**：
+  ```r
+  library(cmprsk)
+  # Fine-Gray 模型
+  fg_model <- crr(ftime, fstatus, cov1 = model.matrix(~ treatment + age, data)[, -1])
+  summary(fg_model)  # SHR + 95%CI + p-value
+  # 可视化
+  library(ggsurvfit)
+  cuminc(Surv(time, status) ~ treatment, data = cleaned) %>%
+    ggcuminc(outcome = "event_of_interest") + theme_pub()
+  ```
+- **关键细节**：
+  - 与标准 Cox 的区别：subdistribution hazard vs cause-specific hazard
+  - Gray 检验做组间比较
+  - 依赖 SurvivalAnalysis 的结果作为前序参考
+
+### 3.9 非线性与剂量反应分析
+
+#### RCSAnalysis（限制性立方样条分析）
+- **用途**：探索连续暴露与结局之间的非线性剂量反应关系
+- **输出**：RCS 曲线图（含 95%CI 带）+ 非线性检验 p 值
+- **R 代码模式**：
+  ```r
+  library(rms)
+  dd <- datadist(cleaned); options(datadist = "dd")
+  # RCS 模型（通常 3-5 个 knots，按 Harrell 推荐百分位数）
+  fit <- ols(outcome ~ rcs(exposure, 4) + age + sex, data = cleaned)
+  anova(fit)  # 非线性检验
+  # 可视化
+  p <- Predict(fit, exposure, ref.zero = TRUE)
+  ggplot(p, aes(exposure, yhat)) +
+    geom_line(color = "#0072B5") +
+    geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2, fill = "#0072B5") +
+    geom_rug(data = cleaned, aes(x = exposure), sides = "b") +
+    theme_pub() +
+    labs(x = "Exposure", y = "Adjusted Effect (95% CI)",
+         title = paste0("P for non-linearity = ", round(anova(fit)["exposure", "P"], 4)))
+  ```
+- **关键细节**：
+  - 参考值选取：中位数或临床有意义的值
+  - knot 敏感性分析（3/4/5 个 knots 比较）
+  - 参见图表：r_patterns §2.13 RCS 曲线
+
+### 3.10 缺失数据处理
+
+#### MICEImputation（多重插补）
+- **用途**：处理 5%-20% 缺失率的变量（与 data-prep 三级策略配合）
+- **输出**：插补收敛诊断图（trace plot）+ 插补前后分布对比图 + 汇集（pooled）分析结果
+- **R 代码模式**：
+  ```r
+  library(mice)
+  # 插补（m=5 为默认，method='pmm' 适用于连续+分类混合）
+  imp <- mice(cleaned, m = 5, method = "pmm", seed = 42,
+              predictorMatrix = quickpred(cleaned, mincor = 0.1))
+  # 诊断：收敛性
+  plot(imp, c("exposure", "outcome"))  # trace plot
+  # 诊断：分布对比
+  densityplot(imp)  # 插补值 vs 观测值
+  # 汇集分析
+  fit_imp <- with(imp, lm(outcome ~ treatment + age + sex))
+  pooled <- pool(fit_imp)
+  summary(pooled, conf.int = TRUE, exponentiate = FALSE)
+  ```
+- **关键细节**：
+  - m=5 为默认插补次数，缺失率 >20% 时建议 m=20
+  - 预测矩阵设计：排除 ID 变量和不相关变量
+  - Rubin 规则汇集
+  - 与完整病例分析的敏感性比较
+  - 依赖 Phase 1 data-prep 的缺失值诊断结果
+
+### 3.11 中介与调节分析
+
+#### MediationAnalysis（中介分析）
+- **用途**：检验暴露是否通过某个中介变量间接影响结局
+- **输出**：中介效应路径图 + 直接效应/间接效应/总效应表 + Bootstrap CI
+- **R 代码模式**：
+  ```r
+  library(mediation)
+  # 中介模型：exposure → mediator → outcome
+  med_fit <- lm(mediator ~ exposure + age + sex, data = cleaned)
+  out_fit <- lm(outcome ~ exposure + mediator + age + sex, data = cleaned)
+  # 因果中介分析
+  med_result <- mediate(med_fit, out_fit, treat = "exposure",
+                        mediator = "mediator", sims = 1000, boot = TRUE)
+  summary(med_result)
+  # 报告：ACME（平均因果中介效应）、ADE（平均直接效应）、总效应、比例中介
+  ```
+- **关键细节**：
+  - 因果中介分析的前提假设：无未测量混杂
+  - 报告 ACME、ADE、总效应、proportion mediated
+  - Bootstrap 法（sims=1000）估计间接效应 CI
+
+#### ModerationAnalysis（调节分析）
+- **用途**：检验某变量是否改变暴露-结局关系的强度或方向
+- **输出**：交互效应表 + 简单斜率图（在调节变量不同水平下的效应）
+- **R 代码模式**：
+  ```r
+  # 交互项模型
+  fit <- lm(outcome ~ exposure * moderator + age + sex, data = cleaned)
+  summary(fit)  # 交互项系数 + p 值
+  # 简单斜率
+  library(emmeans)
+  emtrends(fit, ~ moderator, var = "exposure",
+           at = list(moderator = c(mean - sd, mean, mean + sd)))
+  # Johnson-Neyman 区间（连续调节变量）
+  library(interactions)
+  sim_slopes(fit, pred = exposure, modx = moderator, plot = TRUE) + theme_pub()
+  ```
+- **关键细节**：
+  - 区分调节（moderation）和中介（mediation）的概念
+  - 连续调节变量时 J-N 区间的解读
+  - 调节变量在 ± 1 SD 处的简单斜率
+
+### 3.12 聚类与模式识别
+
+#### ClusterAnalysis（聚类分析）
+- **用途**：识别研究人群中的潜在亚型或表型模式
+- **子类型**：k-means / 层次聚类 / LCA（潜在类别分析）
+- **输出**：轮廓系数/肘部法则图（最优聚类数）+ 聚类特征热图 + 各聚类人群描述表
+- **R 代码模式**：
+  ```r
+  library(factoextra)
+  # 标准化聚类变量
+  cluster_vars <- scale(cleaned[, c("var1", "var2", "var3")])
+  # 最优 k 选择
+  fviz_nbclust(cluster_vars, kmeans, method = "silhouette") + theme_pub()
+  # k-means 聚类
+  set.seed(42)
+  km <- kmeans(cluster_vars, centers = 3, nstart = 25)
+  cleaned$cluster <- as.factor(km$cluster)
+  # 聚类特征描述
+  library(gtsummary)
+  tbl_summary(cleaned, by = cluster, include = c(var1, var2, var3, age, sex)) %>%
+    add_p()
+  # LCA（潜在类别分析）
+  library(poLCA)
+  lca_model <- poLCA(cbind(item1, item2, item3) ~ 1, data = cleaned, nclass = 3)
+  ```
+- **关键细节**：
+  - 聚类数选择标准：BIC/AIC/轮廓系数
+  - 聚类可解释性（临床意义 > 统计指标）
+  - 聚类结果稳定性检验（bootstrap resampling）
 
 ---
 

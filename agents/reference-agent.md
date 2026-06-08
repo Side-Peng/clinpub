@@ -14,29 +14,50 @@ You handle all literature-related tasks: search, retrieval, management, and cita
 <execution_flow>
 
 <step name="check_skill_availability" priority="first">
-Before any search, verify that the `ncbi-search` skill is available:
+Before any search, verify available search capabilities and select the appropriate mode:
 
 ```
-1. Check if ncbi-search skill exists in the current environment:
-   - The ncbi-search skill should be listed in available skills
-   - It provides NCBI E-Utilities API access (PubMed, Gene, Protein, etc.)
-   - It supports: pubmed search with MeSH expansion, year filtering, article type filtering
+1. Check search tool availability:
+   a. ncbi-search skill (PubMed E-Utilities)
+   b. Tavily / WebSearch tools
+   c. CrossRef API for DOI resolution
 
-2. If ncbi-search IS available:
-   → Proceed with literature search using the skill
+2. Select search mode:
 
-3. If ncbi-search is NOT available:
+   **Mode A — Primary (ncbi-search available):**
+   → Proceed with literature search using ncbi-search skill.
+   → This is the preferred mode with full MeSH expansion, year filtering, and article type filtering.
+
+   **Mode B — Fallback (ncbi-search NOT available, but Tavily/WebSearch available):**
+   → Use Tavily or WebSearch for literature search.
+   → Use CrossRef API to resolve and verify DOIs.
+   → Mark all citations in citation_map.md with `source: fallback`.
+   → Limitations to communicate to user:
+     - No MeSH term expansion (broader keyword search)
+     - Fewer structured filters (year, article type may be less precise)
+     - DOI verification may have delays
+   → Output notice:
+     ```
+     ⚠️ ncbi-search 技能未安装，已切换到备用检索模式。
+     使用 Tavily/WebSearch + CrossRef DOI 解析。
+     所有引用已标记 source: fallback。
+     建议安装 ncbi-search 以获得更精确的 PubMed 检索。
+     ```
+
+   **Mode C — Offline (no search tools available):**
    → Output the following and STOP:
-   ```
-   ❌ ncbi-search 技能未安装
+     ```
+     ❌ 无可用文献检索工具
 
-   clinpub 文献检索依赖 ncbi-search 技能（PubMed E-Utilities）。
-   请安装 ncbi-search 技能后再继续：
+     clinpub 文献检索需要至少一种检索工具：
 
-   安装方式：联系管理员获取 ncbi-search 技能文件并安装到 skills 目录。
+     安装选项（任选其一）：
+     1. 安装 ncbi-search 技能（推荐）：联系管理员获取技能文件并安装到 skills 目录
+     2. 安装 Tavily MCP：配置 Tavily API key 并启用 MCP 服务
+     3. 启用 WebSearch：确认 WebSearch 工具在当前环境中可用
 
-   安装完成后，重新执行当前命令即可。
-   ```
+     安装完成后，重新执行当前命令即可。
+     ```
    → Do NOT attempt to run any Python scripts as fallback.
    → Do NOT fabricate references.
 ```
@@ -275,7 +296,8 @@ Write MANIFEST.yaml to `Reference/` declaring all outputs and listing writer-age
 
 <critical_rules>
 - Every citation MUST have a DOI — no DOI, no citation (flag for user)
-- Check ncbi-search skill availability before each search session; if missing, prompt user to install
+- Check ncbi-search skill availability before each search session; if missing, check for Tavily/WebSearch fallback
+- If in fallback mode, mark all citations with `source: fallback` in citation_map.md
 - Never fabricate references — if search returns nothing, report "no results found"
 - Rate limit: ncbi-search handles rate limiting automatically (3 req/sec without NCBI_API_KEY, 10 req/sec with key)
 - Retained references must be directly relevant to the study

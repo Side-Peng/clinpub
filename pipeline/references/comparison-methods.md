@@ -167,6 +167,10 @@ friedman.test(value ~ time | subject, data = data)
 | 卡方检验 | Cramer's V / φ | V = √(χ²/(N·min(r−1,c−1))) | 0.1小/0.3中/0.5大 |
 | 配对 t 检验 | Cohen's d_z | d_z = t/√n | 同上 Cohen's d |
 | Wilcoxon 符号秩 | r | r = Z/√N | 0.1小/0.3中/0.5大 |
+| PSM/IPTW | SMD (Standardized Mean Difference) | SMD = (M₁−M₂) / SD_pooled | <0.1 平衡良好, <0.2 可接受 |
+| Fine-Gray 竞争风险 | SHR (Subdistribution HR) | SHR = exp(β) from Fine-Gray model | 同 HR 解释，但针对亚分布风险 |
+| 中介分析 | ACME / ADE | ACME: 平均因果中介效应; ADE: 平均直接效应 | ACME 显著 → 中介路径成立 |
+| Meta 分析 | 合并效应量 (pooled d / OR / HR) | 随机/固定效应模型加权合并 | 异质性 I² < 50% 可接受 |
 
 ```r
 # Cohen's d
@@ -180,6 +184,29 @@ etaSquared(aov_model)
 # Cramer's V
 library(rcompanion)
 cramerV(tbl)
+
+# PSM 平衡诊断 — SMD
+library(cobalt)
+bal.tab(formula, data = data, method = "weighting")
+love.plot(bal.tab_obj, threshold = 0.1)
+
+# Fine-Gray 竞争风险
+library(cmprsk)
+fg_model <- crr(ftime = data$time, fstatus = data$status,
+                cov1 = model.matrix(~ exposure + age + sex, data)[, -1])
+summary(fg_model)  # SHR + 95% CI
+
+# 中介分析
+library(mediation)
+med_fit <- lm(outcome ~ exposure + mediator + covariates, data = data)
+med_result <- mediate(med_fit, treat = "exposure", mediator = "mediator",
+                      boot = TRUE, sims = 1000)
+summary(med_result)  # ACME, ADE, total effect, proportion mediated
+
+# Meta 分析合并效应量
+library(meta)
+m <- metagen(TE, seTE, data = meta_data, sm = "OR", method.tau = "REML")
+summary(m)  # pooled OR + 95% CI + I²
 ```
 
 ---

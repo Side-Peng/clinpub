@@ -57,10 +57,20 @@ analysis_plan:
   #         grouping: "Treatment"
   waves: {}
 
+journal:
+  name: ""                        # 期刊名
+  tier: "Q1"                      # Q1/Q2/Q3/Q4 — 对应 journal_standards.md 分级标准
+  word_limit: 5000                # 正文字数限制
+  abstract_limit: 300             # 摘要字数限制
+  reference_style: "vancouver"    # 参考文献格式
+  figure_limit: 6                 # 图表数量限制
+  data_sharing: "required"        # 数据共享要求
+  specific_requirements: []       # 期刊特定要求（覆盖默认标准）
+
 language:
-  manuscript: "zh-CN"                  # 论文语言
-  figures_tables: "en"                 # 图表语言
-  statistics: "R"                      # 统计主语言
+  manuscript: "zh-CN"             # 论文语言 (zh-CN / en-US)
+  figures_tables: "en"            # 图表语言
+  statistics: "R"                 # 统计主语言
 
 quality:
   journal_level: "Q1"                  # Q1 / Q2
