@@ -1,4 +1,4 @@
-﻿# AGENTS.md
+# AGENTS.md
 
 This file provides guidance to Qoder (qoder.com) when working with code in this repository.
 
@@ -144,7 +144,7 @@ Project_Root/
 |---------|-------|-------------|
 | `/clinpub` | — | Command reference overview |
 | `/clinpub-data2idea` | — | Topic mining from data |
-| `/clinpub-init-project` | 0 | Project setup, config, research framework |
+| `/clinpub-init` | 0 | Project setup, config, research framework |
 | `/clinpub-data-prep` | 1 | Data cleaning → cleaned.csv |
 | `/clinpub-analysis` | 2 | Statistical analysis (methods proposed dynamically) |
 | `/clinpub-writing` | 3 | IMRAD manuscript drafting |
@@ -193,14 +193,14 @@ Project_Root/
 ## Dependencies
 
 - **R**: dplyr, tidyr, stringr, readr, readxl, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx, ggplot2, ggpubr, patchwork, survminer, ggsurvfit, ggsignif, here, fs
-- **Python**: pandas, numpy, pymupdf, requests, openpyxl, tavily-python (see `requirements.txt`)
+- **Python**: pandas, numpy, requests, openpyxl (see `requirements.txt`)
 - **Node**: >= 22.0.0
 - **Env vars**: `NCBI_API_KEY` (optional, PubMed rate limit), `TAVILY_API_KEY` (Tavily search)
 
 ## External Skills
 
 clinpub depends on Claude Code skills installed separately:
-- `ncbi-search` — PubMed literature search (sole search入口 since v1.2)
+- `ncbi-search` — PubMed literature search (sole search entry since v1.2)
 - `pdf-reader` — PDF full-text reading
 - `tavily` — supplementary search
 

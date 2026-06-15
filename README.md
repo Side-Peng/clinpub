@@ -1,4 +1,4 @@
-﻿# clinpub — 临床数据分析与发表管线
+# clinpub — 临床数据分析与发表管线
 
 [clínica + publish] 面向 SCI Q1/Q2 期刊的端到端临床数据分析和发表加速器。
 
@@ -21,7 +21,7 @@ npx clinpub@latest        # 一键安装
 
 ```
 commands/clinpub/*.md — Thin entry points (user-facing)
-agents/*.md            — Specialized AI agent role cards (7 agents)
+agents/*.md            — Specialized AI agent role cards (8 agents)
 pipeline/
   workflows/*.md       — Phase orchestration logic
   references/*.md      — Reference documents (11 files)
@@ -99,13 +99,13 @@ Project_Root/
 
 | 命令 | 用途 |
 |------|------|
-| `clinpub:data2idea <file>` | 选题挖掘：从数据中找论文思路 |
-| `clinpub:init-project` | Phase 0：项目初始化 |
-| `clinpub:data-prep` | Phase 1：数据准备 |
-| `clinpub:analysis` | Phase 2：统计分析 |
-| `clinpub:writing` | Phase 3：论文撰写 |
-| `clinpub:review` | Phase 4：审稿修稿 |
-| `clinpub:milestone <N>` | Phase 关卡评审：验证成功标准、记录决策、用户签字放行 |
+| `clinpub-data2idea <file>` | 选题挖掘：从数据中找论文思路 |
+| `clinpub-init` | Phase 0：项目初始化 |
+| `clinpub-data-prep` | Phase 1：数据准备 |
+| `clinpub-analysis` | Phase 2：统计分析 |
+| `clinpub-writing` | Phase 3：论文撰写 |
+| `clinpub-review` | Phase 4：审稿修稿 |
+| `clinpub-milestone <N>` | Phase 关卡评审：验证成功标准、记录决策、用户签字放行 |
 
 > 如需查看各 Phase 的完整命令用法和前置条件，运行 `/clinpub` 查看命令参考。
 
