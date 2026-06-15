@@ -55,6 +55,7 @@ USER → COMMANDS (commands/clinpub/clinpub.md)
 | **Clinpub Planner** | — | 研究分析规划，创建可执行的 PLAN.md（波次依赖图） |
 | **Clinpub Executor** | R/Python | 分析执行，原子提交，偏差处理，SUMMARY.md 生成 |
 | **Clinpub Verifier** | — | 跨阶段验证（Phase 1 数据质量 + Phase 2 统计 + Phase 3 论文），15 种验证模式 |
+| **Modify Agent** | R 为主 | 分析产出修改：图表样式、统计方法、变量调整 |
 
 ### 阶段化流程
 

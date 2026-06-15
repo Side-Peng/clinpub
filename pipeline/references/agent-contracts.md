@@ -1,4 +1,4 @@
-﻿# Agent Contracts
+# Agent Contracts
 
 > Each clinpub agent has a defined role, scope, inputs, outputs, and completion markers.
 
@@ -127,6 +127,21 @@ Each agent contract defines:
 | **Output naming conventions** | Report: `{phase-number}-VERIFICATION.md` in `.clinpub/phases/XX-name/`. Status: passed / gaps_found / human_needed. |
 | **Pre-conditions** | Phase 1: `cleaned.csv` and `data_quality.html` exist. Phase 2: SUMMARY.md and all method output dirs exist. Phase 3: `05_Manuscript/manuscript.md` and `Reference/citation_map.md` exist. |
 | **Completion markers** | VERIFICATION.md exists, all patterns checked, overall status is pass/gaps_found/human_needed |
+
+---
+
+## Modify Agent
+
+| Field | Definition |
+|-------|------------|
+| **Role** | Analysis output modification specialist for post-analysis adjustments |
+| **Scope** | Post-Phase 2 modifications: figure styles, statistical methods, variables, chart types. Optionally patches affected sections in `05_Manuscript/`. NOT responsible for initial analysis, writing, or literature. |
+| **Inputs** | `project_config.yml`, `.clinpub/phases/02-analysis/*-PLAN.md`, `04_Outputs/`, `03_AnalysisMethods/`, `02_PreprocessedData/data/cleaned.csv` |
+| **Outputs** | Modified files in `03_AnalysisMethods/` and `04_Outputs/`, updated PLAN.md with modification history |
+| **Communication** | Reads from `04_Outputs/` and PLAN.md. Writes modified outputs back to same directories. Appends modification records to PLAN.md. |
+| **Output naming conventions** | Preserves original file names. Modification history appended to PLAN.md as `## 修改记录` section with timestamp, scope, and affected files. |
+| **Pre-conditions** | Phase 2 analysis complete (PLAN.md exists with finalized methods). `cleaned.csv` exists. `04_Outputs/` has at least one method directory. |
+| **Completion markers** | Modified files match requested scope, all figures still ≥300 DPI, modification history recorded in PLAN.md, no regressions in unmodified outputs |
 
 ---
 

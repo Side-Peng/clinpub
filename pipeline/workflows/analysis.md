@@ -1,4 +1,4 @@
-﻿---
+---
 name: analysis
 description: "Phase 2 orchestration: Diagnose data structure → discuss with user → propose dynamic analysis plan → execute in dependency order. Each method produces figure + table + 方法说明 with publication-grade standards."
 ---
@@ -252,8 +252,6 @@ If manifest is missing, write it here: `04_Outputs/MANIFEST.yaml` documenting ea
 - 选择「不满意」→ 引导用户调用 `/clinpub-modify`；修改完成后回到 `verify_outputs` 复检
 </step>
 
-</process>
-
 <step name="milestone" priority="high">
 Execute the milestone workflow to formally close Phase 2 and gate into Phase 3:
 
@@ -277,6 +275,8 @@ See @./pipeline/workflows/milestone.md for full protocol.
 ────────────────────────────────
 </output>
 </step>
+
+</process>
 
 <statistical_reporting_standards>
 - Every analysis: **effect size + 95%CI + exact p-value** (not just "p < 0.05")

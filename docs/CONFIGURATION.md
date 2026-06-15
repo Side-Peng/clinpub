@@ -1,4 +1,4 @@
-﻿# clinpub 配置指南
+# clinpub 配置指南
 
 ## 项目配置
 
@@ -216,22 +216,18 @@ Hooks 自动注册在 `.claude/settings.json`：
 ```json
 {
   "hooks": {
-    "Write": [
+    "PreToolUse": [
       {
-        "matcher": "*.R",
-        "command": "node hooks/clinpub-workflow-guard.js"
-      }
-    ],
-    "Bash": [
+        "matcher": "Write|Edit",
+        "hooks": [{ "type": "command", "command": "node hooks/clinpub-workflow-guard.js", "timeout": 5000 }]
+      },
       {
-        "matcher": "*",
-        "command": "bash hooks/clinpub-phase-boundary.sh"
-      }
-    ],
-    "Read": [
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "bash hooks/clinpub-phase-boundary.sh", "timeout": 5000 }]
+      },
       {
-        "matcher": "*.csv",
-        "command": "node hooks/clinpub-prompt-guard.js"
+        "matcher": "Read",
+        "hooks": [{ "type": "command", "command": "node hooks/clinpub-prompt-guard.js", "timeout": 3000 }]
       }
     ]
   }

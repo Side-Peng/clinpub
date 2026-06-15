@@ -1,4 +1,4 @@
-﻿---
+---
 name: pre-phase-research
 description: "标准化 Phase 前调研流程：根据 Phase 类型自动选择调研轨道，执行搜索，产出 RESEARCH.md，为 discuss-phase 提供信息基础。配合 agents/reference-agent.md 的 phase_research 模式使用。"
 ---
@@ -190,11 +190,10 @@ RESEARCH.md 的内容映射到 CONTEXT.md 的对应节，标记方式为**追加
 
 ### 搜索策略
 
-1. **读取 codebase 地图文件**：
-   - `.clinpub/codebase/ARCHITECTURE.md` — 了解当前架构
-   - `.clinpub/codebase/CONVENTIONS.md` — 了解代码规范
-   - `.clinpub/codebase/STRUCTURE.md` — 了解文件结构
-   - `.clinpub/codebase/INTEGRATIONS.md` — 了解外部集成
+1. **读取项目上下文文件**：
+   - `project_config.yml` — 了解当前项目配置
+   - `.clinpub/STATE.md` — 了解当前阶段
+   - `.clinpub/ROADMAP.md` — 了解路线图
    - 无需额外扫描逻辑（per D-10）
 2. **ncbi-search 搜索技术文献**：使用 `ncbi-search` 技能在 PubMed 中搜索技术方案文献（关键词: "{technology_keyword}"，最大 5 篇）
 

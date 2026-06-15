@@ -64,6 +64,24 @@
 
 ---
 
+### Gate 3.5: Writing Quality Gate (Phase 3 → Phase 4)
+
+**Purpose**: Manuscript draft is complete enough for peer review simulation.
+
+| Check | Required | Pass Condition |
+|-------|----------|----------------|
+| IMRAD structure complete | Yes | All four sections (Introduction, Methods, Results, Discussion) present with substantive content |
+| Methods section reproducible | Yes | Contains software versions, statistical parameters, sample sizes |
+| Results match analysis outputs | Yes | All figures/tables in manuscript reference existing `04_Outputs/` files |
+| Citation-map alignment | Yes | Every in-text citation has bib entry and vice versa |
+| Manuscript language consistent | Yes | Chinese body, English figure/table labels |
+
+**Gate passage**: All checks pass.
+
+**Failure action**: Return to Phase 3. Specify which sections need revision.
+
+---
+
 ### Gate 4: Submission Gate (Phase 4 → Submit)
 
 **Purpose**: Manuscript meets journal submission requirements.

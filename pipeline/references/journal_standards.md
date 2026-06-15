@@ -113,6 +113,27 @@
 
 ---
 
+## AI 工具声明要求（2024-2026 趋势）
+
+越来越多的 SCI 期刊要求作者声明 AI 工具的使用情况。clinpub 用户应在手稿中包含以下声明：
+
+### 声明模板
+
+**中文版（手稿正文末尾或投稿系统）：**
+> 在本研究的准备过程中，作者使用了 AI 辅助工具（Claude Code）进行数据清洗、统计分析和手稿润色。所有分析结果均经作者独立审核和验证。作者对文章的全部内容承担最终责任。
+
+**英文版（Cover Letter 或投稿系统）：**
+> During the preparation of this work, the author(s) used AI-assisted tools (Claude Code) for data cleaning, statistical analysis, and manuscript polishing. All results were independently reviewed and verified by the author(s). The author(s) take(s) full responsibility for the content of the article.
+
+### 注意事项
+
+- 具体声明措辞以目标期刊的 Author Guidelines 为准
+- 部分期刊要求在 Methods 而非 Acknowledgments 中声明
+- 部分期刊（如 Nature 系列）有专门的 AI 声明表格
+- 投稿前务必查阅目标期刊最新的 AI policy
+
+---
+
 ## 期刊自定义覆盖
 
 ### 在 project_config.yml 中配置期刊要求

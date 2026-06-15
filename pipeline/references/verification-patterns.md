@@ -326,6 +326,37 @@
 - 1-2 checks fail → flagged as WARNING, user to decide
 - All pass → passed
 
+---
+
+### Pattern 16: Modify Agent Output Consistency
+
+**Purpose**: After modify-agent adjusts analysis outputs, verify that modifications are consistent and did not introduce regressions.
+
+**Steps:**
+1. Compare modified output files against PLAN.md modification record — verify all requested changes were applied
+2. Check unmodified outputs remain unchanged (no accidental overwrites)
+3. Verify all figures still meet ≥300 DPI threshold
+4. Verify modified tables still have correct column counts and variable names
+5. Check that method documentation (方法说明) was updated if statistical method changed
+6. Verify MANIFEST.yaml in modified directories reflects updated file timestamps
+
+**Self-check reference:**
+
+| Check | Pass Criteria |
+|-------|--------------|
+| Requested changes applied | All items in modification scope present in output |
+| Unmodified files intact | MD5/size match pre-modification baseline |
+| Figure resolution | All figures ≥300 DPI |
+| Table structure | Column names and row counts consistent with data |
+| 方法说明 sync | If method changed, 方法说明 updated accordingly |
+| MANIFEST updated | Timestamps and file list reflect current state |
+
+**Failure indicators:**
+- Any unmodified file changed → CRITICAL (regression)
+- Figure below 300 DPI → CRITICAL
+- 方法说明 not updated after method change → WARNING
+- MANIFEST not updated → INFO
+
 Each verification produces a structured report:
 
 ```markdown

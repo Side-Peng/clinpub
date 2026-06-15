@@ -1,4 +1,4 @@
-﻿/**
+/**
  * clinpub-workflow-guard.js
  *
  * Claude Code hook that enforces analysis workflow stage ordering.
@@ -28,7 +28,7 @@ function getCurrentPhase() {
 
   const content = fs.readFileSync(statePath, "utf-8");
   // D-02: Authoritative source — match structured line only
-  const phaseMatch = content.match(/阶段：Phase\s*(\d)/);
+  const phaseMatch = content.match(/阶段：Phase\s*(\d+)/);
   if (phaseMatch) return parseInt(phaseMatch[1], 10);
 
   // D-04: Legacy fallback — kept for backward compatibility.

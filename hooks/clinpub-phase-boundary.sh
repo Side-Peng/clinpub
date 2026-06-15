@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # clinpub-phase-boundary.sh
 #
 # Claude Code hook that enforces phase boundary conditions.
@@ -45,7 +45,7 @@ check_phase_boundary() {
     return 1
   fi
 
-  if grep -q "Phase $prev_phase.*✅\|Phase $prev_phase.*Complete\|Phase $prev_phase.*signed" "$STATE_FILE" 2>/dev/null; then
+  if grep -qE "阶段：Phase\s*$prev_phase" "$STATE_FILE" 2>/dev/null; then
     echo -e "${GREEN}OK: Phase $prev_phase milestone complete.${NC}"
     return 0
   fi

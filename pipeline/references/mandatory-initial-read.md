@@ -1,4 +1,4 @@
-﻿# Mandatory Initial Read
+# Mandatory Initial Read
 
 > Every clinpub agent MUST read this file at the start of execution before performing any action.
 
@@ -72,6 +72,7 @@ Based on loaded context, determine which agent(s) are needed:
 | Research planning | `clinpub-planner` |
 | Analysis execution with commits | `clinpub-executor` |
 | Statistical verification | `clinpub-verifier` |
+| Analysis output modification | `modify-agent` |
 
 ---
 

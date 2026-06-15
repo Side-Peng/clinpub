@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Data Profiler — 为 /climpub data to idea 命令服务
+Data Profiler — 为 /clinpub-data2idea 命令服务
 读取 CSV/XLSX，输出结构化数据画像：变量字典、分布摘要、缺失模式、相关性、研究类型预判
 
 Usage:

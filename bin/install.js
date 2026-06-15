@@ -62,8 +62,11 @@ function getPaths(isGlobal) {
 
 // ─── Frontmatter extraction ────────────────────────────────────────
 function extractFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) return { frontmatter: null, body: content };
+  // Strip BOM if present (some editors add \uFEFF at start of file)
+  // Normalize CRLF to LF for consistent regex matching
+  const clean = content.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
+  const match = clean.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if (!match) return { frontmatter: null, body: clean };
   return { frontmatter: match[1], body: match[2] };
 }
 
@@ -97,8 +100,9 @@ function convertCommandToSkill(content, skillName, resourceRef) {
 
   // Rewrite @-references to point to installed resource dir
   // resourceRef is already in tilde form (e.g., ~/.claude/clinpub or ./.claude/clinpub)
+  // IMPORTANT: @./.clinpub/ is a project runtime path — do NOT rewrite it
   let newBody = body;
-  newBody = newBody.replace(/@\.\//g, `@${resourceRef}/`);
+  newBody = newBody.replace(/@\.\/(?!\.clinpub\/)/g, `@${resourceRef}/`);
   newBody = newBody.replace(/@pipeline\//g, `@${resourceRef}/pipeline/`);
   newBody = newBody.replace(/@agents\//g, `@${resourceRef}/agents/`);
   newBody = newBody.replace(/@scripts\//g, `@${resourceRef}/scripts/`);
