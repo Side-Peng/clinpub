@@ -73,7 +73,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 
 | 优先级 | 关键词（任一命中即路由） | 路由到 | 特异度 |
 |--------|-------------------------|--------|--------|
-| 1 | `(初始化\|init\|开始\|创建项目\|新建)` | init-project | 高 — 非清洗/分析语境 |
+| 1 | `(初始化\|init\|开始\|创建项目\|新建)` | init | 高 — 非清洗/分析语境 |
 | 2 | `(清洗\|clean\|数据质量\|缺失\|异常值\|cleaned)` | data-prep | 高 — 特异性数据处理术语 |
 | 3 | `(选题\|话题挖掘\|idea\|数据探索\|data2idea)` | data2idea | 高 — 选题挖掘术语 |
 | 4 | `(分析\|统计\|结果\|图\|表\|analysis\|figure\|table\|回归\|生存\|ROC)` | analysis | 高 — 分析术语 |
@@ -95,7 +95,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 
 | 路由目标 Phase | 命令名称 | 执行方式 |
 |---------------|---------|---------|
-| Phase 0 | `/clinpub-init-project` | 确认后提示用户执行 |
+| Phase 0 | `/clinpub-init` | 确认后提示用户执行 |
 | Phase 1 | `/clinpub-data-prep` | 确认后提示用户执行 |
 | Phase 2 | `/clinpub-analysis` | 确认后提示用户执行 |
 | Phase 3 | `/clinpub-writing` | 确认后提示用户执行 |
@@ -152,7 +152,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 ```
 当前状态: 项目未初始化
 检测结果: STATE.md 不存在或无 Phase 标识行
-建议: /clinpub-init-project  → 初始化项目配置和目录结构
+建议: /clinpub-init  → 初始化项目配置和目录结构
       /clinpub-data2idea    → 从数据中挖掘论文选题（无需初始化）
 请输入对应的命令名称继续，或输入 'exit' 取消。
 ```
@@ -176,7 +176,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 │ │     当前状态: Phase 0 (项目初始化) — 未完成                │
 │ │     project_config.yml 不存在或关键字段为空                │
 │ │     建议:                                                  │
-│ │       /clinpub-init-project    → 初始化项目                │
+│ │       /clinpub-init    → 初始化项目                │
 └──────────────────────────────────────────────────────────────┘
 
 **Phase 1 ~ 4 各 Phase 的检测结果格式**
@@ -246,6 +246,6 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 - 带 NL 输入时正确推断意图并路由到对应命令
 - NL 推断失败时正确回退到无参行为（显示状态摘要）
 - 路由后等待用户确认，不自动执行目标命令
-- 所有 8 个命令的路由映射完整（init-project, data-prep, analysis, writing, review, next-step, milestone, data2idea）
+- 所有 8 个命令的路由映射完整（init, data-prep, analysis, writing, review, next-step, milestone, data2idea）
 - 不匹配停用词（"看"、"查"、"项目"、"做"）
 </success_criteria>

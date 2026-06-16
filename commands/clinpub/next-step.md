@@ -1,4 +1,4 @@
-﻿---
+---
 name: clinpub:next-step
 description: "Auto-advance to the next Phase or Wave. Verifies current step completion, auto-detects granularity (Wave vs Phase), updates STATE.md and ROADMAP.md, generates MILESTONE.md for phase transitions, and outputs clear prompt with next steps."
 argument-hint: ""
@@ -64,7 +64,7 @@ grep -A 100 "analysis_plan:" project_config.yml | grep -E "^\s+\d+:" | wc -l
 PHASE=$(grep -oP '阶段：Phase\s*\K\d' .clinpub/STATE.md)
 
 # 如果 PHASE 为空 → STATE.md 没有 Phase 标识行
-#   → 输出错误: "STATE.md 未包含 Phase 标识行，项目可能未初始化。请执行 /clinpub-init-project"
+#   → 输出错误: "STATE.md 未包含 Phase 标识行，项目可能未初始化。请执行 /clinpub-init"
 #   → 结束命令
 
 # 如果 PHASE=0 → 项目刚初始化，没有 Wave 需要推进

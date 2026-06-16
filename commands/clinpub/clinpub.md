@@ -24,7 +24,7 @@ Each phase is an independent command. Invoke them one at a time. Between phases,
 
 | # | Command | Purpose | Key Output |
 |---|---------|---------|------------|
-| 0 | `/clinpub-init-project` | Discuss research framework → project config + directory structure | `project_config.yml` |
+| 0 | `/clinpub-init` | Discuss research framework → project config + directory structure | `project_config.yml` |
 | 1 | `/clinpub-data-prep` | Data cleaning → EDA → quality report | `cleaned.csv` |
 | 2 | `/clinpub-analysis` | Wave-based statistical analysis → figures + tables | `04_Outputs/` |
 | 3 | `/clinpub-writing` | Literature search → IMRAD manuscript drafting | `manuscript.md` |
@@ -38,7 +38,7 @@ For milestone review (checking phase status, re-running verification): `/clinpub
 
 ```
 # Always start with Phase 0
-/clinpub-init-project
+/clinpub-init
 
 # After Phase 0 completes and user signs off, proceed to Phase 1
 /clinpub-data-prep

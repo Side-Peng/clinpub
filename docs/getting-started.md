@@ -1,4 +1,4 @@
-﻿# Getting Started with clinpub
+# Getting Started with clinpub
 
 从零到投稿，用你的临床数据跑通完整 5 阶段管线。
 
@@ -64,7 +64,7 @@ npx clinpub@latest
 
 ## 4. Phase 0 — 项目初始化
 
-**命令**：`/clinpub-init-project`
+**命令**：`/clinpub-init`
 
 Claude 会与你讨论：
 
@@ -198,7 +198,7 @@ Writer Agent 模拟同行评审：
 | ------------------------------- | -------------------------- |
 | `/clinpub`                    | 主入口，启动完整管线       |
 | `/clinpub-data2idea data.csv` | 不做分析，先从数据挖掘选题 |
-| `/clinpub-init-project`       | 初始化项目目录和配置       |
+| `/clinpub-init`       | 初始化项目目录和配置       |
 | `/clinpub-data-prep`          | 仅跑 Phase 1 数据清洗      |
 | `/clinpub-analysis`           | 仅跑 Phase 2 统计分析      |
 | `/clinpub-writing`            | 仅跑 Phase 3 论文撰写      |

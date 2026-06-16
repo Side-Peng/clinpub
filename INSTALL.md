@@ -27,10 +27,11 @@ commands/clinpub/data2idea.md        → ~/.claude/skills/clinpub-data2idea/SKIL
 commands/clinpub/analysis.md         → ~/.claude/skills/clinpub-analysis/SKILL.md
 commands/clinpub/writing.md          → ~/.claude/skills/clinpub-writing/SKILL.md
 commands/clinpub/review.md           → ~/.claude/skills/clinpub-review/SKILL.md
-commands/clinpub/init-project.md     → ~/.claude/skills/clinpub-init-project/SKILL.md
 commands/clinpub/data-prep.md        → ~/.claude/skills/clinpub-data-prep/SKILL.md
 commands/clinpub/milestone.md        → ~/.claude/skills/clinpub-milestone/SKILL.md
 ```
+
+**Note**: `/clinpub-init` is a user-level command at `~/.claude/commands/clinpub-init.md`, not installed by this package.
 
 Shared resources (agents, pipeline, scripts, hooks) are copied to:
 
