@@ -1,5 +1,5 @@
 ---
-name: clinpub:modify
+name: modify
 description: "Modify completed analysis outputs. Clarifies modification scope (figure style, statistical method, variables), executes changes, verifies outputs, and records history in PLAN.md. Can be invoked from any phase. Triggers: modify figures, change analysis method, adjust chart style, replace variables."
 argument-hint: "[method ID or brief description, leave empty for interactive selection]"
 allowed-tools:

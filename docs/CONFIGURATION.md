@@ -194,24 +194,24 @@ pip install -r requirements.txt
 ### 安装 clinpub
 
 ```bash
-npx clinpub@latest
+claude plugin install clinpub
 ```
 
 ### 安装位置
 
-- **全局安装**：`~/.claude/`（所有项目可用）
-- **本地安装**：`./.claude/`（仅当前项目）
+- **插件安装**：由 Claude Code Plugin 系统管理（`~/.claude/plugins/cache/`）
+- **开发模式**：`claude --plugin-dir ./clinpub`
 
 ### 验证安装
 
 ```bash
 # 重启 Claude Code 后
-/clinpub  # 应显示主菜单
+/clinpub:overview  # 应显示命令参考表
 ```
 
 ## Hooks 配置
 
-Hooks 自动注册在 `.claude/settings.json`：
+Hooks 声明式配置于 `hooks/hooks.json`（Plugin 系统自动加载）：
 
 ```json
 {
@@ -219,15 +219,15 @@ Hooks 自动注册在 `.claude/settings.json`：
     "PreToolUse": [
       {
         "matcher": "Write|Edit",
-        "hooks": [{ "type": "command", "command": "node hooks/clinpub-workflow-guard.js", "timeout": 5000 }]
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-workflow-guard.js\"", "timeout": 5000 }]
       },
       {
         "matcher": "Bash",
-        "hooks": [{ "type": "command", "command": "bash hooks/clinpub-phase-boundary.sh", "timeout": 5000 }]
+        "hooks": [{ "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-phase-boundary.sh\"", "timeout": 5000 }]
       },
       {
         "matcher": "Read",
-        "hooks": [{ "type": "command", "command": "node hooks/clinpub-prompt-guard.js", "timeout": 3000 }]
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-prompt-guard.js\"", "timeout": 3000 }]
       }
     ]
   }

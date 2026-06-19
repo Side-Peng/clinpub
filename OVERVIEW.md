@@ -18,28 +18,28 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 
 | Command | What it does |
 |---------|-------------|
-| `/clinpub-clinpub` | **Command reference** — Overview of all phase commands. Each phase invoked individually |
-| `/clinpub-data2idea <filepath>` | **Topic mining** — Analyze data structure + PubMed search → 3-5 candidate paper topics |
-| `/clinpub-init` | Phase 0 — Set up project directory, config, research framework |
-| `/clinpub-data-prep` | Phase 1 — Data cleaning, EDA, generate cleaned.csv |
-| `/clinpub-analysis` | Phase 2 — Adaptive statistical analysis (methods dynamically proposed based on data) |
-| `/clinpub-writing` | Phase 3 — Literature search + IMRAD manuscript drafting |
-| `/clinpub-review` | Phase 4 — Simulated peer review + revision + response letter |
-| `/clinpub-milestone <N>` | Phase gate — Verify success criteria, record decisions, user sign-off |
-| `/clinpub-modify` | **Modify** — Adjust analysis outputs (figure style, statistical method, variables) post-analysis |
+| `/clinpub:overview` | **Command reference** — Overview of all phase commands. Each phase invoked individually |
+| `/clinpub:data2idea <filepath>` | **Topic mining** — Analyze data structure + PubMed search → 3-5 candidate paper topics |
+| `/clinpub:init` | Phase 0 — Set up project directory, config, research framework |
+| `/clinpub:data-prep` | Phase 1 — Data cleaning, EDA, generate cleaned.csv |
+| `/clinpub:analysis` | Phase 2 — Adaptive statistical analysis (methods dynamically proposed based on data) |
+| `/clinpub:writing` | Phase 3 — Literature search + IMRAD manuscript drafting |
+| `/clinpub:review` | Phase 4 — Simulated peer review + revision + response letter |
+| `/clinpub:milestone <N>` | Phase gate — Verify success criteria, record decisions, user sign-off |
+| `/clinpub:modify` | **Modify** — Adjust analysis outputs (figure style, statistical method, variables) post-analysis |
 
 ## Quick Start
 
 ```bash
-# 1. Install (one-line, see INSTALL.md for details)
-npx clinpub@latest
+# 1. Install (see INSTALL.md for details)
+claude plugin install clinpub
 
 # 2. Start a new project
 #    Place your CSV/XLSX data in the working directory, then:
-/clinpub
+/clinpub:overview
 
 # 3. Or mine topics from data first:
-/clinpub-data2idea your_data.csv
+/clinpub:data2idea your_data.csv
 ```
 
 **新手？** 完整教程、示例数据和常见问题 → `docs/getting-started.md`
@@ -47,7 +47,7 @@ npx clinpub@latest
 ## Architecture
 
 ```
-commands/clinpub/*.md  → Slash command entry points
+commands/*.md            → Slash command entry points (auto-discovered)
 agents/*.md            → 8 specialized agents (analyst, writer, reference, topic-miner, planner, executor, verifier, modify)
 pipeline/
   workflows/*.md       → Phase orchestration (DISCUSS → PLAN → EXECUTE → VERIFY)

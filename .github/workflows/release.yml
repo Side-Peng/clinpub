@@ -19,8 +19,17 @@ jobs:
         with:
           node-version: "22"
 
-      - name: List files
-        run: ls -la
+      - name: Validate Plugin Structure
+        run: |
+          echo "Validating .claude-plugin/plugin.json..."
+          test -f .claude-plugin/plugin.json || { echo "Missing plugin.json"; exit 1; }
+          node -e "const p = require('./.claude-plugin/plugin.json'); if (!p.name || !p.version) { console.error('Invalid plugin.json'); process.exit(1); } console.log('Plugin:', p.name, 'v' + p.version);"
+          echo "Validating commands/ directory..."
+          ls commands/*.md > /dev/null 2>&1 || { echo "No command files found"; exit 1; }
+          echo "Validating hooks/hooks.json..."
+          test -f hooks/hooks.json || { echo "Missing hooks.json"; exit 1; }
+          node -e "const h = require('./hooks/hooks.json'); if (!h.hooks) { console.error('Invalid hooks.json'); process.exit(1); } console.log('Hooks OK:', Object.keys(h.hooks).join(', '));"
+          echo "Plugin validation passed."
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

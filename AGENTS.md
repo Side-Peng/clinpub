@@ -4,20 +4,19 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## What This Is
 
-A Claude Code **skill package** (npm: `clinpub`). Not a traditional app — `bin/install.js` converts `commands/clinpub/*.md` into Claude Code skills and copies shared resources (agents, pipeline, scripts, hooks) to `~/.claude/clinpub/`.
-
-The `SKILL.md` at root is the Claude Code entry point with trigger descriptions.
+A Claude Code **Plugin** (`clinpub`). End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Distributed via the Claude Code plugin system (`.claude-plugin/plugin.json`).
 
 ## Build, Install & Test Commands
 
 ```bash
-# Install clinpub as skills (interactive — prompts global vs local)
-npx clinpub@latest
-# Non-interactive
-npx clinpub --global      # Install to ~/.claude/
-npx clinpub --local       # Install to ./.claude/
-npx clinpub --uninstall   # Remove installation
-npx clinpub --version     # Print version
+# Install as Claude Code Plugin (development)
+claude --plugin-dir ./clinpub
+
+# Install from marketplace (production)
+claude plugin install clinpub
+
+# Validate plugin structure
+claude plugin validate . --strict
 
 # Run a single R test
 Rscript tests/test_data_cleaning.R
@@ -32,41 +31,40 @@ Rscript -e 'install.packages(c("dplyr","tidyr","ggplot2","gtsummary","survival",
 pip install -r requirements.txt
 ```
 
-`package.json` has empty `scripts: {}`. No CI test workflow — only `release.yml` for GitHub Releases (tag push `v*`). npm publish is manual.
-
 ## Architecture
 
 ```
-Commands (commands/clinpub/*.md)  → Slash command entry points (frontmatter + @-references)
+Commands (commands/*.md)           → Slash command entry points (frontmatter + @-references)
   ↓
 Workflows (pipeline/workflows/*.md) → Phase orchestration (DISCUSS→PLAN→EXECUTE→VERIFY)
   ↓
 Agents (agents/*.md)               → 8 specialized AI role cards (fresh context each)
   ↓
 Scripts (scripts/*.py)             → R/Python analysis tools
-Hooks (hooks/*.js/*.sh)            → Workflow enforcement (phase guard, prompt injection)
+Hooks (hooks/hooks.json + *.js/*.sh) → Workflow enforcement (phase guard, prompt injection)
 ```
 
 **Three-layer routing**: user invokes command → workflow orchestrates → agent executes with fresh context.
 
-### Command → Skill Conversion (install.js)
+### Plugin Structure
 
-`bin/install.js` is the core infrastructure. On install it:
+```
+.claude-plugin/plugin.json  → Plugin manifest (identity + metadata)
+commands/*.md               → 11 flat command files (auto-discovered by plugin system)
+agents/*.md                 → 8 specialized agents (auto-discovered)
+hooks/hooks.json            → Declarative hook configuration (3 PreToolUse hooks)
+pipeline/                   → Workflows, references, templates (loaded via @./ references)
+```
 
-1. Converts each `commands/clinpub/*.md` → `~/.claude/skills/clinpub-<name>/SKILL.md`
-2. Copies `agents/`, `pipeline/`, `scripts/`, `hooks/`, `CLAUDE.md` → `~/.claude/clinpub/`
-3. Rewrites `@./`, `@pipeline/`, `@agents/`, `@scripts/`, `@hooks/` references to point to installed location (`~/.claude/clinpub/...`)
-4. Registers 3 hooks in `~/.claude/settings.json` under `hooks.PreToolUse`
-
-When developing, `@./` references in command files resolve to the source tree. After install, they resolve to the copied resource tree. This is the key portability mechanism.
+`@./` references in command files resolve to the plugin root at runtime via `${CLAUDE_PLUGIN_ROOT}` substitution.
 
 ### Command File Format
 
-Each command file (`commands/clinpub/*.md`) has YAML frontmatter + structured body:
+Each command file (`commands/*.md`) has YAML frontmatter + structured body:
 
 ```yaml
 ---
-name: clinpub:analysis
+name: analysis
 description: "..."
 argument-hint: ""
 allowed-tools:
@@ -112,8 +110,8 @@ data <- read.csv(global_path)
 
 Hooks in `hooks/` block writes to directories belonging to future phases:
 
-- `clinpub-workflow-guard.js` — PreToolUse hook for Write/Edit. Reads `.clinpub/STATE.md` for current phase via regex `阶段：Phase\s*(\d)`. Blocks writes to directories owned by later phases.
-- `clinpub-phase-boundary.sh` — PreToolUse hook for Bash. Checks prerequisite milestone completion and data file existence before allowing phase-specific commands.
+- `clinpub-workflow-guard.js` — PreToolUse hook for Write/Edit. Reads `.clinpub/STATE.md` for current phase via regex `阶段：Phase\s*(\d)`. Blocks writes to directories owned by later phases. When `import_mode: true` is present in STATE.md **and** a valid Phase line exists, returns phase 99 (all directories accessible). If STATE.md lacks Phase info (crash residue), falls through to normal phase detection.
+- `clinpub-phase-boundary.sh` — PreToolUse hook for Bash. Checks prerequisite milestone completion and data file existence before allowing phase-specific commands. Skips all checks when `import_mode: true` is detected in STATE.md **with** a valid Phase line. Crash residue (import_mode without Phase info) does not bypass checks.
 - `clinpub-prompt-guard.js` — PreToolUse hook for Read. Scans data files for prompt injection patterns.
 
 **Always-accessible dirs** (exempt from phase guard): `.clinpub`, `scripts`, `hooks`, `pipeline`, `agents`, `commands`, `.gitignore`, `CHANGELOG.md`, `package.json`, `CLAUDE.md`, `README.md`.
@@ -138,21 +136,21 @@ Project_Root/
 └── project_config.yml         # Phase 0 — Central config (study type, variables, journal)
 ```
 
-## Commands (9 skills installed)
+## Commands (11 plugin commands)
 
 | Command | Phase | What It Does |
 |---------|-------|-------------|
-| `/clinpub` | — | Command reference overview |
-| `/clinpub-data2idea` | — | Topic mining from data |
-| `/clinpub-init` | 0 | Project setup, config, research framework |
-| `/clinpub-data-prep` | 1 | Data cleaning → cleaned.csv |
-| `/clinpub-analysis` | 2 | Statistical analysis (methods proposed dynamically) |
-| `/clinpub-writing` | 3 | IMRAD manuscript drafting |
-| `/clinpub-review` | 4 | Peer review simulation + revision |
-| `/clinpub-milestone` | gate | Phase gate verification with user sign-off |
-| `/clinpub-modify` | — | Modify analysis outputs (figure style, method, variables) |
+| `/clinpub:overview` | — | Command reference overview |
+| `/clinpub:data2idea` | — | Topic mining from data |
+| `/clinpub:init` | 0 | Project setup or import existing project (auto-detects artifacts) |
+| `/clinpub:data-prep` | 1 | Data cleaning → cleaned.csv |
+| `/clinpub:analysis` | 2 | Statistical analysis (methods proposed dynamically) |
+| `/clinpub:writing` | 3 | IMRAD manuscript drafting |
+| `/clinpub:review` | 4 | Peer review simulation + revision |
+| `/clinpub:milestone` | gate | Phase gate verification with user sign-off |
+| `/clinpub:modify` | — | Modify analysis outputs (figure style, method, variables) |
 
-`commands/clinpub/do.md` and `commands/clinpub/next-step.md` are routing/advancement helpers (breakpoint resume and step advancement), not in the main command table.
+`commands/do.md` and `commands/next-step.md` are routing/advancement helpers (breakpoint resume and step advancement), not in the main command table.
 
 ## Agent Routing
 
@@ -187,6 +185,7 @@ Project_Root/
 | `pipeline/references/agent-contracts.md` | Agent roles, I/O contracts, read/write matrix |
 | `pipeline/references/mandatory-initial-read.md` | Required context loading sequence for every agent |
 | `pipeline/references/comparison-methods.md` | Group comparison decision tree (2-group, 3+ group, paired) |
+| `pipeline/references/import-heuristics.md` | When importing existing projects (file role inference rules) |
 | `agents/analyst-agent.md` | When delegating statistical analysis |
 | `agents/writer-agent.md` | When delegating manuscript writing |
 

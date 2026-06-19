@@ -30,16 +30,16 @@ export UNPAYWALL_EMAIL="your@email.com" # Unpaywall PDF 全文获取
 ## 2. 安装
 
 ```bash
-npx clinpub@latest
+claude plugin install clinpub
 ```
 
-安装器会提示选择全局安装（`~/.claude/`）或本地安装（`./.claude/`）。选全局安装后重启 Claude Code，即可在任意项目使用 `/clinpub` 命令。
+安装完成后重启 Claude Code，即可在任意项目使用 `/clinpub:overview` 命令。
 
 验证安装：
 
 ```bash
-# 重启 Claude Code 后，输入 /clinpub 应看到主菜单
-/clinpub
+# 重启 Claude Code 后，输入 /clinpub:overview 应看到命令参考
+/clinpub:overview
 ```
 
 ---
@@ -57,14 +57,14 @@ npx clinpub@latest
 ### 3.3 启动管线
 
 ```bash
-/clinpub
+/clinpub:overview
 ```
 
 ---
 
 ## 4. Phase 0 — 项目初始化
 
-**命令**：`/clinpub-init`
+**命令**：`/clinpub:init`
 
 Claude 会与你讨论：
 
@@ -93,7 +93,7 @@ Project_Root/
 
 ## 5. Phase 1 — 数据准备
 
-**命令**：`/clinpub-data-prep`
+**命令**：`/clinpub:data-prep`
 
 Analyst Agent 执行：
 
@@ -117,7 +117,7 @@ Analyst Agent 执行：
 
 ## 6. Phase 2 — 统计分析
 
-**命令**：`/clinpub-analysis`
+**命令**：`/clinpub:analysis`
 
 这是最核心的阶段。Claude 会：
 
@@ -146,7 +146,7 @@ Analyst Agent 执行：
 
 ## 7. Phase 3 — 论文撰写
 
-**命令**：`/clinpub-writing`
+**命令**：`/clinpub:writing`
 
 双 Agent 协作：
 
@@ -181,7 +181,7 @@ Reference/
 
 ## 8. Phase 4 — 审稿修稿
 
-**命令**：`/clinpub-review`
+**命令**：`/clinpub:review`
 
 Writer Agent 模拟同行评审：
 
@@ -196,14 +196,14 @@ Writer Agent 模拟同行评审：
 
 | 命令                            | 用途                       |
 | ------------------------------- | -------------------------- |
-| `/clinpub`                    | 主入口，启动完整管线       |
-| `/clinpub-data2idea data.csv` | 不做分析，先从数据挖掘选题 |
-| `/clinpub-init`       | 初始化项目目录和配置       |
-| `/clinpub-data-prep`          | 仅跑 Phase 1 数据清洗      |
-| `/clinpub-analysis`           | 仅跑 Phase 2 统计分析      |
-| `/clinpub-writing`            | 仅跑 Phase 3 论文撰写      |
-| `/clinpub-review`             | 仅跑 Phase 4 审稿修稿      |
-| `/clinpub-milestone N`        | 查看 Phase N 关卡状态      |
+| `/clinpub:overview`             | 主入口，查看命令参考       |
+| `/clinpub:data2idea data.csv` | 不做分析，先从数据挖掘选题 |
+| `/clinpub:init`       | 初始化项目目录和配置       |
+| `/clinpub:data-prep`          | 仅跑 Phase 1 数据清洗      |
+| `/clinpub:analysis`           | 仅跑 Phase 2 统计分析      |
+| `/clinpub:writing`            | 仅跑 Phase 3 论文撰写      |
+| `/clinpub:review`             | 仅跑 Phase 4 审稿修稿      |
+| `/clinpub:milestone N`        | 查看 Phase N 关卡状态      |
 
 ---
 

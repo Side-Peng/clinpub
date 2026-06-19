@@ -1,5 +1,5 @@
 ---
-name: clinpub:milestone
+name: milestone
 description: "Phase milestone management. Review completed phase deliverables, verify success criteria, record decisions, and gate progression to next phase. Generates MILESTONE.md and updates ROADMAP.md."
 argument-hint: "<phase-number>"
 allowed-tools:

@@ -1,1 +1,37 @@
-scripts/__pycache__/
+# Python artifacts
+**/__pycache__/
+*.pyc
+*.pyo
+
+# R artifacts
+.Rhistory
+.RData
+*.Rproj
+
+# Dev & IDE files
+.vscode/
+.idea/
+*.egg-info/
+.DS_Store
+Thumbs.db
+
+# Docs not needed in npm package
+docs/
+AGENTS.md
+CONTRIBUTING.md
+CHANGELOG.md
+开发日志.md
+
+# CI config
+.github/
+
+# Project state
+.clinpub/
+.qoder/
+.claude/
+CLAUDE.md
+.gitignore
+.npmignore
+
+# Tests
+tests/

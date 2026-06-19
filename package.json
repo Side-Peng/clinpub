@@ -1,31 +1,15 @@
 {
   "name": "clinpub",
-  "version": "1.2.2",
-  "description": "Clinical data analysis and publication pipeline for Claude Code — SCI Q1/Q2 journals",
-  "keywords": ["clinical", "biostatistics", "publication", "IMRAD", "R", "medical", "claude-code", "claude-code-skill"],
+  "version": "2.0.0",
+  "description": "Clinical data analysis and publication pipeline — Claude Code Plugin for SCI Q1/Q2 journals",
+  "keywords": ["clinical", "biostatistics", "publication", "IMRAD", "R", "medical", "claude-code-plugin"],
   "license": "MIT",
   "author": "Side-Peng <1615085076@qq.com> (https://github.com/Side-Peng/clinpub)",
-  "bin": {
-    "clinpub": "bin/install.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Side-Peng/clinpub.git"
   },
-  "scripts": {},
-"engines": {
+  "engines": {
     "node": ">=22.0.0"
-  },
-  "files": [
-    "bin/",
-    "SKILL.md",
-    "INSTALL.md",
-    "README.md",
-    "requirements.txt",
-    "commands/",
-    "agents/",
-    "pipeline/",
-    "scripts/",
-    "hooks/"
-  ]
+  }
 }

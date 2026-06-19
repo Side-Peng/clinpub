@@ -1,6 +1,6 @@
 ---
-name: clinpub:do
-description: "Read workspace state and auto-route to the appropriate clinpub command. With natural language input (e.g., '/clinpub-do 我想改清洗逻辑'), routes by intent. With no arguments, shows current state summary and suggests next commands."
+name: do
+description: "Read workspace state and auto-route to the appropriate clinpub command. With natural language input (e.g., '/clinpub:do 我想改清洗逻辑'), routes by intent. With no arguments, shows current state summary and suggests next commands."
 argument-hint: "[your intent or question]"
 allowed-tools:
   - Read
@@ -95,14 +95,14 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 
 | 路由目标 Phase | 命令名称 | 执行方式 |
 |---------------|---------|---------|
-| Phase 0 | `/clinpub-init` | 确认后提示用户执行 |
-| Phase 1 | `/clinpub-data-prep` | 确认后提示用户执行 |
-| Phase 2 | `/clinpub-analysis` | 确认后提示用户执行 |
-| Phase 3 | `/clinpub-writing` | 确认后提示用户执行 |
-| Phase 4 | `/clinpub-review` | 确认后提示用户执行 |
-| 选题挖掘 | `/clinpub-data2idea` | 确认后提示用户执行（无需初始化） |
-| 自动推进 | `/clinpub-next-step` | 确认后提示用户执行 |
-| Phase 检查 | `/clinpub-milestone N` | 确认后提示用户执行 |
+| Phase 0 | `/clinpub:init` | 确认后提示用户执行 |
+| Phase 1 | `/clinpub:data-prep` | 确认后提示用户执行 |
+| Phase 2 | `/clinpub:analysis` | 确认后提示用户执行 |
+| Phase 3 | `/clinpub:writing` | 确认后提示用户执行 |
+| Phase 4 | `/clinpub:review` | 确认后提示用户执行 |
+| 选题挖掘 | `/clinpub:data2idea` | 确认后提示用户执行（无需初始化） |
+| 自动推进 | `/clinpub:next-step` | 确认后提示用户执行 |
+| Phase 检查 | `/clinpub:milestone N` | 确认后提示用户执行 |
 
 ## 2. 无参行为：状态检测（D-01）
 
@@ -152,8 +152,8 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 ```
 当前状态: 项目未初始化
 检测结果: STATE.md 不存在或无 Phase 标识行
-建议: /clinpub-init  → 初始化项目配置和目录结构
-      /clinpub-data2idea    → 从数据中挖掘论文选题（无需初始化）
+建议: /clinpub:init  → 初始化项目配置和目录结构
+      /clinpub:data2idea    → 从数据中挖掘论文选题（无需初始化）
 请输入对应的命令名称继续，或输入 'exit' 取消。
 ```
 
@@ -169,14 +169,14 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 │ │  │  当前状态: Phase 0 (项目初始化) — 已完成                │
 │ │  │  检测到 project_config.yml，关键字段有效                │
 │ │  │  建议:                                                  │
-│ │  │    /clinpub-data-prep        → Phase 1 数据清洗         │
-│ │  │    /clinpub-next-step        → 自动推进到下一步         │
+│ │  │    /clinpub:data-prep        → Phase 1 数据清洗         │
+│ │  │    /clinpub:next-step        → 自动推进到下一步         │
 │ │  │                                                         │
 │ │  └─ NO  → 输出:                                           │
 │ │     当前状态: Phase 0 (项目初始化) — 未完成                │
 │ │     project_config.yml 不存在或关键字段为空                │
 │ │     建议:                                                  │
-│ │       /clinpub-init    → 初始化项目                │
+│ │       /clinpub:init    → 初始化项目                │
 └──────────────────────────────────────────────────────────────┘
 
 **Phase 1 ~ 4 各 Phase 的检测结果格式**
@@ -186,11 +186,11 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 当前状态: Phase N (name) — [进行中|已完成]
 检测到: [已完成的工件列表] | [缺失的工件列表]
 建议:
-  /clinpub-{command}    → [做什么]
-  /clinpub-{command}    → [做什么]
-  /clinpub-next-step    → 自动推进到下一阶段
+  /clinpub:{command}    → [做什么]
+  /clinpub:{command}    → [做什么]
+  /clinpub:next-step    → 自动推进到下一阶段
 
-输入对应的命令名称（如 clinpub-data-prep）执行，或输入 'exit' 取消。
+输入对应的命令名称（如 clinpub:data-prep）执行，或输入 'exit' 取消。
 ```
 
 具体各 Phase 的路由条件:
@@ -234,7 +234,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 
 输出状态摘要和建议命令后，等待用户输入：
 
-1. 用户输入命令名（如 `data-prep`）→ 提示用户执行 `/clinpub-{name}`
+1. 用户输入命令名（如 `data-prep`）→ 提示用户执行 `/clinpub:{name}`
 2. 用户输入 `exit` 或 `取消` → 结束命令
 3. 用户输入其他内容 → 重新解释可用的命令选项
 

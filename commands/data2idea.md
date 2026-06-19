@@ -1,5 +1,5 @@
 ---
-name: clinpub:data2idea
+name: data2idea
 description: "Topic mining from clinical data tables (CSV/XLSX). Analyze variable structure, distribution patterns, missing data, and correlations; combine with PubMed literature search to identify research gaps; generate 3-5 structured candidate paper topics with feasibility scores. No statistical analysis or manuscript writing involved."
 argument-hint: "<filepath>"
 allowed-tools:

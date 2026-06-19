@@ -27,6 +27,15 @@ function getCurrentPhase() {
   if (!fs.existsSync(statePath)) return -1;
 
   const content = fs.readFileSync(statePath, "utf-8");
+
+  // Import mode bypass with crash-safety validation
+  if (/import_mode:\s*true/.test(content)) {
+    // Valid import: STATE.md has full structure with phase info
+    if (/阶段：Phase\s*\d+/.test(content)) return 99;
+    // Crash residue: minimal STATE.md with only import_mode flag
+    // Fall through to normal phase detection (will likely return 0)
+  }
+
   // D-02: Authoritative source — match structured line only
   const phaseMatch = content.match(/阶段：Phase\s*(\d+)/);
   if (phaseMatch) return parseInt(phaseMatch[1], 10);

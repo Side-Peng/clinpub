@@ -157,7 +157,7 @@ test_complete_workflow <- function() {
   yaml::write_yaml(config, file.path(test_dir, "project_config.yml"))
   
   # 3. 执行 Phase 1
-  source("commands/clinpub/data-prep.R")
+  source("commands/data-prep.R")
   run_data_prep(test_dir)
   
   # 4. 验证输出

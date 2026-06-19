@@ -1,5 +1,5 @@
 ---
-name: clinpub:review
+name: review
 description: "Phase 4: Simulated peer review and revision. Generate mock peer review, confirm revision items with user, revise manuscript, generate response letter. Loops until satisfactory."
 argument-hint: ""
 allowed-tools:

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "clinpub",
+  "displayName": "ClinPub — Clinical Publication Pipeline",
+  "version": "2.0.0",
+  "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Reads CSV/XLSX data, runs R-based statistical analysis, generates publication-grade figures, searches literature (PubMed), writes IMRAD manuscripts, and simulates peer review.",
+  "author": {
+    "name": "Side-Peng",
+    "email": "1304916798@qq.com",
+    "url": "https://github.com/Side-Peng/clinpub"
+  },
+  "homepage": "https://github.com/Side-Peng/clinpub",
+  "repository": "https://github.com/Side-Peng/clinpub",
+  "license": "MIT",
+  "keywords": ["clinical", "biostatistics", "publication", "IMRAD", "R", "medical", "claude-code-plugin"]
+}

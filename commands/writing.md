@@ -1,5 +1,5 @@
 ---
-name: clinpub:writing
+name: writing
 description: "Phase 3: IMRAD manuscript writing. Supports two modes: (1) batch mode (一键成稿) - bulk reference search then bulk writing with single final review; (2) sequential mode - per-section search, write, and user review. Shared reference library for deduplication. Placeholder-based cross-references. Final concatenation produces manuscript.md with YAML frontmatter."
 argument-hint: ""
 allowed-tools:

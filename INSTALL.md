@@ -1,47 +1,30 @@
 # clinpub Installation Guide
 
-## One-Line Install (Recommended)
+## Install as Claude Code Plugin
+
+### From Plugin Marketplace (Recommended)
 
 ```bash
-npx clinpub@latest
+claude plugin install clinpub
 ```
 
-The installer prompts you to choose:
-1. **Global** — All projects (`~/.claude/`)
-2. **Local** — Current project only (`./.claude/`)
-
-### Non-interactive (CI / Scripts)
+### From Local Source (Development)
 
 ```bash
-npx clinpub --global    # Global install
-npx clinpub --local     # Local install
+claude --plugin-dir ./clinpub
 ```
 
-### What Gets Installed
+### From Git Repository
 
-The installer converts each command file into a Claude Code skill:
-
-```
-commands/clinpub/clinpub.md          → ~/.claude/skills/clinpub-clinpub/SKILL.md
-commands/clinpub/data2idea.md        → ~/.claude/skills/clinpub-data2idea/SKILL.md
-commands/clinpub/analysis.md         → ~/.claude/skills/clinpub-analysis/SKILL.md
-commands/clinpub/writing.md          → ~/.claude/skills/clinpub-writing/SKILL.md
-commands/clinpub/review.md           → ~/.claude/skills/clinpub-review/SKILL.md
-commands/clinpub/data-prep.md        → ~/.claude/skills/clinpub-data-prep/SKILL.md
-commands/clinpub/milestone.md        → ~/.claude/skills/clinpub-milestone/SKILL.md
+```bash
+git clone https://github.com/Side-Peng/clinpub.git
+claude --plugin-dir ./clinpub
 ```
 
-**Note**: `/clinpub-init` is a user-level command at `~/.claude/commands/clinpub-init.md`, not installed by this package.
+## Validate Installation
 
-Shared resources (agents, pipeline, scripts, hooks) are copied to:
-
-```
-~/.claude/clinpub/                   # Shared resource directory
-├── agents/                          # 7 specialized agents
-├── pipeline/                        # Workflows, references, templates
-├── scripts/                         # Python tools
-├── hooks/                           # Workflow enforcement
-└── CLAUDE.md                        # Reference documentation
+```bash
+claude plugin validate . --strict
 ```
 
 ## Usage
@@ -49,19 +32,25 @@ Shared resources (agents, pipeline, scripts, hooks) are copied to:
 After installation, restart Claude Code, then:
 
 ```bash
-/clinpub                    # Full 5-phase pipeline
-/clinpub-data2idea data.csv # Topic mining from data
-/clinpub-analysis           # Statistical analysis
-/clinpub-writing            # Manuscript writing
-/clinpub-review             # Peer review simulation
+/clinpub:overview                  # Command reference overview
+/clinpub:data2idea data.csv       # Topic mining from data
+/clinpub:init                     # Phase 0: Project initialization
+/clinpub:data-prep                # Phase 1: Data preparation
+/clinpub:analysis                 # Phase 2: Statistical analysis
+/clinpub:writing                  # Phase 3: Manuscript writing
+/clinpub:review                   # Phase 4: Peer review simulation
+/clinpub:milestone <N>            # Phase gate verification
+/clinpub:modify                   # Modify analysis outputs
+/clinpub:do                       # Breakpoint resume (work-in-progress)
+/clinpub:next-step                # Advance to next step
 ```
 
 ## Prerequisites
 
 | Requirement | Version | Purpose |
 |-------------|---------|---------|
-| Claude Code | >= 2.1.88 | Skill support |
-| Node.js | >= 22.0.0 | Installer + hook execution |
+| Claude Code | >= 2.1.88 | Plugin support |
+| Node.js | >= 22.0.0 | Hook execution |
 | R | >= 4.2 | Statistical analysis |
 | Python | >= 3.9 | Data profiling, search scripts |
 
@@ -93,26 +82,33 @@ export TAVILY_API_KEY="your_key"     # Required for Tavily search
 ## Updating
 
 ```bash
-npx clinpub@latest       # Re-run installer with latest version
+claude plugin update clinpub
+```
+
+Or re-install from source:
+
+```bash
+git pull origin main
+claude --plugin-dir ./clinpub
 ```
 
 ## Uninstalling
 
 ```bash
-npx clinpub --global --uninstall
-npx clinpub --local --uninstall
+claude plugin uninstall clinpub
 ```
 
 ## Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
-| Skills not found after install | Restart Claude Code to reload skills |
-| `/clinpub` not appearing | Run `npx clinpub@latest` again, then restart |
+| Commands not found after install | Restart Claude Code to reload plugins |
+| `/clinpub:overview` not appearing | Run `claude --plugin-dir ./clinpub` again, then restart |
 | R package errors | Run the `install.packages()` command above |
 | Python import errors | Run `pip install -r requirements.txt` |
 | PubMed search fails | Set `NCBI_API_KEY` env var |
 | Tavily search fails | Set `TAVILY_API_KEY` env var |
+| Plugin validation fails | Ensure `.claude-plugin/plugin.json` exists and is valid |
 
 ## Development
 

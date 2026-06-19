@@ -4,6 +4,28 @@ All notable changes to the clinpub project will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.0.0] - 2026-06-01
+
+### Added — Claude Code Plugin 标准迁移
+- **`.claude-plugin/plugin.json`**: 插件清单文件（Plugin 身份与元数据）
+- **`hooks/hooks.json`**: 声明式钩子配置（3 个 PreToolUse hooks，替代 settings.json 手动注册）
+- **`${CLAUDE_PLUGIN_ROOT}`**: 运行时路径替换（替代 install.js 的 `@./` 重写）
+
+### Changed — 分发方式
+- **npm → Plugin**: 从 `npx clinpub@latest` 迁移到 `claude plugin install clinpub`
+- **命令命名空间**: `/clinpub-xxx` → `/clinpub:xxx`（Plugin 标准冒号分隔符）
+- **命令目录扁平化**: `commands/clinpub/*.md` → `commands/*.md`（Plugin 自动发现）
+- **`SKILL.md` → `OVERVIEW.md`**: 避免无 skills/ 目录时自动加载为重复 skill
+- **`commands/clinpub/clinpub.md` → `commands/overview.md`**: 重命名避免 `/clinpub:clinpub` 冗余命名
+
+### Removed
+- **`bin/install.js`**: 自定义 npm 安装器（504 行），功能完全由 Plugin 系统替代
+- **`bin/` 目录**: 不再需要自定义安装脚本
+- **`package.json` 的 `bin`/`files`/`scripts` 字段**: 最小化保留元数据
+
+### Fixed
+- **`next-step.md` 项目相对 @-引用**: 移除 3 个指向项目文件的 `@./` 引用，改为运行时 Read 指令
+
 ## [1.2.0] - 2026-05-25
 
 ### Changed

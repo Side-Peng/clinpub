@@ -11,8 +11,8 @@
 ## 快速开始
 
 ```bash
-npx clinpub@latest        # 一键安装
-/clinpub                     # 启动完整管线
+claude plugin install clinpub   # 安装 Claude Code 插件
+/clinpub:overview               # 查看命令参考
 ```
 
 完整教程、示例数据和常见问题 → `docs/getting-started.md`
@@ -20,15 +20,17 @@ npx clinpub@latest        # 一键安装
 ## 架构
 
 ```
-commands/clinpub/*.md — Thin entry points (user-facing)
-agents/*.md            — Specialized AI agent role cards (8 agents)
+commands/*.md            — Flat command entry points (user-facing, auto-discovered)
+agents/*.md              — Specialized AI agent role cards (8 agents)
 pipeline/
-  workflows/*.md       — Phase orchestration logic
-  references/*.md      — Reference documents (11 files)
-  templates/*.md       — Templates (14 files including study types + method-readme)
-  contexts/*.md        — Context configurations
-scripts/*.py           — Tool scripts (profiling, search, PDF)
-hooks/*.js/*.sh        — Claude Code hooks (workflow guard, phase boundary, prompt guard)
+  workflows/*.md         — Phase orchestration logic
+  references/*.md        — Reference documents (11 files)
+  templates/*.md         — Templates (14 files including study types + method-readme)
+  contexts/*.md          — Context configurations
+scripts/*.py             — Tool scripts (profiling, search, PDF)
+hooks/hooks.json         — Declarative hook config (3 PreToolUse hooks)
+  *.js/*.sh              — Hook implementation scripts
+.claude-plugin/          — Plugin manifest (plugin.json)
 docs/                  — Tutorials and guides
 examples/              — Sample data and example configs
 tests/                 — Test files
@@ -37,11 +39,11 @@ tests/                 — Test files
 ### 三层架构
 
 ```
-USER → COMMANDS (commands/clinpub/clinpub.md)
+USER → COMMANDS (commands/*.md)
          → WORKFLOWS (pipeline/workflows/*.md)
            → AGENTS (agents/*.md — each with fresh context)
              → SCRIPTS (scripts/*.py — R/Python tools)
-             → HOOKS (hooks/*.js/*.sh — workflow enforcement)
+             → HOOKS (hooks/hooks.json + *.js/*.sh — workflow enforcement)
 ```
 
 ### Agent 协作
@@ -74,7 +76,7 @@ USER → COMMANDS (commands/clinpub/clinpub.md)
 | Phase | 名称 | 产出 |
 |-------|------|------|
 | — | Bug Fixes | Hook 正则修复 + 数据联动更新 |
-| — | 断点续做 | `/clinpub-do` + `/clinpub-next-step` 命令 |
+| — | 断点续做 | `/clinpub:do` + `/clinpub:next-step` 命令 |
 | — | 手稿拼接 | IMRAD 分段撰写 + 引用策略标准化 |
 | — | 方法增强 | 组间对比决策树 + 未知方法搜索 |
 | — | Phase 前调研 | 调研→建议→讨论→执行 标准化流程 |
@@ -100,15 +102,15 @@ Project_Root/
 
 | 命令 | 用途 |
 |------|------|
-| `clinpub-data2idea <file>` | 选题挖掘：从数据中找论文思路 |
-| `clinpub-init` | Phase 0：项目初始化 |
-| `clinpub-data-prep` | Phase 1：数据准备 |
-| `clinpub-analysis` | Phase 2：统计分析 |
-| `clinpub-writing` | Phase 3：论文撰写 |
-| `clinpub-review` | Phase 4：审稿修稿 |
-| `clinpub-milestone <N>` | Phase 关卡评审：验证成功标准、记录决策、用户签字放行 |
+| `/clinpub:data2idea <file>` | 选题挖掘：从数据中找论文思路 |
+| `/clinpub:init` | Phase 0：项目初始化 |
+| `/clinpub:data-prep` | Phase 1：数据准备 |
+| `/clinpub:analysis` | Phase 2：统计分析 |
+| `/clinpub:writing` | Phase 3：论文撰写 |
+| `/clinpub:review` | Phase 4：审稿修稿 |
+| `/clinpub:milestone <N>` | Phase 关卡评审：验证成功标准、记录决策、用户签字放行 |
 
-> 如需查看各 Phase 的完整命令用法和前置条件，运行 `/clinpub` 查看命令参考。
+> 如需查看各 Phase 的完整命令用法和前置条件，运行 `/clinpub:overview` 查看命令参考。
 
 ## 质量门控
 
@@ -131,7 +133,7 @@ Project_Root/
 
 ## Hooks（工作流保护）
 
-3 个 Claude Code hooks 保护分析流程（注册在 `.claude/settings.json`）：
+3 个 Claude Code hooks 保护分析流程（声明式配置于 `hooks/hooks.json`）：
 
 | Hook | 触发时机 | 作用 |
 |------|----------|------|

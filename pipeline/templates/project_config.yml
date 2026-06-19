@@ -104,3 +104,15 @@ citation_strategy:
   if_preference:
     min_if: null
     note: ""
+
+# ============================================================
+# 导入模式配置（仅在导入已有项目时填写）
+# ============================================================
+import:
+  mode: false                        # 是否为导入模式
+  date: ""                           # 导入日期
+  source_description: ""             # 导入来源描述
+  starting_phase: 0                  # 导入后的起始 Phase
+  skipped_phases: []                 # 跳过的 Phase 列表，如 [0, 1]
+  imported_files: []                 # 已导入的文件列表: [{source, target, role}]
+  unverified_gates: []               # 未验证的 Gate 列表: [{gate, reason, status}]

@@ -1,5 +1,5 @@
 ---
-name: clinpub:next-step
+name: next-step
 description: "Auto-advance to the next Phase or Wave. Verifies current step completion, auto-detects granularity (Wave vs Phase), updates STATE.md and ROADMAP.md, generates MILESTONE.md for phase transitions, and outputs clear prompt with next steps."
 argument-hint: ""
 allowed-tools:
@@ -45,14 +45,20 @@ grep -A 100 "analysis_plan:" project_config.yml | grep -E "^\s+\d+:" | wc -l
 </interfaces>
 
 <execution_context>
-@./.clinpub/STATE.md
-@./.clinpub/ROADMAP.md
-@./project_config.yml
 @./pipeline/references/checkpoints.md
 @./pipeline/templates/milestone.md
 </execution_context>
 
 <process>
+
+## 0. 加载项目状态文件
+
+在执行后续步骤前，先用 Read 工具读取以下项目文件作为上下文：
+- `.clinpub/STATE.md`
+- `.clinpub/ROADMAP.md`
+- `project_config.yml`
+
+这三个文件包含当前阶段状态、Plan 完成进度和分析 Wave 定义，是后续步骤的输入。
 
 ## 1. 读取当前状态
 
@@ -64,7 +70,7 @@ grep -A 100 "analysis_plan:" project_config.yml | grep -E "^\s+\d+:" | wc -l
 PHASE=$(grep -oP '阶段：Phase\s*\K\d' .clinpub/STATE.md)
 
 # 如果 PHASE 为空 → STATE.md 没有 Phase 标识行
-#   → 输出错误: "STATE.md 未包含 Phase 标识行，项目可能未初始化。请执行 /clinpub-init"
+#   → 输出错误: "STATE.md 未包含 Phase 标识行，项目可能未初始化。请执行 /clinpub:init"
 #   → 结束命令
 
 # 如果 PHASE=0 → 项目刚初始化，没有 Wave 需要推进
@@ -181,7 +187,7 @@ Phase 2 (统计分析) — 当前 Wave 未完成
   1. 当前 Wave 的 SUMMARY.md 不存在 — 表示分析工作流未完成
 
 建议:
-  - /clinpub-analysis      → 继续当前 Wave 的分析
+  - /clinpub:analysis      → 继续当前 Wave 的分析
   - 手动检查 04_Outputs/  → 确认所有 Wave 任务是否确实完成
 ```
 ```
@@ -249,7 +255,7 @@ elif CURRENT_PHASE == 4:
   if ALL_COMPLETED:
     输出: "🎉 恭喜！所有 Phase 已完成！"
   else:
-    输出: "Phase 4 未完成，请继续 /clinpub-review"
+    输出: "Phase 4 未完成，请继续 /clinpub:review"
 ```
 
 ### 3.2 Wave 推进（同 Phase 内）
@@ -358,12 +364,12 @@ MILESTONE_PATH=".clinpub/phases/{N}-{phase-slug}/MILESTONE.md"
 
 | 场景 | `/clear` 后执行 | 进度总结示例 |
 |------|----------------|-------------|
-| Wave 推进 (Phase 2) | `/clinpub-analysis` — 继续下一 Wave 分析 | Phase 1 ✅ \| Phase 2 ⏳ Wave 2 \| Phase 3-4 ⏳ |
-| Phase 0→1 推进 | `/clinpub-data-prep` — 进入数据清洗 | Phase 1 ⏳ 当前 \| Phase 2-4 ⏳ |
-| Phase 1→2 推进 | `/clinpub-analysis` — 进入统计分析 | Phase 1 ✅ \| Phase 2 ⏳ 当前 \| Phase 3-4 ⏳ |
-| Phase 2→3 推进 | `/clinpub-writing` — 进入手稿撰写 | Phase 1 ✅ \| Phase 2 ✅ \| Phase 3 ⏳ 当前 \| Phase 4 ⏳ |
-| Phase 3→4 推进 | `/clinpub-review` — 进入同行评审 | Phase 1-3 ✅ \| Phase 4 ⏳ 当前 |
-| 全部完成 | `/clinpub-milestone 4` — 最终签字 | 全部 ✅ 🎉 |
+| Wave 推进 (Phase 2) | `/clinpub:analysis` — 继续下一 Wave 分析 | Phase 1 ✅ \| Phase 2 ⏳ Wave 2 \| Phase 3-4 ⏳ |
+| Phase 0→1 推进 | `/clinpub:data-prep` — 进入数据清洗 | Phase 1 ⏳ 当前 \| Phase 2-4 ⏳ |
+| Phase 1→2 推进 | `/clinpub:analysis` — 进入统计分析 | Phase 1 ✅ \| Phase 2 ⏳ 当前 \| Phase 3-4 ⏳ |
+| Phase 2→3 推进 | `/clinpub:writing` — 进入手稿撰写 | Phase 1 ✅ \| Phase 2 ✅ \| Phase 3 ⏳ 当前 \| Phase 4 ⏳ |
+| Phase 3→4 推进 | `/clinpub:review` — 进入同行评审 | Phase 1-3 ✅ \| Phase 4 ⏳ 当前 |
+| 全部完成 | `/clinpub:milestone 4` — 最终签字 | 全部 ✅ 🎉 |
 
 ### 5.3 STATE.md 同步
 

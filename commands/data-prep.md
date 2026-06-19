@@ -1,5 +1,5 @@
 ---
-name: clinpub:data-prep
+name: data-prep
 description: "Phase 1: Data preparation and exploratory data analysis. Clean raw data, handle missing values, detect outliers, create derived variables, generate data quality report, and produce cleaned.csv."
 argument-hint: ""
 allowed-tools:

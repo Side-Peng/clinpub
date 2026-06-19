@@ -1,6 +1,6 @@
 ﻿---
 name: init-project
-description: "Phase 0 orchestration: Discuss research framework with user, infer study type if needed, generate project directory structure and project_config.yml."
+description: "Phase 0 orchestration: Detect import mode or discuss research framework with user, infer study type if needed, generate project directory structure and project_config.yml. Supports importing existing projects at any stage."
 ---
 
 <purpose>
@@ -12,10 +12,54 @@ Initialize a clinical research project by discussing the study framework with th
 @./pipeline/templates/project.md
 @./pipeline/templates/roadmap.md
 @./pipeline/templates/state.md
+@./pipeline/templates/method-readme.md
 @./pipeline/references/checkpoints.md
+@./pipeline/references/r_patterns.md
+@./pipeline/workflows/import-project.md
+@./pipeline/references/import-heuristics.md
+@./pipeline/templates/import-milestone.md
 </required_reading>
 
 <process>
+
+<step name="detect_import_mode" priority="first">
+Before starting standard initialization, scan the project directory to determine if this is an import scenario.
+
+**Scan rules**:
+1. Use Glob to scan the project root and first-level subdirectories for research files:
+   - **Strong-signal files** (data + code): *.csv, *.xlsx, *.xls, *.tsv, *.sav, *.dta, *.rds, *.rda, *.R, *.r, *.py, *.Rmd
+   - **Weak-signal files** (figures + docs): *.png, *.pdf, *.tiff, *.svg, *.md, *.docx, *.tex, *.bib
+2. Exclude from scan: `.clinpub/`, `.git/`, `.claude/`, `node_modules/`, `pipeline/`, `agents/`, `commands/`, `hooks/`, `scripts/`, `bin/`, `.qoder/`, `docs/`, `image/`
+3. Check if standard clinpub directories already exist (01_RawData, 02_PreprocessedData, 03_AnalysisMethods, 04_Outputs, 05_Manuscript)
+4. Check if `project_config.yml` already exists
+
+**Decision logic** (signal-strength model):
+- ≥1 standard clinpub directory → **import mode detected** (strong signal, structural evidence)
+- ≥2 strong-signal files → **import mode detected** (data/code presence is unambiguous)
+- ≥5 weak-signal files (without strong-signal files) → **import mode candidate** (ambiguous, requires user confirmation)
+- Otherwise → standard new project mode
+
+**IF import mode detected** (clinpub directory or strong-signal): **Before executing import workflow**, present confirmation to user:
+
+```
+检测到项目中已有研究文件：
+- 数据文件: {{data_count}} 个 ({{data_examples}})
+- 代码文件: {{code_count}} 个 ({{code_examples}})
+- 图表文件: {{figure_count}} 个
+- 文档文件: {{doc_count}} 个
+
+是否以导入模式启动？
+- 输入 `yes` 或 `导入` → 进入导入模式
+- 输入 `no` 或 `新建` → 以全新项目模式启动
+```
+
+On user confirmation → Execute `@./pipeline/workflows/import-project.md` instead of the steps below.
+On user rejection → Continue with standard initialization below.
+
+**IF import mode candidate** (weak-signal only): Prompt user with the same confirmation but note that signal is ambiguous. Only enter import mode if user explicitly confirms.
+
+**IF no artifacts found**: Continue with the standard initialization steps below.
+</step>
 
 <step name="discuss_research_framework" priority="first">
 Discuss with user before creating anything:
@@ -37,7 +81,11 @@ Auto-inference is advisory only — final type must be user-confirmed.
 </step>
 
 <step name="create_project_structure" priority="high">
-After discussion, create the project directory structure:
+After discussion, create the project directory structure.
+
+**Important**: `03_AnalysisMethods/` and `04_Outputs/` must contain one subdirectory per user-confirmed method.
+Method IDs follow the pattern `{NN}_{MethodName}` (e.g., `01_BaselineTable`, `02_GroupComparison`),
+matching the `methods_to_run` list in `project_config.yml`.
 
 ```
 Project_Root/
@@ -52,8 +100,16 @@ Project_Root/
 ├── 02_PreprocessedData/
 │   ├── data/                   ← cleaned.csv lives here
 │   └── reports/
-├── 03_AnalysisMethods/         ← only user-confirmed method dirs
-├── 04_Outputs/                 ← figures + tables
+├── 03_AnalysisMethods/         ← one subdirectory per confirmed method
+│   ├── 01_BaselineTable/
+│   │   └── 方法说明.md          ← placeholder from method-readme.md template
+│   ├── 02_GroupComparison/
+│   │   └── 方法说明.md
+│   └── ...                     ← additional confirmed methods
+├── 04_Outputs/                 ← one subdirectory per confirmed method
+│   ├── 01_BaselineTable/
+│   ├── 02_GroupComparison/
+│   └── ...                     ← additional confirmed methods
 ├── Reference/                  ← literature
 ├── 05_Manuscript/             ← chapter drafts
 │   └── response_letters/
@@ -61,7 +117,14 @@ Project_Root/
 └── run_all.R                   ← master R script
 ```
 
-**Important**: `03_AnalysisMethods/` and `04_Outputs/` should only contain directories for user-confirmed analysis methods.
+**Per-method subdirectory rules:**
+
+1. For each method in `methods_to_run` (confirmed by user in step 1), create:
+   - `03_AnalysisMethods/{method_id}/` — will hold R/Python code and `方法说明.md`
+   - `04_Outputs/{method_id}/` — will hold figures and tables
+2. In each `03_AnalysisMethods/{method_id}/`, create a placeholder `方法说明.md` using the template from `pipeline/templates/method-readme.md`. The placeholder should have the method title filled in (e.g., `# 基线特征表 — 方法说明`) and all other sections left as template stubs (to be filled by Phase 2).
+3. `04_Outputs/{method_id}/` directories are created empty — outputs are generated in Phase 2.
+4. If the user has not yet confirmed specific methods at this point, defer subdirectory creation until methods are confirmed (but they must exist before Phase 0 milestone closes).
 </step>
 
 <step name="generate_config" priority="high">
@@ -126,6 +189,7 @@ See @./pipeline/workflows/milestone.md for full protocol.
 - Study framework fully discussed and documented
 - Project directory structure created with .clinpub/ layer
 - project_config.yml reflects all user decisions
-- Only user-confirmed analysis method directories created
+- Each user-confirmed method has `03_AnalysisMethods/{method_id}/` and `04_Outputs/{method_id}/` subdirectories
+- Each `03_AnalysisMethods/{method_id}/` contains a placeholder `方法说明.md` from template
 - Decision log written to 00-CONTEXT.md
 </success_criteria>

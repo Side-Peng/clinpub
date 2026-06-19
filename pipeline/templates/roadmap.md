@@ -14,5 +14,12 @@
 | 3 | writing | 论文撰写 | IMRAD 各章节 draft.md 完成 | ⬜ |
 | 4 | review | 审稿修稿 | response letter + 修订稿 | ⬜ |
 
+<!-- Phase 状态说明:
+  ⬜ Pending       — 未开始
+  🔄 In Progress   — 进行中
+  ✅ Complete      — 完成
+  ⏩ 已跳过（导入）  — 导入模式下跳过的 Phase
+-->
+
 ## 当前阶段：Phase 0
 ## 下一步：与用户讨论研究框架

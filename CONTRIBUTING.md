@@ -107,7 +107,8 @@ pip install -r requirements.txt
 
 ```
 clinpub/
-├── commands/clinpub/   # 命令入口（YAML frontmatter + @-references）
+├── .claude-plugin/     # 插件清单（plugin.json）
+├── commands/           # 扁平命令入口（YAML frontmatter + @-references）
 ├── agents/             # AI Agent 角色卡片（每个 Agent 独立上下文）
 ├── pipeline/
 │   ├── workflows/      # 阶段编排（DISCUSS → PLAN → EXECUTE → VERIFY）
@@ -115,8 +116,7 @@ clinpub/
 │   ├── templates/      # 研究类型模板 + 项目配置
 │   └── contexts/       # 上下文配置
 ├── scripts/            # 工具脚本（必须自包含）
-├── hooks/              # 工作流守卫钩子（必须自包含）
-├── bin/                # 安装脚本
+├── hooks/              # hooks.json + 工作流守卫脚本
 └── docs/               # 项目文档
 ```
 

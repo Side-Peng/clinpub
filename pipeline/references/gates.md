@@ -127,3 +127,48 @@ In exceptional cases, a gate can be overridden with:
 Overrides are NOT allowed for:
 - Gate 1 (IRB/Ethics) — no exceptions
 - Data de-identification check — no exceptions
+
+---
+
+## Import Mode Gate Adaptation
+
+When a project is imported mid-pipeline (not started from Phase 0), gate checks are adapted for skipped phases.
+
+### Adaptation Rules
+
+1. **Skipped phases**: Gates for skipped phases are evaluated based on imported artifacts only. Missing items are marked as `UNVERIFIED` rather than `FAIL`.
+
+2. **Gate 1 (IRB/Ethics)**:
+   - Still NOT skippable (per existing "no exceptions" rule)
+   - If no IRB info is available, import is BLOCKED until user provides it
+   - User must fill IRB fields in `project_config.yml` during import
+
+3. **Gate 2 (Data Quality)** — when Phase 1 is skipped:
+   - `cleaned.csv` exists → check imported file → `PASS` or `FAIL`
+   - Variable dictionary → auto-generate from `data_profiler.py` if missing → `PASS` (auto-generated)
+   - Missing rate → auto-check from `cleaned.csv` → `PASS` or `FAIL`
+   - Data quality report → mark as `UNVERIFIED`, offer to generate post-import
+   - Reproducible cleaning code → mark as `UNVERIFIED` (cannot verify on imported data)
+
+4. **Gate 3 (Analysis Validity)** — when Phase 2 is partially complete:
+   - Existing outputs → check file presence only (cannot verify execution) → `PASS`
+   - Missing 方法说明 → must be completed before Gate 3 passes → `UNVERIFIED`
+   - Effect size + 95% CI → check if present in imported tables → `PASS` or `UNVERIFIED`
+   - Code reproducibility → mark as `UNVERIFIED` for imported code
+
+5. **Gate 3.5 and Gate 4**: No adaptation needed — evaluated normally from the starting phase onward.
+
+### Recording
+
+Import gate status is recorded in `IMPORT-MILESTONE.md` with:
+- `PASS` — check verified and passed on imported artifact
+- `UNVERIFIED` — cannot verify on imported artifact (with reason)
+- `FAIL` — verified and failed (blocks import progress)
+
+### Transition to Normal Gates
+
+Once the project enters its starting phase, all subsequent gates operate in normal mode (no adaptation). `UNVERIFIED` items from import must be resolved before the first normal gate check:
+
+- When a gate is checked in normal mode, any `UNVERIFIED` items from import are treated as `FAIL`
+- User must either: remediate (e.g., run `data_profiler.py` to generate quality report), provide documentation, or explicitly request an `OVERRIDE` (recorded with justification)
+- Overrides for previously-UNVERIFIED items ARE allowed (unlike Gate 1 which never allows overrides)

@@ -115,6 +115,16 @@ main() {
     exit 0
   fi
 
+  # Import mode bypass with crash-safety validation
+  if [ -f "$STATE_FILE" ] && grep -q "import_mode:.*true" "$STATE_FILE" 2>/dev/null; then
+    # Only bypass if STATE.md has full structure (not crash residue)
+    if grep -qE "阶段：Phase\s*[0-9]+" "$STATE_FILE" 2>/dev/null; then
+      echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","decision":"allow"}}'
+      exit 0
+    fi
+    # Crash residue: fall through to normal phase boundary checks
+  fi
+
   local target_phase=-1
 
   if echo "$command" | grep -qi "Rscript.*analysis\|python.*analysis\|$ANALYSIS_DIR\|$OUTPUTS_DIR"; then
