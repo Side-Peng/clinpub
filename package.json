@@ -1,10 +1,10 @@
 {
   "name": "clinpub",
   "version": "2.0.0",
-  "description": "Clinical data analysis and publication pipeline — Claude Code Plugin for SCI Q1/Q2 journals",
+  "description": "End-to-end clinical data analysis and publication accelerator for SCI Q1/Q2 journals — Claude Code Plugin",
   "keywords": ["clinical", "biostatistics", "publication", "IMRAD", "R", "medical", "claude-code-plugin"],
   "license": "MIT",
-  "author": "Side-Peng <1615085076@qq.com> (https://github.com/Side-Peng/clinpub)",
+  "author": "Side-Peng <1304916798@qq.com> (https://github.com/Side-Peng/clinpub)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Side-Peng/clinpub.git"

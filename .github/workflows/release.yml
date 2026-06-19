@@ -1,3 +1,5 @@
+# Release workflow — GitHub Release only
+# Since v2.0, clinpub is distributed via Claude Code Plugin system (not npm)
 name: Release
 
 on:

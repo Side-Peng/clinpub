@@ -31,9 +31,9 @@ clinpub/
 │   ├── clinpub-verifier.md    # 统计验证 Agent
 │   └── modify-agent.md        # 分析修改 Agent
 ├── pipeline/                  # 管线配置
-│   ├── workflows/             # 阶段编排逻辑（6 个）
-│   ├── references/            # 参考文档（11 个）
-│   ├── templates/             # 模板文件（14 个，含 method-readme）
+│   ├── workflows/             # 阶段编排逻辑（10 个）
+│   ├── references/            # 参考文档（15 个）
+│   ├── templates/             # 模板文件（18 个，含 study_types/）
 │   └── contexts/              # 上下文配置
 ├── scripts/                   # 工具脚本
 │   └── data_profiler.py       # 数据画像
@@ -42,8 +42,7 @@ clinpub/
 │   ├── clinpub-workflow-guard.js
 │   ├── clinpub-phase-boundary.sh
 │   └── clinpub-prompt-guard.js
-├── docs/                      # 文档
-└── examples/                  # 示例数据
+└── docs/                      # 文档
 ```
 
 ## 三层架构
@@ -67,6 +66,9 @@ clinpub/
 | review | `pipeline/workflows/review.md` | Phase 4：审稿修稿 |
 | milestone | `pipeline/workflows/milestone.md` | 阶段关卡评审 |
 | data2idea | `pipeline/workflows/data2idea.md` | 选题挖掘 |
+| import-project | `pipeline/workflows/import-project.md` | 已有项目导入 |
+| modify | `pipeline/workflows/modify.md` | 分析产出修改 |
+| next-step | `pipeline/workflows/next-step.md` | 步骤推进 |
 
 ### 3. Agents 层（专业化执行）
 

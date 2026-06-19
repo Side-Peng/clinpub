@@ -128,6 +128,95 @@ scale_color_viridis_d(option = "D", begin = 0.1, end = 0.9)
 - 若一个变量在正文和补充材料中均出现，颜色必须一致
 - 多个 biomarker 之间使用同一色系区分强度，而非不同色系
 
+### 配色配置协议（Color Config Protocol）
+
+> **强制规则**：在生成任何使用 `scale_fill_*` / `scale_color_*` 的 R 代码之前，必须先读取 `project_config.yml` 的 `quality.color_palette` 段，并根据用户配置生成配色。
+
+#### 读取逻辑
+
+在 R 脚本的初始化部分（紧随 `library()` 加载之后），加入配色读取代码：
+
+```r
+# ---- Color Palette Configuration (from project_config.yml) ----
+cfg <- yaml::read_yaml("project_config.yml")
+color_cfg <- cfg$quality$color_palette  # may be NULL if not configured
+
+# 解析参数（NULL-safe，回退到默认值）
+color_preset       <- if (!is.null(color_cfg$preset)) color_cfg$preset else "auto"
+color_custom       <- if (!is.null(color_cfg$custom_colors)) unlist(color_cfg$custom_colors) else c()
+color_group_map    <- if (!is.null(color_cfg$group_mapping)) as.character(as.list(color_cfg$group_mapping)) else NULL
+color_continuous   <- if (!is.null(color_cfg$continuous)) color_cfg$continuous else "viridis"
+```
+
+#### 应用方式
+
+使用 `get_palette()` 辅助函数根据配置动态生成配色：
+
+```r
+# get_palette() — 配置驱动的配色生成器
+# n_groups: 当前图的分组数
+get_palette <- function(n_groups) {
+  # 1. 优先使用用户指定分组映射
+  if (!is.null(color_group_map) && length(color_group_map) >= n_groups) {
+    return(color_group_map)
+  }
+  # 2. 优先使用自定义色值列表
+  if (length(color_custom) >= n_groups) {
+    return(color_custom[1:n_groups])
+  }
+  # 3. 按 preset 方案选择
+  switch(color_preset,
+    "nature"       = c("#0072B5", "#BC3C29")[1:min(n_groups, 2)],
+    "okabe-ito"    = c("#E69F00", "#56B4E9", "#009E73", "#F0E442",
+                       "#0072B2", "#D55E00", "#CC79A7", "#000000")[1:n_groups],
+    "brewer-set1"  = RColorBrewer::brewer.pal(max(3, n_groups), "Set1")[1:n_groups],
+    "brewer-dark2" = RColorBrewer::brewer.pal(max(3, n_groups), "Dark2")[1:n_groups],
+    "brewer-set2"  = RColorBrewer::brewer.pal(max(3, n_groups), "Set2")[1:n_groups],
+    "viridis"      = viridis::viridis(n_groups),
+    # auto: 按组数自动选择（默认行为）
+    {
+      if (n_groups <= 2) c("#0072B5", "#BC3C29")[1:n_groups]
+      else if (n_groups <= 4) RColorBrewer::brewer.pal(max(3, n_groups), "Set1")[1:n_groups]
+      else if (n_groups <= 8) RColorBrewer::brewer.pal(max(3, n_groups), "Set2")[1:n_groups]
+      else viridis::viridis(n_groups)
+    }
+  )
+}
+
+# get_continuous_scale() — 连续变量色标
+get_continuous_scale <- function() {
+  switch(color_continuous,
+    "viridis" = scale_fill_viridis_c(option = "D"),
+    "magma"   = scale_fill_viridis_c(option = "A"),
+    "plasma"  = scale_fill_viridis_c(option = "C"),
+    "inferno" = scale_fill_viridis_c(option = "B"),
+    scale_fill_viridis_c(option = "D")
+  )
+}
+```
+
+然后在 ggplot2 调用中使用：
+
+```r
+# 分组图表
+p + scale_fill_manual(values = get_palette(n_groups))
+# 或分组颜色
+p + scale_color_manual(values = get_palette(n_groups))
+# 连续变量
+p + get_continuous_scale()
+```
+
+#### 默认值速查
+
+| 参数 | 默认值 | config 路径 | 说明 |
+|------|--------|-------------|------|
+| `preset` | `"auto"` | `quality.color_palette.preset` | 预设配色方案 |
+| `custom_colors` | `[]` | `quality.color_palette.custom_colors` | 自定义色值列表 |
+| `group_mapping` | `{}` | `quality.color_palette.group_mapping` | 分组→色值映射 |
+| `continuous` | `"viridis"` | `quality.color_palette.continuous` | 连续变量色标 |
+
+**向后兼容**：如果 `project_config.yml` 中不存在 `quality.color_palette` 段（旧项目），上述代码全部回退到默认值，行为与改动前完全一致（`auto` 模式按组数自动选择）。
+
 ---
 
 ## 1.2 出版级主题 `theme_pub()`
@@ -192,12 +281,75 @@ theme_pub_light <- function(base_size = 9, base_family = "sans") {
 
 所有元素均满足 **≥ 8pt** 的期刊最低字号要求。
 
-**应用方式：** `+ theme_pub()`（标准）或 `+ theme_pub_light()`（轻量无边框）。
+**应用方式：** `+ apply_theme()`（配置驱动，见下方 Config Protocol）或直接 `+ theme_pub()`（标准）/ `+ theme_pub_light()`（轻量无边框）。当 `project_config.yml` 包含 `quality.theme` 配置时，**必须**使用 `apply_theme()` 方式。
 
 - 默认显示右侧图例（`legend.position = "right"`）。如需隐藏图例（如单组柱状图），覆盖为 `theme(legend.position = "none")`。
 - 如需图例放在顶部：`theme(legend.position = "top")`。
 - 标题默认左对齐（Nature 风格）。如需居中，覆盖为 `theme(plot.title = element_text(hjust = 0.5))`。
 - 字体族 `"sans"` 在 Windows 上映射到 Arial；Linux/macOS 可能需要 `extrafont` 包（见 §1.3）。
+
+### 配置读取协议（Config Protocol）
+
+> **强制规则**：在生成任何使用 `theme_pub()` 的 R 代码之前，必须先读取 `project_config.yml` 的 `quality.theme` 段，并将用户配置值注入主题函数调用。
+
+#### 读取逻辑
+
+在 R 脚本的初始化部分（紧随 `library()` 加载之后），加入配置读取代码：
+
+```r
+# ---- Theme Configuration (from project_config.yml) ----
+# 读取配置；如果 quality.theme 段不存在，使用默认值
+cfg <- yaml::read_yaml("project_config.yml")
+theme_cfg <- cfg$quality$theme  # may be NULL if not configured
+
+# 解析参数（NULL-safe，回退到默认值）
+theme_variant      <- if (!is.null(theme_cfg$variant)) theme_cfg$variant else "theme_pub"
+theme_base_size    <- if (!is.null(theme_cfg$base_size)) theme_cfg$base_size else 9
+theme_base_family  <- if (!is.null(theme_cfg$base_family)) theme_cfg$base_family else "sans"
+theme_legend_pos   <- if (!is.null(theme_cfg$legend_position)) theme_cfg$legend_position else "right"
+theme_title_hjust  <- if (!is.null(theme_cfg$title_hjust)) theme_cfg$title_hjust else 0
+theme_panel_border <- if (!is.null(theme_cfg$panel_border)) theme_cfg$panel_border else TRUE
+```
+
+#### 应用方式
+
+使用 `apply_theme()` 包装器替代直接 `+ theme_pub()` 调用：
+
+```r
+# apply_theme() — 配置驱动的主题包装器
+apply_theme <- function() {
+  base_theme <- if (theme_variant == "theme_pub_light") {
+    theme_pub_light(base_size = theme_base_size, base_family = theme_base_family)
+  } else {
+    theme_pub(base_size = theme_base_size, base_family = theme_base_family)
+  }
+  # 叠加用户自定义覆盖
+  base_theme + theme(
+    legend.position = theme_legend_pos,
+    plot.title = element_text(hjust = theme_title_hjust),
+    panel.border = if (theme_panel_border) {
+      element_rect(color = "black", fill = NA, linewidth = 0.6)
+    } else {
+      element_blank()
+    }
+  )
+}
+```
+
+然后在所有 ggplot2 调用中使用 `+ apply_theme()` 替代 `+ theme_pub()`。
+
+#### 默认值速查
+
+| 参数 | 默认值 | config 路径 | 说明 |
+|------|--------|-------------|------|
+| `variant` | `"theme_pub"` | `quality.theme.variant` | 主题变体 |
+| `base_size` | `9` | `quality.theme.base_size` | 基础字号 |
+| `base_family` | `"sans"` | `quality.theme.base_family` | 字体族 |
+| `legend_position` | `"right"` | `quality.theme.legend_position` | 图例位置 |
+| `title_hjust` | `0` | `quality.theme.title_hjust` | 标题水平对齐 |
+| `panel_border` | `TRUE` | `quality.theme.panel_border` | 是否有边框 |
+
+**向后兼容**：如果 `project_config.yml` 中不存在 `quality.theme` 段（旧项目），上述代码全部回退到默认值，行为与硬编码 `theme_pub(base_size=9, base_family="sans")` 完全一致。
 
 ---
 

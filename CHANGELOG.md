@@ -4,12 +4,20 @@ All notable changes to the clinpub project will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [2.0.0] - 2026-06-01
+## [2.0.0] - 2026-06-19
 
 ### Added — Claude Code Plugin 标准迁移
 - **`.claude-plugin/plugin.json`**: 插件清单文件（Plugin 身份与元数据）
 - **`hooks/hooks.json`**: 声明式钩子配置（3 个 PreToolUse hooks，替代 settings.json 手动注册）
 - **`${CLAUDE_PLUGIN_ROOT}`**: 运行时路径替换（替代 install.js 的 `@./` 重写）
+
+### Added — 图表主题与配色配置化
+- **`quality.theme`** (`project_config.yml`): 新增 6 个可自定义参数（variant / base_size / base_family / legend_position / title_hjust / panel_border）
+- **`quality.color_palette`** (`project_config.yml`): 新增 4 个配色配置字段（preset / custom_colors / group_mapping / continuous）
+- **Config Protocol** (`r_patterns.md §1.2`): `apply_theme()` 包装器，从 config 动态读取主题参数
+- **Color Config Protocol** (`r_patterns.md §1.1`): `get_palette()` + `get_continuous_scale()` 配色生成器，支持 auto / 预设 / 自定义色值
+- **Phase 2 `discuss_and_confirm`**: 新增第 8 项（主题样式讨论）和第 9 项（配色方案讨论），用户可在分析前自定义图表风格
+- **R 依赖**: 新增 `yaml`、`RColorBrewer`、`viridis` 包
 
 ### Changed — 分发方式
 - **npm → Plugin**: 从 `npx clinpub@latest` 迁移到 `claude plugin install clinpub`
@@ -17,6 +25,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **命令目录扁平化**: `commands/clinpub/*.md` → `commands/*.md`（Plugin 自动发现）
 - **`SKILL.md` → `OVERVIEW.md`**: 避免无 skills/ 目录时自动加载为重复 skill
 - **`commands/clinpub/clinpub.md` → `commands/overview.md`**: 重命名避免 `/clinpub:clinpub` 冗余命名
+- **`analyst-agent.md`**: `load_project_config`、`statistical_analysis`、`publication_standards` 三处更新引用 Config Protocol 和 Color Config Protocol
+- **`analysis.md`**: `discuss_and_confirm` 步骤扩展讨论清单，PLAN YAML 模板追加 `theme_config` 和 `color_palette_config` 段
+- **`project_config.yml` 模板**: `quality` 段追加 `theme` 和 `color_palette` 子段
 
 ### Removed
 - **`bin/install.js`**: 自定义 npm 安装器（504 行），功能完全由 Plugin 系统替代
@@ -39,7 +50,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Docs
 - `docs/getting-started.md` 泛化：移除示例数据具体引用，教程改为通用描述
 
-## [1.1.0] - 2026-05-28
+## [1.2.1] - 2026-05-28
 
 ### Added — Phase 1-6 优化（GSD 管线执行）
 

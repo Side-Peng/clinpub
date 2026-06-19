@@ -78,6 +78,22 @@ quality:
   figure_format: "png"                 # png / pdf / tiff
   figure_font: "Arial"
   figure_font_size: 10
+  # --- theme_pub 自定义参数（Phase 2 discuss_and_confirm 阶段填写）---
+  # 未配置的字段使用 r_patterns.md §1.2 的默认值
+  theme:
+    variant: "theme_pub"               # theme_pub / theme_pub_light
+    base_size: 9                       # 基础字号
+    base_family: "sans"                # 字体族（Windows 映射到 Arial）
+    legend_position: "right"           # right / bottom / top / none
+    title_hjust: 0                     # 标题对齐：0=左对齐(Nature), 0.5=居中
+    panel_border: true                 # true=有边框, false=无边框
+  # --- 配色自定义参数（Phase 2 discuss_and_confirm 阶段填写）---
+  # 未配置的字段使用 r_patterns.md §1.1 的默认值
+  color_palette:
+    preset: "auto"                     # auto / nature / okabe-ito / brewer-set1 / brewer-dark2 / brewer-set2 / viridis / custom
+    custom_colors: []                  # 自定义色值列表，如 ["#FF6B6B", "#4ECDC4", "#45B7D1"]
+    group_mapping: {}                  # 分组名→色值映射，如 {Treatment: "#0072B5", Control: "#BC3C29"}
+    continuous: "viridis"              # 连续变量色标：viridis / magma / plasma / inferno
 
 analysis:
   missing_threshold_low: 0.05          # 缺失率 < 5% 可删除/填充

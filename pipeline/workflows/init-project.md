@@ -113,8 +113,7 @@ Project_Root/
 ├── Reference/                  ← literature
 ├── 05_Manuscript/             ← chapter drafts
 │   └── response_letters/
-├── project_config.yml          ← configuration
-└── run_all.R                   ← master R script
+└── project_config.yml          ← configuration
 ```
 
 **Per-method subdirectory rules:**

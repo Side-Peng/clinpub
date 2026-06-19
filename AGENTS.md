@@ -26,7 +26,7 @@ python tests/test_data_profiler.py
 python -m pytest tests/
 
 # Install R dependencies
-Rscript -e 'install.packages(c("dplyr","tidyr","ggplot2","gtsummary","survival","lme4","glmnet","pROC","ggpubr","patchwork","survminer","ggsurvfit","ggsignif","flextable","openxlsx","here","fs","stringr","readr","readxl"))'
+Rscript -e 'install.packages(c("dplyr","tidyr","ggplot2","gtsummary","survival","lme4","glmnet","pROC","ggpubr","patchwork","survminer","ggsurvfit","ggsignif","flextable","openxlsx","here","fs","stringr","readr","readxl","yaml","RColorBrewer","viridis"))'
 # Install Python dependencies
 pip install -r requirements.txt
 ```
@@ -191,10 +191,10 @@ Project_Root/
 
 ## Dependencies
 
-- **R**: dplyr, tidyr, stringr, readr, readxl, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx, ggplot2, ggpubr, patchwork, survminer, ggsurvfit, ggsignif, here, fs
+- **R**: dplyr, tidyr, stringr, readr, readxl, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx, ggplot2, ggpubr, patchwork, survminer, ggsurvfit, ggsignif, here, fs, yaml, RColorBrewer, viridis
 - **Python**: pandas, numpy, requests, openpyxl (see `requirements.txt`)
 - **Node**: >= 22.0.0
-- **Env vars**: `NCBI_API_KEY` (optional, PubMed rate limit), `TAVILY_API_KEY` (Tavily search)
+- **Env vars**: `NCBI_API_KEY` (optional, PubMed rate limit), `TAVILY_API_KEY` (Tavily search), `UNPAYWALL_EMAIL` (Unpaywall PDF access)
 
 ## External Skills
 

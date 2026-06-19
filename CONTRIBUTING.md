@@ -131,6 +131,7 @@ clinpub/
 | `feat` | 新功能 |
 | `fix` | Bug 修复 |
 | `docs` | 文档更新 |
+| `style` | 代码格式（不影响逻辑） |
 | `refactor` | 重构（不改行为） |
 | `test` | 测试相关 |
 | `chore` | 构建/工具/CI |

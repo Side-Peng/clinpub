@@ -17,7 +17,7 @@
 04_Outputs/**/*.tiff
 04_Outputs/**/*.pdf
 03_AnalysisMethods/**/main.R
-!03_AnalysisMethods/**/README.md
+!03_AnalysisMethods/**/方法说明.md
 
 # API keys and secrets
 .env
@@ -54,6 +54,7 @@ desktop.ini
 .clinpub/
 .qoder/
 .claude/
+.solomd/
 CLAUDE.md
 
 # Dev working files

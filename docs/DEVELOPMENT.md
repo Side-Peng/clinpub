@@ -32,7 +32,7 @@ data <- read.csv(global_data_path)  # 全局变量
 
 | 组件        | 版本      | 用途               |
 | ----------- | --------- | ------------------ |
-| Claude Code | >= 2.1.88 | Skill 宿主环境     |
+| Claude Code | >= 2.1.88 | Plugin 宿主环境     |
 | Node.js     | >= 22.0.0 | Hook 执行          |
 | R           | >= 4.2    | 统计分析           |
 | Python      | >= 3.9    | 数据画像、文献检索 |

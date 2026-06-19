@@ -77,6 +77,7 @@ pip install -r requirements.txt
 ```bash
 export NCBI_API_KEY="your_key"       # Optional, improves PubMed rate limit
 export TAVILY_API_KEY="your_key"     # Required for Tavily search
+export UNPAYWALL_EMAIL="your@email.com"  # Optional, Unpaywall PDF access
 ```
 
 ## Updating

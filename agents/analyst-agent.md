@@ -27,6 +27,10 @@ DATA="$PROJECT_DIR/02_PreprocessedData/data/cleaned.csv"
 ```
 
 Verify both exist before proceeding. Read `project_config.yml` to understand variables, methods, and output settings.
+
+Read `quality.theme` section from `project_config.yml` for theme customization parameters. If present, these override the default `theme_pub()` parameters defined in `r_patterns.md §1.2`. See `r_patterns.md §1.2 Config Protocol` for the mandatory code injection pattern.
+
+Read `quality.color_palette` section from `project_config.yml` for color customization parameters. If present, use `get_palette()` wrapper from `r_patterns.md §1.1 Color Config Protocol` to generate colors dynamically. Fall back to `auto` defaults if config section is absent.
 </step>
 
 <step name="data_preparation" priority="high">
@@ -57,7 +61,7 @@ For each method:
 3. Generate R/Python code:
    - **Standard approach**: Use conventional statistical tests (t-test, Wilcoxon, linear model, mixed model)
    - **Complex methods**: Refer to `r_patterns.md` Part 2 for implementation patterns
-   - **Always**: Apply Core Standards from `r_patterns.md` Part 1 (theme_pub, ggsave, directory rules)
+   - **Always**: Apply Core Standards from `r_patterns.md` Part 1 (theme_pub via Config Protocol, color palette via Color Config Protocol, ggsave, directory rules)
 4. Run the code, verify outputs, write README
 5. After all methods in the wave complete, write MANIFEST.yaml in `04_Outputs/` listing all method outputs and declaring writer-agent as consumer (see `pipeline/references/manifest-format.md`)
 6. Proceed to next method in same wave; after wave completes, present checkpoint
@@ -132,12 +136,12 @@ All figures must meet:
 - Resolution: ≥300 DPI (FIGURE_DPI)
 - Format: PNG / PDF / TIFF (LZW compression)
 - Font: Arial ≥8pt
-- Color: viridis / RColorBrewer (color-blind friendly)
+- Color: via Color Config Protocol (`r_patterns.md §1.1`) — read `quality.color_palette` from `project_config.yml`, use `get_palette()` wrapper for group colors and `get_continuous_scale()` for continuous variables. Fall back to `auto` defaults if absent.
 - Dimensions: single column 8cm, double column 17cm
 - Border: black solid (panel.border)
 - Grid: none or light gray dashed
 
-Apply `theme_pub()` from r_patterns §11 to all ggplot2 figures.
+Apply `theme_pub()` via the Config Protocol (`r_patterns.md §1.2`): read `quality.theme` from `project_config.yml`, use `apply_theme()` wrapper to inject user-customized parameters. Fall back to defaults if config section is absent.
 </publication_standards>
 
 <critical_rules>

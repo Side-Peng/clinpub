@@ -122,11 +122,40 @@ Discuss the proposed plan with user and finalize:
 
 1. **Method list**: User adds, removes, or adjusts methods
 2. **Method parameters**: Variable selection strategy, model covariates, reference groups
-3. **Figure/table preferences**: Color palette (see r_patterns.md §1.1), output format, dimensions
+3. **Figure/table preferences**: Color palette (see r_patterns.md §1.1 Color Config Protocol), output format, dimensions, **theme style** (see r_patterns.md §1.2 Config Protocol)
 4. **Train/validation split**: If prediction/ML methods confirmed, discuss ratio
 5. **Multiple comparison correction**: FDR vs Bonferroni vs none
 6. **Significance level**: default α=0.05
 7. **Outcome transformation**: If creating binary cutoffs, discuss threshold basis (median, clinical)
+8. **Theme customization**: `theme_pub()` parameters (see r_patterns.md §1.2 Config Protocol)
+   - Present current defaults and ask: "您希望调整图表主题样式吗？"
+   - Show configurable parameters:
+
+   | 参数 | 默认值 | 说明 |
+   |------|--------|------|
+   | `variant` | `theme_pub` | `theme_pub`（标准带边框）或 `theme_pub_light`（轻量无边框） |
+   | `base_size` | 9 | 基础字号（影响所有文本元素实际 pt） |
+   | `base_family` | "sans" | 字体族（Windows=Arial） |
+   | `legend_position` | "right" | 图例位置：right / bottom / top / none |
+   | `title_hjust` | 0 | 标题对齐：0=左对齐(Nature风格), 0.5=居中 |
+   | `panel_border` | true | 是否有数据区黑色边框 |
+
+   - If user has no preference, keep all defaults (backward compatible)
+   - Write confirmed values to `project_config.yml` under `quality.theme`
+9. **Color palette customization**: (see r_patterns.md §1.1 Color Config Protocol)
+   - Present current defaults and ask: "您希望调整图表配色吗？"
+   - Show configurable parameters:
+
+   | 参数 | 默认值 | 说明 |
+   |------|--------|------|
+   | `preset` | `auto` | 预设方案：`auto`(按组数自动选择) / `nature` / `okabe-ito` / `brewer-set1` / `brewer-dark2` / `custom` |
+   | `custom_colors` | `[]` | 自定义色值列表，如 `["#FF6B6B", "#4ECDC4"]` |
+   | `group_mapping` | `{}` | 分组名→色值映射，如 `{Treatment: "#0072B5", Control: "#BC3C29"}` |
+   | `continuous` | `viridis` | 连续变量色标：viridis / magma / plasma / inferno |
+
+   - Default `auto` behavior: 2 groups → Nature dual-color; 3-4 → Set1; 5-8 → Set2; continuous → viridis
+   - If user has no preference, keep `auto` (backward compatible)
+   - Write confirmed values to `project_config.yml` under `quality.color_palette`
 
 <!-- 方法搜索触发（Phase 4 方法增强） -->
 **方法搜索提示：**
@@ -183,6 +212,20 @@ analysis_plan:
           timepoint: "baseline"
           formula: "{outcome} ~ {grouping_variable} + age + sex + BMI"
           outputs: ["regression_table.docx", "forest_plot.png"]
+# Theme configuration (from discuss_and_confirm step 8)
+theme_config:
+  variant: "theme_pub"
+  base_size: 9
+  base_family: "sans"
+  legend_position: "right"
+  title_hjust: 0
+  panel_border: true
+# Color palette configuration (from discuss_and_confirm step 9)
+color_palette_config:
+  preset: "auto"
+  custom_colors: []
+  group_mapping: {}
+  continuous: "viridis"
 ```
 </step>
 

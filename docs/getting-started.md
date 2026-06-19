@@ -12,7 +12,7 @@
 
 | 组件        | 最低版本  | 用途               |
 | ----------- | --------- | ------------------ |
-| Claude Code | >= 2.1.88 | Skill 宿主环境     |
+| Claude Code | >= 2.1.88 | Plugin 宿主环境     |
 | Node.js     | >= 22.0.0 | Hook 执行          |
 | R           | >= 4.2    | 统计分析           |
 | Python      | >= 3.9    | 数据画像、文献检索 |
@@ -266,4 +266,4 @@ font_add("SimHei", "simhei.ttf")
 - 阅读 `pipeline/references/journal_standards.md` — 了解期刊格式要求
 - 探索 `agents/` 目录了解各 Agent 详细能力
 
-有问题？检查 `.clinpub/STATE.md` 了解当前进度，或重新运行 `/clinpub` 继续。
+有问题？检查 `.clinpub/STATE.md` 了解当前进度，或重新运行 `/clinpub:do` 继续。

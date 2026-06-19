@@ -63,7 +63,7 @@ hooks/*.js/*.sh        → Workflow enforcement hooks
 |-------|------|--------|
 | 0 | init | project_config.yml, directory structure, ROADMAP |
 | 1 | data-prep | cleaned.csv + data quality report (HTML) |
-| 2 | analysis | 10 analysis methods, each with figure + table + 方法说明 |
+| 2 | analysis | Adaptive analysis methods, each with figure + table + 方法说明 |
 | 3 | writing | IMRAD manuscript (Chinese body, English figures/tables) |
 | 4 | review | Review comments + response letter + revised manuscript |
 
@@ -74,7 +74,7 @@ hooks/*.js/*.sh        → Workflow enforcement hooks
 ## Dependencies
 
 - **R**: dplyr, ggplot2, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx
-- **Python**: pandas, numpy, pymupdf, requests, openpyxl
+- **Python**: pandas, numpy, requests, openpyxl
 - **Env vars**: `NCBI_API_KEY` (optional, improves PubMed rate)
 
 ## Detailed Documentation

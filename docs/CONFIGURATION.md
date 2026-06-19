@@ -135,22 +135,38 @@ install.packages(c(
   # 统计分析
   "survival", "lme4", "glmnet", "pROC",
   
-  # 因果推断 & 高级方法
-  "MatchIt", "WeightIt", "cobalt", "cmprsk", "rms",
-  "mice", "mediation", "emmeans", "interactions",
-  
-  # 聚类 & 潜在类
-  "poLCA", "factoextra", "mclust",
-  
   # 可视化
   "ggplot2", "ggpubr", "patchwork", "survminer", "ggsurvfit",
-  "ggsignif", "ggcorrplot", "consort", "ComplexUpset", "ggalluvial",
+  "ggsignif",
   
   # 输出
   "gtsummary", "flextable", "openxlsx",
   
   # 路径
   "here", "fs"
+))
+```
+
+### 可选扩展 R 包
+
+以下包仅在特定分析场景下需要，按需安装：
+
+```r
+install.packages(c(
+  # 因果推断 & 倾向评分
+  "MatchIt", "WeightIt", "cobalt",
+  
+  # 竞争风险 & 高级回归
+  "cmprsk", "rms",
+  
+  # 缺失值插补 & 中介分析
+  "mice", "mediation", "emmeans", "interactions",
+  
+  # 聚类 & 潜在类分析
+  "poLCA", "factoextra", "mclust",
+  
+  # 可视化扩展
+  "ggcorrplot", "consort", "ComplexUpset", "ggalluvial"
 ))
 ```
 
@@ -255,8 +271,7 @@ Project_Root/
 ├── 04_Outputs/                 # 图表输出
 ├── Reference/                  # 文献
 ├── 05_Manuscript/             # 论文各章节
-├── project_config.yml          # 项目配置
-└── run_all.R                   # R 脚本入口
+└── project_config.yml          # 项目配置
 ```
 
 ## 研究类型配置
@@ -314,6 +329,6 @@ study:
 
 ### 文件命名规范
 
-- 图表：`{方法编号}_{描述}.{格式}`（例：`01_BaselineTable.png`）
-- 表格：`{方法编号}_{描述}.xlsx`（例：`01_BaselineTable.xlsx`）
+- 图表：`figure_N.png`（N 从 1 开始，按方法顺序编号）
+- 表格：`table_N.docx`（N 从 1 开始，按方法顺序编号）
 - 脚本：`{方法编号}_{描述}.R`（例：`01_BaselineTable.R`）
