@@ -1,0 +1,15 @@
+{
+  "name": "clinpub",
+  "owner": {
+    "name": "Side-Peng",
+    "email": "1304916798@qq.com"
+  },
+  "plugins": [
+    {
+      "name": "clinpub",
+      "source": "./",
+      "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals.",
+      "version": "2.1.0"
+    }
+  ]
+}
