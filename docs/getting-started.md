@@ -21,7 +21,7 @@
 
 ```bash
 export NCBI_API_KEY="your_ncbi_key"    # 提升 PubMed 查询速率 (3→10 req/s)
-export TAVILY_API_KEY="your_tavily_key" # Tavily 文献检索（Phase 3 用）
+export TAVILY_API_KEY="your_tavily_key" # Tavily 网页/灰色文献补充检索（非主搜索）
 export UNPAYWALL_EMAIL="your@email.com" # Unpaywall PDF 全文获取
 ```
 

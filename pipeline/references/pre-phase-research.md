@@ -150,7 +150,7 @@ RESEARCH.md 的内容映射到 CONTEXT.md 的对应节，标记方式为**追加
 
 - `agents/reference-agent.md` — phase_research 模式（定义 Track A/Track B 的具体搜索执行逻辑）
 - `.clinpub/codebase/` — Track B 使用的代码库地图文件
-- `ncbi-search` skill — PubMed 文献搜索（ncbi-search 技能，用户自行安装）
+- `scripts/ncbi_search.py` — 内置 PubMed 文献搜索（clinpub ≥ v2.1 自带）
 
 ---
 
@@ -164,8 +164,7 @@ RESEARCH.md 的内容映射到 CONTEXT.md 的对应节，标记方式为**追加
 
 1. 调用 reference-agent 的 `phase_research` 模式（Track A 子模式）
 2. 搜索渠道：
-   - **学术文献搜索**：使用 `ncbi-search` 技能搜索 PubMed（关键词: "{phase_keywords}"，类型: review，最大 5 篇）
-   - ncbi-search 技能由用户自行安装，clinpub 不捆绑内置
+   - **学术文献搜索**：通过 Bash 直接调用内置 `scripts/ncbi_search.py` 搜索 PubMed（关键词: "{phase_keywords}"，类型: review，最大 5 篇）
 3. 搜索关键词构建规则：从 Phase 名称和 ROADMAP.md 的 Goal 描述提取核心关键词
 
 ### 产出格式
@@ -195,7 +194,7 @@ RESEARCH.md 的内容映射到 CONTEXT.md 的对应节，标记方式为**追加
    - `.clinpub/STATE.md` — 了解当前阶段
    - `.clinpub/ROADMAP.md` — 了解路线图
    - 无需额外扫描逻辑（per D-10）
-2. **ncbi-search 搜索技术文献**：使用 `ncbi-search` 技能在 PubMed 中搜索技术方案文献（关键词: "{technology_keyword}"，最大 5 篇）
+2. **PubMed 搜索技术文献**：通过 Bash 直接调用内置 `scripts/ncbi_search.py`（关键词: "{technology_keyword}"，最大 5 篇）
 
 ### 产出格式（与 Track A 统一）
 

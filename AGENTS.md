@@ -158,7 +158,7 @@ Project_Root/
 |------|-------|-------|----------|------|
 | 数据清洗 + 质量报告 | `analyst-agent` | 1 | R primary | 默认执行者 |
 | 方法设计 + 代码执行 | `analyst-agent` | 2 | R primary | 默认执行者 |
-| 文献检索 + 引用 | `reference-agent` | 3 | Python | |
+| 文献检索 + 引用 | `reference-agent` | 3 | Python | 内置 `scripts/ncbi_search.py` |
 | 论文撰写 | `writer-agent` | 3 | — | |
 | 选题挖掘 | `topic-miner-agent` | — | Python | |
 | 分析规划 | `clinpub-planner` | 2 | — | 可选高级模式 |
@@ -199,7 +199,6 @@ Project_Root/
 ## External Skills
 
 clinpub depends on Claude Code skills installed separately:
-- `ncbi-search` — PubMed literature search (sole search entry since v1.2)
 - `pdf-reader` — PDF full-text reading
 - `tavily` — supplementary search
 
@@ -208,5 +207,5 @@ clinpub depends on Claude Code skills installed separately:
 - `.gitignore` blocks all patient data files (CSV, XLSX, SAV, DTA, SAS7BDAT) — never commit clinical data
 - `.clinpub/` is the GSD project state directory (PROJECT.md, ROADMAP.md, STATE.md)
 - The hook reads phase from STATE.md using regex `阶段：Phase\s*(\d)` — if you change STATE.md format, update the hook
-- Literature search scripts were removed in v1.2 — now uses external `ncbi-search` skill exclusively
+- Literature search is native since v2.1 — `scripts/ncbi_search.py` is vendored from github.com/Side-Peng/ncbi-search (MIT)
 - Commit convention: `<type>(<scope>): <subject>` — Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`

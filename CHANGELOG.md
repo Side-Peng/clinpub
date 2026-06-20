@@ -4,6 +4,27 @@ All notable changes to the clinpub project will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added — 原生文献检索能力
+- **`scripts/ncbi_search.py`**: 多数据库主入口（PubMed / Gene / Protein / dbSNP / ClinVar / Taxonomy 等，vendor 自 `github.com/Side-Peng/ncbi-search`，MIT）
+- **`scripts/pubmed_search.py`**: PubMed 专用检索（MeSH 自动扩展、年份/类型过滤）
+- **`scripts/pubmed_fetch.py`**: PMID 批量取全文
+- **`scripts/ncbi_utils.py`**: E-Utilities 共享工具（限流、重试、XML 清洗）
+- **`pipeline/references/query_syntax.md`**: PubMed 检索语法参考
+
+### Changed — 文献检索由外部 skill 改为内置
+- **`reference-agent.md`**: 移除 `check_skill_availability` 步骤及 Mode A/B/C fallback；统一通过 Bash 调用 `scripts/ncbi_search.py`
+- **`topic-miner-agent.md`**: 移除 ncbi-search 可用性检测；subagent prompt 改为直接 Bash 调用
+- **`pipeline/workflows/data2idea.md`**: parallel dispatch subagent prompt 改为直接 Bash 调用
+- **`pipeline/references/pre-phase-research.md`**: Track A / Track B 搜索渠道改为内置脚本
+- **`AGENTS.md`**: `## External Skills` 段删除 `ncbi-search` 条目；Agent Routing 表补充内置脚本备注；Quirks 段注明 v2.1 起 native
+- **`README.md`**: 中英文「关联技能 / External Skills」表删除 `ncbi-search`
+- **`INSTALL.md`**: Claude Code skills 列表删除 `ncbi-search`（已是内置能力）
+
+### Removed
+- 所有 agent / workflow / reference 文档中的 `skill("ncbi-search")` 调用与 ncbi-search 可用性检测逻辑
+
 ## [2.0.0] - 2026-06-19
 
 ### Added — Claude Code Plugin 标准迁移

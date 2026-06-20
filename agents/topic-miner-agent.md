@@ -71,13 +71,11 @@ The profile includes:
 <step name="literature_scan_parallel" priority="high">
 Based on the data profile, dispatch **parallel subagents** to search PubMed — one per variable group. This ensures deep, per-variable literature coverage and enables compound novelty detection.
 
-**Prerequisite — ncbi-search skill check:**
+**Prerequisite — native PubMed search:**
 
-1. Verify `ncbi-search` skill is available in current environment
-2. If NOT available → inform user to install ncbi-search skill and stop
-3. If available → subagents will load it via `skill("ncbi-search")`
+The built-in `scripts/ncbi_search.py` is bundled with clinpub (≥ v2.1) — no skill installation required. Subagents call it directly via Bash.
 
-**Optional**: Set `NCBI_API_KEY` env var for faster rate limiting (3req/s → 10req/s). ncbi-search works without it.
+**Optional**: Set `NCBI_API_KEY` env var for faster rate limiting (3req/s → 10req/s). The script works without it.
 
 ### Phase 1: Variable Grouping
 
@@ -106,12 +104,15 @@ You are a PubMed research scout. Search for existing literature on:
 **Additional filters**: Last 5 years, English, Human
 
 Tasks:
-1. Load and use ncbi-search skill: skill("ncbi-search")
-2. Run PubMed search with the query above
-3. Count relevant papers (last 5 years)
-4. Identify top 3 high-impact papers (journal, year)
-5. Note research trends: increasing/decreasing/stable
-6. Identify research gaps: what has NOT been studied
+1. Run PubMed search via the built-in script:
+   ```bash
+   python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<search query>" \
+     --db pubmed --years 5 --max 20
+   ```
+2. Count relevant papers (last 5 years)
+3. Identify top 3 high-impact papers (journal, year)
+4. Note research trends: increasing/decreasing/stable
+5. Identify research gaps: what has NOT been studied
 
 Return structured summary in this exact format:
 - Variable: {name}
@@ -304,7 +305,6 @@ analysis:
 - Generate `idea/to_project_config.yml` after topic selection — user must review and confirm variable mappings before use
 - Do NOT overwrite existing `project_config.yml` — always write to `idea/to_project_config.yml`
 - If critical config fields cannot be determined from data (e.g., outcome variable is ambiguous), flag them with `# TODO: user confirmation needed` in the generated YAML
-- Verify ncbi-search skill is available before any PubMed search; if missing, prompt user to install
   </critical_rules>
 
 <success_criteria>

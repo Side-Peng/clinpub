@@ -1,6 +1,6 @@
 {
   "name": "clinpub",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "End-to-end clinical data analysis and publication accelerator for SCI Q1/Q2 journals — Claude Code Plugin",
   "keywords": ["clinical", "biostatistics", "publication", "IMRAD", "R", "medical", "claude-code-plugin"],
   "license": "MIT",

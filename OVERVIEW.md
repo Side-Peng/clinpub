@@ -53,7 +53,7 @@ pipeline/
   workflows/*.md       → Phase orchestration (DISCUSS → PLAN → EXECUTE → VERIFY)
   references/*.md      → Standards, methods, patterns, gates
   templates/*.md       → Study types + project templates
-scripts/*.py           → R/Python analysis tools
+scripts/*.py           → Data profiler + native NCBI/PubMed search + R/Python tools
 hooks/*.js/*.sh        → Workflow enforcement hooks
 ```
 
@@ -75,6 +75,7 @@ hooks/*.js/*.sh        → Workflow enforcement hooks
 
 - **R**: dplyr, ggplot2, survival, lme4, glmnet, pROC, gtsummary, flextable, openxlsx
 - **Python**: pandas, numpy, requests, openpyxl
+- **Built-in**: `scripts/ncbi_search.py` (PubMed / Gene / Protein / dbSNP / ClinVar / Taxonomy 等 NCBI 多数据库，clinpub ≥ v2.1 自带)
 - **Env vars**: `NCBI_API_KEY` (optional, improves PubMed rate)
 
 ## Detailed Documentation
@@ -88,6 +89,7 @@ Read these files as needed:
 | `pipeline/references/journal_standards.md` | Before writing (journal requirements) |
 | `pipeline/references/gates.md` | At phase transitions (quality gates) |
 | `pipeline/references/r_patterns.md` | When writing R visualization code |
+| `pipeline/references/query_syntax.md` | When constructing PubMed search queries |
 | `agents/analyst-agent.md` | When delegating statistical analysis |
 | `agents/writer-agent.md` | When delegating manuscript writing |
 | `INSTALL.md` | First-time setup |

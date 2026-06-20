@@ -80,7 +80,11 @@ You are a PubMed research scout. Search for existing literature on:
 **Additional filters**: Last 5 years, English, Human
 
 Tasks:
-1. Run PubMed search using ncbi-search skill
+1. Run PubMed search via the built-in script:
+   ```bash
+   python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<search query>" \
+     --db pubmed --years 5 --max 20
+   ```
 2. Count relevant papers (last 5 years)
 3. Identify top 3 high-impact papers (journal IF, citation count if available)
 4. Note research trends: increasing/decreasing/stable publication rate

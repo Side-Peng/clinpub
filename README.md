@@ -99,7 +99,7 @@ claude --plugin-dir ./clinpub
 用户 → 命令 (commands/*.md — 11 个入口)
        → 工作流 (pipeline/workflows/*.md — 10 个编排文件)
          → 智能体 (agents/*.md — 8 个专业智能体，每次独立上下文)
-           → 脚本 (scripts/*.py — R/Python 工具)
+           → 脚本 (scripts/*.py — 数据画像 + 内置 NCBI/PubMed 检索 + R/Python 工具)
            → 钩子 (hooks/ — 3 个 PreToolUse 守卫)
 ```
 
@@ -232,7 +232,6 @@ Project_Root/
 
 | 技能 | 用途 |
 |---|---|
-| `ncbi-search` | PubMed 文献检索（v1.2 起唯一检索入口） |
 | `tavily` | 补充信息检索 |
 | `pdf-reader` | PDF 全文阅读 |
 
@@ -382,7 +381,7 @@ Full tutorial, example data, and FAQ → `docs/getting-started.md`
 USER → COMMANDS (commands/*.md — 11 entry points)
          → WORKFLOWS (pipeline/workflows/*.md — 10 orchestration files)
            → AGENTS (agents/*.md — 8 specialized agents, each with fresh context)
-             → SCRIPTS (scripts/*.py — R/Python tools)
+             → SCRIPTS (scripts/*.py — data profiler + native NCBI/PubMed search + R/Python tools)
              → HOOKS (hooks/ — 3 PreToolUse guards)
 ```
 
@@ -515,7 +514,6 @@ Project_Root/
 
 | Skill | Purpose |
 |---|---|
-| `ncbi-search` | PubMed literature search (sole search entry since v1.2) |
 | `tavily` | Supplementary search |
 | `pdf-reader` | PDF full-text reading |
 

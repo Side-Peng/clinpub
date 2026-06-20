@@ -36,7 +36,11 @@ clinpub/
 │   ├── templates/             # 模板文件（18 个，含 study_types/）
 │   └── contexts/              # 上下文配置
 ├── scripts/                   # 工具脚本
-│   └── data_profiler.py       # 数据画像
+│   ├── data_profiler.py       # 数据画像
+│   ├── ncbi_search.py         # NCBI 多数据库智能检索（主入口）
+│   ├── pubmed_search.py       # PubMed 专用检索（MeSH 扩展 + 过滤）
+│   ├── pubmed_fetch.py        # PMID 批量取全文
+│   └── ncbi_utils.py          # E-Utilities 共享工具（限流/重试）
 ├── hooks/                     # Claude Code Hooks（3 个）
 │   ├── hooks.json             # 声明式钩子配置
 │   ├── clinpub-workflow-guard.js
