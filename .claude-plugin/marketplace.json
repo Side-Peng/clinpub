@@ -7,9 +7,21 @@
   "plugins": [
     {
       "name": "clinpub",
-      "source": "./",
+      "displayName": "ClinPub — Clinical Publication Pipeline",
+      "source": {
+        "source": "github",
+        "repo": "Side-Peng/clinpub"
+      },
       "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals.",
-      "version": "2.1.0"
+      "version": "2.1.0",
+      "author": {
+        "name": "Side-Peng",
+        "email": "1304916798@qq.com"
+      },
+      "category": "data-analysis",
+      "homepage": "https://github.com/Side-Peng/clinpub",
+      "license": "MIT",
+      "keywords": ["clinical", "biostatistics", "publication", "IMRAD", "R", "medical"]
     }
   ]
 }
