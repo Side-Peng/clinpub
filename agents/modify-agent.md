@@ -117,10 +117,11 @@ For each successfully executed modification:
 
 1. Figure exists in `04_Outputs/{id}/` and is non-empty
 2. Figure meets publication standards: ≥300 DPI (FIGURE_DPI), English labels, theme_pub() applied
-3. Table exists and contains updated statistics
-4. README (方法说明) updated with new method description
-5. Statistical reports include effect size + 95%CI + exact p-value
-6. R script is self-contained (reads from cleaned.csv, no global state)
+3. **Theme Enforcement self-check** (r_patterns.md §1.2): all 6 checklist items pass — no grey background, no built-in ggplot themes, colors from semantic palette, human-readable axis labels, unified line widths
+4. Table exists and contains updated statistics
+5. README (方法说明) updated with new method description
+6. Statistical reports include effect size + 95%CI + exact p-value
+7. R script is self-contained (reads from cleaned.csv, no global state)
 </step>
 
 <step name="update_plan" priority="high">

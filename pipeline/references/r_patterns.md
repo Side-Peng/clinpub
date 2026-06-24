@@ -224,17 +224,21 @@ p + get_continuous_scale()
 所有 ggplot2 图表**必须**应用此主题。
 
 ```r
-theme_pub <- function(base_size = 9, base_family = "sans") {
-  # base_size=9：兼顾出版（≥8pt 最小字号）和屏幕阅读
+theme_pub <- function(base_size = 11, base_family = "sans") {
+  # base_size=11：保证屏幕阅读和出版均清晰（≥8pt 期刊底线由 rel() 缩放保证）
   # base_family="sans" 在 Windows 上默认映射到 Arial
   theme_minimal(base_size = base_size, base_family = base_family) %+replace%
     theme(
+      # 背景
+      panel.background = element_rect(fill = "white", color = NA),
+      plot.background = element_rect(fill = "white", color = NA),
       # 图例
       legend.position = "right",
       legend.title = element_text(face = "bold", size = rel(0.9)),
       legend.text = element_text(size = rel(0.9)),
       legend.key.size = unit(0.8, "lines"),
       legend.spacing = unit(0.3, "cm"),
+      legend.background = element_rect(fill = "white", color = NA),
       # 标题（左对齐，Nature 风格）
       plot.title = element_text(hjust = 0, size = rel(1.1), face = "bold",
                                 margin = margin(b = 8)),
@@ -242,44 +246,46 @@ theme_pub <- function(base_size = 9, base_family = "sans") {
       axis.title = element_text(size = rel(1), face = "bold"),
       axis.title.x = element_text(margin = margin(t = 8)),
       axis.title.y = element_text(margin = margin(r = 8)),
-      axis.text = element_text(size = rel(0.9), face = "bold"),
+      axis.text = element_text(size = rel(0.9), color = "black"),
       axis.line = element_line(color = "black", linewidth = 0.4),
-      # 网格
-      panel.grid = element_blank(),
-      panel.border = element_rect(color = "black", fill = NA, linewidth = 0.6),
-      # 刻度
       axis.ticks = element_line(color = "black", linewidth = 0.3),
+      # 网格（仅保留主网格线，极淡，辅助读数）
+      panel.grid.major = element_line(color = "grey92", linewidth = 0.2),
+      panel.grid.minor = element_blank(),
+      # 边框
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 0.4),
       # 分面
       strip.background = element_rect(fill = "grey95", color = "black",
                                       linewidth = 0.4),
       strip.text = element_text(face = "bold", size = rel(0.9)),
-      # 外边距
-      plot.margin = margin(10, 10, 10, 10)
+      # 外边距（稍宽松，避免多图拼接时挤压）
+      plot.margin = margin(12, 12, 12, 12)
     )
 }
 
 # 轻量变体：无边框，适用于流程图、示意图等不需要数据边框的图
-theme_pub_light <- function(base_size = 9, base_family = "sans") {
-  theme_pub(base_size = base_size, base_family = base_family) %+replace%
+theme_pub_light <- function(base_size = 11, base_family = "sans") {
+  theme_pub(base_size = base_size, base_family = base_family) +
     theme(
       panel.border = element_blank(),
-      axis.line = element_line(color = "black", linewidth = 0.4)
+      axis.line = element_line(color = "black", linewidth = 0.4),
+      panel.grid.major = element_blank()
     )
 }
 ```
 
-### `theme_pub()` 字号速查（base_size = 9）
+### `theme_pub()` 字号速查（base_size = 11）
 
 | 元素 | `rel()` | 实际 pt | 说明 |
 |------|---------|---------|------|
-| `plot.title` | 1.1 | 9.9 | 图表主标题 |
-| `axis.title` | 1.0 | 9.0 | 轴标题 |
-| `axis.text` | 0.9 | 8.1 | 轴刻度标签 |
-| `legend.title` | 0.9 | 8.1 | 图例标题 |
-| `legend.text` | 0.9 | 8.1 | 图例文本 |
-| `strip.text` | 0.9 | 8.1 | 分面标签 |
+| `plot.title` | 1.1 | 12.1 | 图表主标题 |
+| `axis.title` | 1.0 | 11.0 | 轴标题 |
+| `axis.text` | 0.9 | 9.9 | 轴刻度标签 |
+| `legend.title` | 0.9 | 9.9 | 图例标题 |
+| `legend.text` | 0.9 | 9.9 | 图例文本 |
+| `strip.text` | 0.9 | 9.9 | 分面标签 |
 
-所有元素均满足 **≥ 8pt** 的期刊最低字号要求。
+所有元素均满足 **≥ 8pt** 的期刊最低字号要求，且在屏幕上阅读舒适。
 
 **应用方式：** `+ apply_theme()`（配置驱动，见下方 Config Protocol）或直接 `+ theme_pub()`（标准）/ `+ theme_pub_light()`（轻量无边框）。当 `project_config.yml` 包含 `quality.theme` 配置时，**必须**使用 `apply_theme()` 方式。
 
@@ -304,7 +310,7 @@ theme_cfg <- cfg$quality$theme  # may be NULL if not configured
 
 # 解析参数（NULL-safe，回退到默认值）
 theme_variant      <- if (!is.null(theme_cfg$variant)) theme_cfg$variant else "theme_pub"
-theme_base_size    <- if (!is.null(theme_cfg$base_size)) theme_cfg$base_size else 9
+theme_base_size    <- if (!is.null(theme_cfg$base_size)) theme_cfg$base_size else 11
 theme_base_family  <- if (!is.null(theme_cfg$base_family)) theme_cfg$base_family else "sans"
 theme_legend_pos   <- if (!is.null(theme_cfg$legend_position)) theme_cfg$legend_position else "right"
 theme_title_hjust  <- if (!is.null(theme_cfg$title_hjust)) theme_cfg$title_hjust else 0
@@ -328,7 +334,7 @@ apply_theme <- function() {
     legend.position = theme_legend_pos,
     plot.title = element_text(hjust = theme_title_hjust),
     panel.border = if (theme_panel_border) {
-      element_rect(color = "black", fill = NA, linewidth = 0.6)
+      element_rect(color = "black", fill = NA, linewidth = 0.4)
     } else {
       element_blank()
     }
@@ -343,13 +349,53 @@ apply_theme <- function() {
 | 参数 | 默认值 | config 路径 | 说明 |
 |------|--------|-------------|------|
 | `variant` | `"theme_pub"` | `quality.theme.variant` | 主题变体 |
-| `base_size` | `9` | `quality.theme.base_size` | 基础字号 |
+| `base_size` | `11` | `quality.theme.base_size` | 基础字号 |
 | `base_family` | `"sans"` | `quality.theme.base_family` | 字体族 |
 | `legend_position` | `"right"` | `quality.theme.legend_position` | 图例位置 |
 | `title_hjust` | `0` | `quality.theme.title_hjust` | 标题水平对齐 |
 | `panel_border` | `TRUE` | `quality.theme.panel_border` | 是否有边框 |
 
-**向后兼容**：如果 `project_config.yml` 中不存在 `quality.theme` 段（旧项目），上述代码全部回退到默认值，行为与硬编码 `theme_pub(base_size=9, base_family="sans")` 完全一致。
+**向后兼容**：如果 `project_config.yml` 中不存在 `quality.theme` 段（旧项目），上述代码全部回退到默认值，行为与硬编码 `theme_pub(base_size=11, base_family="sans")` 完全一致。
+
+### 主题强制执行规则（Theme Enforcement）
+
+> **⚠️ 强制规则**：以下规则不可跳过、不可降级。每张由 clinpub 生成的 ggplot2 图表**必须**满足所有检查项。
+
+#### 必须遵守
+
+1. **`theme_pub()` 或 `apply_theme()` 必须出现在每个 `ggplot()` 调用链的最后一层。** 任何其他 `theme()` 调用必须放在 `theme_pub()` **之前**（通过 `+ theme(...)` 在 `theme_pub()` 之前添加），否则会被 `theme_pub()` 的 `%+replace%` 覆盖。
+2. **禁止使用 ggplot2 内置主题替代 `theme_pub()`。** 以下调用一律禁止出现在 clinpub 生成的代码中：
+   - `theme_grey()` / `theme_gray()`
+   - `theme_bw()`
+   - `theme_classic()`
+   - `theme_minimal()`（直接调用，不通过 `theme_pub()`）
+   - `theme_dark()` / `theme_void()`（除 CONSORT 流程图等特殊情况）
+   - `theme_light()`
+3. **禁止在 `theme_pub()` 之后添加覆盖背景的 `theme()` 调用。** 如 `+ theme(panel.background = element_rect(fill = "grey92"))` 是严格禁止的——这会导致灰色背景，与 `theme_pub()` 的白色背景设计冲突。
+4. **x 轴标签必须使用人类可读的标签名**，不能直接暴露变量名（如 `sleep_group_label`）。必须使用 `labs(x = "Sleep Quality")` 或 `scale_x_discrete(labels = c(...))` 进行映射。
+5. **配色必须来自 Color Config Protocol**（§1.1），不能硬编码 "steelblue"、"coral"、"pink"、"lightblue" 等临时颜色。
+
+#### 常见错误与修正
+
+| 错误代码 | 症状 | 正确写法 |
+|---------|------|---------|
+| `ggplot(...) + geom_xxx() + theme_grey()` | 灰色背景 + 白色网格 | `ggplot(...) + geom_xxx() + theme_pub()` |
+| `ggplot(...) + theme_pub() + theme_bw()` | `theme_bw` 覆盖 `theme_pub`，风格不一致 | `ggplot(...) + theme_pub()` （去掉 `theme_bw`） |
+| `ggplot(...) + theme_pub() + theme(panel.background = ...)` | 背景色被意外修改 | 将 `theme()` 放在 `theme_pub()` 之前，或仅覆盖允许的少量参数 |
+| `labs(x = "variable_name")` 直接写变量名 | x 轴暴露代码变量名 | `labs(x = "Human Readable Label")` |
+| `scale_fill_manual(values = c("pink", "cyan"))` | 配色脱离语义色板 | `scale_fill_manual(values = get_palette(2))` |
+| `geom_boxplot(fill = "lightblue")` | 硬编码颜色 | 使用 `aes(fill = group)` + `scale_fill_manual(values = get_palette(n))` |
+
+#### 出图前自检清单（每次生成图表代码前必须逐项核对）
+
+在生成任何 ggplot2 图表的 R 代码时，**必须**确认以下 6 项全部通过。任何一项不通过，生成的图表将不符合 clinpub 出版标准：
+
+- [ ] ① `theme_pub()` 或 `apply_theme()` 出现在 ggplot 调用链中
+- [ ] ② 没有 `theme_grey` / `theme_bw` / `theme_classic` 等内置主题
+- [ ] ③ 背景为白色（无灰色背景）
+- [ ] ④ 配色来自 `get_palette()` / 语义色，无硬编码临时颜色
+- [ ] ⑤ x/y 轴标签为人类可读英文（非变量名）
+- [ ] ⑥ 所有黑色线条宽度统一：`axis.line = 0.4`、`panel.border = 0.4`、`axis.ticks = 0.3`
 
 ---
 
@@ -688,10 +734,14 @@ y_limits <- c(y_range[1] - y_pad, y_range[2] + y_pad)
 ### 模式
 ```r
 ggplot(data, aes(x = group, y = value)) +
-  geom_jitter(aes(fill = group), color = alpha("gray50", 0.4),
-              shape = 21, width = 0.2, size = 2) +
-  geom_boxplot(aes(fill = group), alpha = 0.0, color = "black",
-               outlier.shape = NA, width = 0.5)
+  geom_jitter(aes(color = group), alpha = 0.6,
+              width = 0.2, size = 2) +
+  geom_boxplot(aes(fill = group), alpha = 0.3, color = "black",
+               outlier.shape = NA, width = 0.5, linewidth = 0.4) +
+  scale_color_manual(values = get_palette(length(unique(data$group)))) +
+  scale_fill_manual(values = get_palette(length(unique(data$group)))) +
+  labs(x = "Group", y = "Value") +
+  theme_pub()
 ```
 
 ### 适用条件
@@ -800,8 +850,9 @@ ggplot(cm_df, aes(x = Actual, y = Predicted)) +
   geom_tile(aes(fill = Freq), color = "white", linewidth = 1) +
   geom_text(aes(label = sprintf("%d\n(%.1f%%)", Freq, Percent)),
             size = 4, fontface = "bold") +
-  scale_fill_gradient(low = "white", high = "steelblue") +
-  coord_fixed()
+  scale_fill_gradient(low = "white", high = "#0072B5") +
+  coord_fixed() +
+  theme_pub()
 ```
 
 ### 适用条件
@@ -819,11 +870,13 @@ ggplot(cm_df, aes(x = Actual, y = Predicted)) +
 ### 模式
 ```r
 ggplot(df, aes(x = estimate, y = reorder(label, estimate))) +
-  geom_point(size = 4, color = "steelblue") +
+  geom_point(size = 4, color = "#0072B5") +
   geom_errorbarh(aes(xmin = lower, xmax = upper),
-                 height = 0.2, color = "steelblue") +
-  geom_vline(xintercept = reference, linetype = "dashed", color = "red") +
-  labs(x = "AUC (95% CI)", y = "")
+                 height = 0.2, color = "#0072B5") +
+  geom_vline(xintercept = reference, linetype = "dashed",
+             color = "#BC3C29", linewidth = 0.4) +
+  labs(x = "AUC (95% CI)", y = "") +
+  theme_pub()
 ```
 
 ### 适用条件
@@ -843,9 +896,11 @@ ggplot(df, aes(x = estimate, y = reorder(label, estimate))) +
 ggplot(df, aes(x = jitter(as.numeric(factor(outcome)), amount = 0.1),
                y = predicted_prob, color = as.factor(outcome))) +
   geom_jitter(size = 2.5, alpha = 0.7, width = 0.15) +
-  geom_hline(yintercept = cutoff, linetype = "dashed", color = "red") +
-  scale_color_manual(values = c("steelblue", "coral")) +
-  labs(x = "Actual Group", y = "Predicted Probability")
+  geom_hline(yintercept = cutoff, linetype = "dashed",
+             color = "#E69F00", linewidth = 0.4) +
+  scale_color_manual(values = c("#0072B5", "#BC3C29")) +
+  labs(x = "Actual Group", y = "Predicted Probability") +
+  theme_pub()
 ```
 
 ### 适用条件

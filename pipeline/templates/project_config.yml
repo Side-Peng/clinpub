@@ -82,7 +82,7 @@ quality:
   # 未配置的字段使用 r_patterns.md §1.2 的默认值
   theme:
     variant: "theme_pub"               # theme_pub / theme_pub_light
-    base_size: 9                       # 基础字号
+    base_size: 11                      # 基础字号
     base_family: "sans"                # 字体族（Windows 映射到 Arial）
     legend_position: "right"           # right / bottom / top / none
     title_hjust: 0                     # 标题对齐：0=左对齐(Nature), 0.5=居中

@@ -134,7 +134,7 @@ Discuss the proposed plan with user and finalize:
    | 参数 | 默认值 | 说明 |
    |------|--------|------|
    | `variant` | `theme_pub` | `theme_pub`（标准带边框）或 `theme_pub_light`（轻量无边框） |
-   | `base_size` | 9 | 基础字号（影响所有文本元素实际 pt） |
+   | `base_size` | 11 | 基础字号（影响所有文本元素实际 pt） |
    | `base_family` | "sans" | 字体族（Windows=Arial） |
    | `legend_position` | "right" | 图例位置：right / bottom / top / none |
    | `title_hjust` | 0 | 标题对齐：0=左对齐(Nature风格), 0.5=居中 |
@@ -215,7 +215,7 @@ analysis_plan:
 # Theme configuration (from discuss_and_confirm step 8)
 theme_config:
   variant: "theme_pub"
-  base_size: 9
+  base_size: 11
   base_family: "sans"
   legend_position: "right"
   title_hjust: 0
