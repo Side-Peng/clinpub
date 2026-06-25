@@ -29,9 +29,11 @@ python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<query>" [options]
 python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<query>" \
   --db pubmed --years <N> --type <type> --max <N>
 
-# Batch PMID fetch (full record)
+# Batch PMID fetch (full record, includes abstract)
 python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_fetch.py" <PMID1> <PMID2> ... --format json
 ```
+
+**摘要获取**: `ncbi_search.py` 使用 ESummary API，不返回摘要。写入 `reference_library.json` 前，必须对搜索结果中有 PMID 的文献调用 `pubmed_fetch.py` 获取完整摘要（EFetch XML），提取 `abstract` 字段存入引用库。
 
 Never call `skill("ncbi-search")` — the capability is native to clinpub.
 </step>
@@ -72,6 +74,7 @@ Search strategies by trigger phase:
 - Read abstracts → retain: directly relevant, SCI-indexed, within year range from citation_strategy config (with landmark exceptions)
 - Exclude: case reports, editorials, errata
 - Get DOI for every retained reference
+- **Fetch abstracts**: 对保留的文献调用 `pubmed_fetch.py` 批量获取完整摘要（`python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_fetch.py" <PMID1> <PMID2> ... --format json`），将摘要文本写入 `reference_library.json` 的 `abstract` 字段。无 PMID 的文献通过 DOI 解析获取摘要，无法获取时标记为 `"pending"`
 
 **During Phase 3 chapter writing:**
 - Supplementary search per chapter topic via built-in `ncbi_search.py`
@@ -259,6 +262,8 @@ Write two output files to `Reference/`:
 }
 ```
 
+**reference_library.json**: 写入或更新共享引用库（参见 `pipeline/references/reference-library.md` 规范），每条记录**必须包含 `abstract` 字段**（完整摘要文本）。通过 `pubmed_fetch.py` 获取摘要后写入。
+
 Deduplicate at final stage. Flag any references without DOIs for user action.
 
 Write MANIFEST.yaml to `Reference/` declaring all outputs and listing writer-agent as consumer (see `pipeline/references/manifest-format.md`).
@@ -273,6 +278,7 @@ Write MANIFEST.yaml to `Reference/` declaring all outputs and listing writer-age
 - Rate limit: `ncbi_search.py` handles rate limiting automatically (3 req/sec without NCBI_API_KEY, 10 req/sec with key)
 - Retained references must be directly relevant to the study
 - Flag whether each reference is "essential" or "supplementary"
+- **摘要必填**: 每条写入 `reference_library.json` 的记录必须包含 `abstract` 字段。通过 `pubmed_fetch.py` 获取完整摘要，无法获取时标记为 `"pending"`
 
 ### method_search 规则
 - 方法搜索统一使用内置 `scripts/ncbi_search.py`（PubMed）

@@ -17,11 +17,12 @@ Language modes:
 
 ## Chapter Writing Order
 
-1. Methods (most structured, write first)
-2. Results (data-driven, write after methods)
-3. Introduction (funnel structure, write after results are clear)
-4. Discussion (narrative, write after introduction)
-5. Abstract (structured, write last)
+按 IMRAD 顺序撰写（D-01），与 `sequential_section_writing` 和 `batch_writing` 流程一致：
+
+1. Introduction（漏斗结构：领域背景 → 知识缺口 → 研究目的）
+2. Methods（从 project_config.yml + 分析管线输出自动生成）
+3. Results（数据驱动：描述关键发现 + 指向图表）
+4. Discussion（叙事结构：主要发现 → 与已有文献对比 → 临床意义 → 局限性）
 
 ## Study Type Templates
 

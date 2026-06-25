@@ -139,9 +139,10 @@ See `@./agents/reference-agent.md` for detailed search protocol.
 搜索后更新 `Reference/reference_library.json`：
 1. 读取已有库
 2. 新引用逐条去重（检查 `citation_key`）
-3. 分配新 ID（max_id + 1）
-4. 写入库
-5. 更新 `Reference/MANIFEST.yaml`
+3. 获取摘要：对新引用调用 `pubmed_fetch.py`（有 PMID 时）或通过 DOI 解析获取完整摘要文本，写入 `abstract` 字段
+4. 分配新 ID（max_id + 1）
+5. 写入库（每条记录必须包含 `abstract` 字段，无法获取时标记为 `"pending"`）
+6. 更新 `Reference/MANIFEST.yaml`
 
 #### Step B: Writer-Agent 撰写（D-02, D-03）
 
@@ -209,7 +210,7 @@ See `@./agents/reference-agent.md` for detailed search protocol.
 3. **Results 文献搜索**: 仅在有对比需求时搜索, 目标 0-3 篇
 4. **Discussion 文献搜索**: 对比同类研究 + 机制解释 + 临床意义, 目标 15-25 篇
 
-每次搜索后更新 `Reference/reference_library.json`（读取→去重→分配ID→写入）。
+每次搜索后更新 `Reference/reference_library.json`（读取→去重→获取摘要→分配ID→写入，每条记录必须包含 `abstract` 字段）。
 
 搜索全部完成后输出进度：
 ```

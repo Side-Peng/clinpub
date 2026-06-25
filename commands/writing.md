@@ -46,6 +46,18 @@ Phase 3: IMRAD manuscript writing with dual-mode support.
 
 <process>
 Execute the writing workflow from @./pipeline/workflows/writing.md end-to-end.
+
+关键决策步骤（必须依次执行，不可跳过）：
+
+1. **引用策略确认** (`discuss_citation_strategy`): 与用户确认各段引用数量、时间范围、IF 偏好，写入 project_config.yml
+2. **写作计划讨论** (`discuss_writing_plan`): 确认核心论点、目标期刊、手稿结构、图表安排
+3. **写作模式选择** (`choose_writing_mode`): 使用 AskUserQuestion 向用户呈现两种模式——
+   - 一键成稿（batch）→ 跳过逐步流程，直接执行 `batch_writing`（批量文献搜索 → 批量撰写 → 统一审阅）
+   - 逐步写作（sequential）→ 执行 `reference_pre_search` + `sequential_section_writing`（逐段：文献搜索 → 撰写 → 用户审阅）
+4. 按用户选择的模式执行撰写（IMRAD 顺序：Introduction → Methods → Results → Discussion）
+5. 终稿拼接 (`concatenate_manuscript`): 占位符替换 + 引用重编号 + YAML frontmatter
+6. 验证 (`verify_manuscript`): 结构/引用/字数/STROBE 合规检查
+7. 用户确认 (`checkpoint_confirm`) → milestone 关闭 Phase 3
 </process>
 
 <success_criteria>

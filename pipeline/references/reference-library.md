@@ -33,7 +33,8 @@
       "pmid": "12345678",
       "sections_used": ["introduction", "discussion"],
       "added_by_section": "introduction",
-      "citation_reason": "Supports the association between X and Y"
+      "citation_reason": "Supports the association between X and Y",
+      "abstract": "Full abstract text of the article, obtained from PubMed EFetch. Used by writer-agent for accurate citation context and by reference-agent for relevance filtering."
     }
   ]
 }
@@ -57,6 +58,7 @@
 | `sections_used` | 是 | 该引用被哪些段引用的列表（["introduction", "discussion"]）。去重时检查此字段 |
 | `added_by_section` | 是 | 首次添加该引用的段落名称 |
 | `citation_reason` | 是 | 引用此文献的原因描述 |
+| `abstract` | 是 | 论文摘要全文。从 PubMed EFetch 获取（通过 `pubmed_fetch.py`）。writer-agent 用于精准引用上下文，reference-agent 用于相关性筛选。无法获取时标记为 `"abstract": "pending"` |
 
 ### 1.3 每次写入引用库的规则（D-09）
 
@@ -65,6 +67,7 @@
 3. **追加新条目**: 如果 `citation_key` 不存在 → 分配下一个最大 `id+1`，追加到库中
 4. **去重键策略**: 以 `citation_key`（AuthorYear）为主键。如果不同论文同 AuthorYear（极少数重复引用场景），加后缀区分：`Author2024a`, `Author2024b`
 5. **DOI 必填**: 任何无 DOI 的引用标记为 `pending_doi` 并在段落末尾标注 ⚠️。不可跳过
+6. **摘要必填**: 每条新引用必须包含 `abstract` 字段。获取方式：对有 PMID 的文献，调用 `pubmed_fetch.py` 获取完整摘要（EFetch XML）；对无 PMID 但有 DOI 的文献，通过 DOI 解析获取摘要文本。无法获取时标记为 `"abstract": "pending"`，由后续补充搜索或用户手动补全
 
 ---
 
@@ -161,9 +164,10 @@ Supplementary Figure: /{{SupplementaryFigure:(\d+)}}/
 2. 如果 `Reference/reference_library.json` 不存在 → 创建初始空库 `{"version":"1.0","last_updated":"...","references":[]}`
 3. 读取已有库内容
 4. 对新找到的引用逐条检查 `citation_key` 去重（规则见 1.3）
-5. 新引用分配 `id`（max_id + 1），写入库
-6. 更新 `last_updated` 字段
-7. 保存 `Reference/reference_library.json`
+5. 对每条新引用获取摘要：通过 `pubmed_fetch.py`（有 PMID 时）或 DOI 解析获取完整摘要文本，写入 `abstract` 字段
+6. 新引用分配 `id`（max_id + 1），写入库（含 `abstract` 字段）
+7. 更新 `last_updated` 字段
+8. 保存 `Reference/reference_library.json`
 
 ### 4.2 各段撰写时的引用使用规则（writer-agent）
 

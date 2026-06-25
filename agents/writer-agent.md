@@ -64,7 +64,7 @@ fi
 
 If any file declared as required for writer-agent is missing, report to user and stop. Do not fabricate data.
 
-Then read: project_config.yml (study type, variables, target journal), Reference/citation_map.md and references.bib, all outputs from 04_Outputs/, and the appropriate study type template from pipeline/templates/study_types/.
+Then read: project_config.yml (study type, variables, target journal), Reference/citation_map.md, Reference/reference_library.json (含摘要，用于精准引用上下文), and references.bib, all outputs from 04_Outputs/, and the appropriate study type template from pipeline/templates/study_types/.
 </step>
 
 <step name="draft_methods" priority="high">
