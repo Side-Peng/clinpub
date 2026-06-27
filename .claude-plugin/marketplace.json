@@ -8,10 +8,7 @@
     {
       "name": "clinpub",
       "displayName": "ClinPub — Clinical Publication Pipeline",
-      "source": {
-        "source": "github",
-        "repo": "Side-Peng/clinpub"
-      },
+      "source": "git:https://github.com/Side-Peng/clinpub",
       "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals.",
       "version": "2.1.0",
       "author": {
