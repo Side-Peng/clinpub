@@ -156,6 +156,10 @@ color_continuous   <- if (!is.null(color_cfg$continuous)) color_cfg$continuous e
 # get_palette() — 配置驱动的配色生成器
 # n_groups: 当前图的分组数
 get_palette <- function(n_groups) {
+  # 0. 单色场景直接返回 Hero 色
+  if (n_groups == 1) {
+    return("#0072B5")  # Hero color for single-color plots
+  }
   # 1. 优先使用用户指定分组映射
   if (!is.null(color_group_map) && length(color_group_map) >= n_groups) {
     return(color_group_map)
@@ -193,6 +197,20 @@ get_continuous_scale <- function() {
     scale_fill_viridis_c(option = "D")
   )
 }
+
+# get_diverging_scale() — 发散色标（相关性矩阵等有正负方向的连续变量）
+# midpoint: 发散中心值，相关性矩阵默认为 0
+get_diverging_scale <- function(midpoint = 0) {
+  scale_fill_gradient2(
+    low = "#0072B5", mid = "white", high = "#BC3C29",
+    midpoint = midpoint
+  )
+}
+
+# 语义色便捷函数 — 用于单色图表（森林图、RCS、趋势图等）
+get_hero_color     <- function() "#0072B5"   # 核心关注色（新方法/干预组）
+get_baseline_color <- function() "#BC3C29"   # 对照/参考色（标准治疗/零线）
+get_accent_color   <- function() "#E69F00"   # 强调色（阈值线/异常亚组）
 ```
 
 然后在 ggplot2 调用中使用：
@@ -395,7 +413,17 @@ apply_theme <- function() {
 - [ ] ③ 背景为白色（无灰色背景）
 - [ ] ④ 配色来自 `get_palette()` / 语义色，无硬编码临时颜色
 - [ ] ⑤ x/y 轴标签为人类可读英文（非变量名）
-- [ ] ⑥ 所有黑色线条宽度统一：`axis.line = 0.4`、`panel.border = 0.4`、`axis.ticks = 0.3`
+- [ ] ⑥ 线宽规范：结构线（`axis.line`、`panel.border`）= 0.4，`axis.ticks` = 0.3；数据线常规 0.4，主曲线/主趋势可加粗至 0.8，辅助线保持 0.4
+
+### 数据线宽度约定
+
+结构线（轴、边框、刻度）由 `theme_pub()` 统一控制，不可覆盖。数据线（`geom_line`、`geom_segment` 等）按视觉层次分三档：
+
+| 层级 | 宽度 | 适用场景 |
+|------|------|---------|
+| 常规 | 0.4 | 辅助参考线、CI 边界、个体轨迹、次要趋势 |
+| 加粗 | 0.8 | 主曲线（RCS、KM）、主趋势线、组均值线 |
+| 强调 | 1.2 | 仅限全幅单线核心图（极少使用） |
 
 ---
 
@@ -806,6 +834,43 @@ coords_best <- coords(roc_obj, "best",
           "ppv", "npv", "accuracy"))
 ```
 
+### 可视化
+```r
+# ROC 曲线绘制模板
+roc_df <- data.frame(
+  FPR = 1 - roc_obj$specificities,
+  TPR = roc_obj$sensitivities
+)
+p <- ggplot(roc_df, aes(x = FPR, y = TPR)) +
+  geom_line(color = get_hero_color(), linewidth = 0.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed",
+              color = "grey50", linewidth = 0.4) +
+  labs(x = "1 - Specificity (FPR)",
+       y = "Sensitivity (TPR)",
+       title = sprintf("ROC Curve (AUC = %.3f)", as.numeric(auc_obj))) +
+  coord_equal() +
+  theme_pub()
+
+# 多模型对比（Unadjusted vs Adjusted）
+roc_adj_df <- data.frame(
+  FPR = 1 - roc_adjusted$specificities,
+  TPR = roc_adjusted$sensitivities
+)
+p_compare <- ggplot() +
+  geom_line(data = roc_df, aes(x = FPR, y = TPR),
+            color = get_hero_color(), linewidth = 0.8) +
+  geom_line(data = roc_adj_df, aes(x = FPR, y = TPR),
+            color = get_baseline_color(), linewidth = 0.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed",
+              color = "grey50", linewidth = 0.4) +
+  labs(x = "1 - Specificity (FPR)", y = "Sensitivity (TPR)",
+       color = "Model") +
+  scale_color_manual(values = c(get_hero_color(), get_baseline_color()),
+                     labels = c("Unadjusted", "Adjusted")) +
+  coord_equal() +
+  theme_pub()
+```
+
 ### 适用条件
 - 生物标志物诊断价值评估
 - 需要对比"单纯标志物" vs "综合模型"的 AUC
@@ -850,7 +915,7 @@ ggplot(cm_df, aes(x = Actual, y = Predicted)) +
   geom_tile(aes(fill = Freq), color = "white", linewidth = 1) +
   geom_text(aes(label = sprintf("%d\n(%.1f%%)", Freq, Percent)),
             size = 4, fontface = "bold") +
-  scale_fill_gradient(low = "white", high = "#0072B5") +
+  scale_fill_gradient(low = "white", high = get_hero_color()) +
   coord_fixed() +
   theme_pub()
 ```
@@ -870,11 +935,11 @@ ggplot(cm_df, aes(x = Actual, y = Predicted)) +
 ### 模式
 ```r
 ggplot(df, aes(x = estimate, y = reorder(label, estimate))) +
-  geom_point(size = 4, color = "#0072B5") +
+  geom_point(size = 4, color = get_hero_color()) +
   geom_errorbarh(aes(xmin = lower, xmax = upper),
-                 height = 0.2, color = "#0072B5") +
+                 height = 0.2, color = get_hero_color()) +
   geom_vline(xintercept = reference, linetype = "dashed",
-             color = "#BC3C29", linewidth = 0.4) +
+             color = get_baseline_color(), linewidth = 0.4) +
   labs(x = "AUC (95% CI)", y = "") +
   theme_pub()
 ```
@@ -897,8 +962,8 @@ ggplot(df, aes(x = jitter(as.numeric(factor(outcome)), amount = 0.1),
                y = predicted_prob, color = as.factor(outcome))) +
   geom_jitter(size = 2.5, alpha = 0.7, width = 0.15) +
   geom_hline(yintercept = cutoff, linetype = "dashed",
-             color = "#E69F00", linewidth = 0.4) +
-  scale_color_manual(values = c("#0072B5", "#BC3C29")) +
+             color = get_accent_color(), linewidth = 0.4) +
+  scale_color_manual(values = get_palette(2)) +
   labs(x = "Actual Group", y = "Predicted Probability") +
   theme_pub()
 ```
@@ -983,7 +1048,7 @@ corr_matrix <- cor(data, method = "spearman", use = "pairwise.complete.obs")
 ggcorrplot(corr_matrix,
   type = "lower",
   lab = TRUE, lab_size = 3,
-  colors = c("#0072B5", "white", "#BC3C29"),  # 蓝白红三色
+  colors = c(get_hero_color(), "white", get_baseline_color()),  # 蓝白红三色
   ggtheme = theme_pub())
 ```
 
@@ -1119,11 +1184,11 @@ fit_glm <- lrm(outcome ~ rcs(exposure, 4) + age + sex, data = data)
 p <- Predict(fit_ols, exposure, fun = function(x) x,
              ref.zero = FALSE)
 plot(p, xlab = "Exposure (units)", ylab = "Adjusted outcome",
-     col = "#0072B5", lwd = 2)
+     col = get_hero_color(), lwd = 2)
 # 或用 ggplot2:
 ggplot(data = p, aes(exposure, yhat)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#0072B5", alpha = 0.2) +
-  geom_line(color = "#0072B5", linewidth = 1) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = get_hero_color(), alpha = 0.2) +
+  geom_line(color = get_hero_color(), linewidth = 0.8) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
   labs(x = "Exposure", y = "Adjusted effect (95% CI)",
        title = "Non-linear dose-response relationship") +
@@ -1165,12 +1230,12 @@ progression_threshold <- 20 # PD: ≥ 20% 增大
 
 p <- ggplot(df, aes(x = patient_id, y = best_change, fill = group)) +
   geom_bar(stat = "identity", width = 0.8) +
-  geom_hline(yintercept = 0, color = "black", linewidth = 0.5) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.4) +
   geom_hline(yintercept = response_threshold,
-             linetype = "dashed", color = "#0072B5") +
+             linetype = "dashed", color = get_hero_color()) +
   geom_hline(yintercept = progression_threshold,
-             linetype = "dashed", color = "#BC3C29") +
-  scale_fill_manual(values = c("#0072B5", "#BC3C29")) +
+             linetype = "dashed", color = get_baseline_color()) +
+  scale_fill_manual(values = get_palette(2)) +
   labs(x = "", y = "Best % change from baseline",
        title = "Waterfall plot of best tumor response") +
   theme_pub() +
@@ -1202,7 +1267,7 @@ library(ggplot2)
 m <- metagen(TE, seTE, data = meta_data, sm = "OR", method.tau = "REML")
 
 # 基础漏斗图（base R）
-funnel(m, pch = 16, col = "#0072B5",
+funnel(m, pch = 16, col = get_hero_color(),
        studlab = TRUE, xlab = "Effect size (log OR)")
 
 # ggplot2 版本
@@ -1213,13 +1278,14 @@ funnel_data <- data.frame(
 )
 
 p <- ggplot(funnel_data, aes(x = effect, y = se)) +
-  geom_point(size = 3, color = "#0072B5", alpha = 0.7) +
-  geom_vline(xintercept = m$TE.random, linetype = "dashed", color = "red") +
+  geom_point(size = 3, color = get_hero_color(), alpha = 0.7) +
+  geom_vline(xintercept = m$TE.random, linetype = "dashed",
+             color = get_baseline_color()) +
   geom_segment(
     aes(x = m$TE.random - 1.96 * se, xend = m$TE.random + 1.96 * se,
         y = se, yend = se),
     data = data.frame(se = seq(0.05, max(funnel_data$se), length.out = 100)),
-    color = "gray70", alpha = 0.5
+    color = "grey70", alpha = 0.5, linewidth = 0.4
   ) +
   scale_y_reverse() +
   labs(x = "Effect size (log OR)", y = "Standard error",
@@ -1261,7 +1327,7 @@ upset(data, conditions,
     )
   ),
   set_sizes = upset_set_size(
-    geom = geom_bar(fill = "#0072B5", width = 0.6)
+    geom = geom_bar(fill = get_hero_color(), width = 0.6)
   ),
   stripes = upset_stripes(
     geom = geom_segment(color = "gray90"),
@@ -1303,7 +1369,7 @@ p <- ggplot(df, aes(y = count, axis1 = baseline, axis2 = followup)) +
   geom_alluvium(aes(fill = baseline), width = 0.3, alpha = 0.7) +
   geom_stratum(width = 0.3, fill = "white", color = "black") +
   geom_text(stat = "stratum", aes(label = afterglow(stratum)), size = 3) +
-  scale_fill_manual(values = c("#0072B5", "#BC3C29", "#009E73")) +
+  scale_fill_manual(values = get_palette(3)) +
   labs(x = "", y = "Number of patients",
        title = "Treatment response transition from baseline to follow-up") +
   theme_pub() +
@@ -1332,14 +1398,14 @@ library(ggplot2)
 # 数据准备：长格式，每人多行
 # df: id, time, value, group
 p <- ggplot(df, aes(x = time, y = value, group = id, color = group)) +
-  geom_line(alpha = 0.3, linewidth = 0.8) +
+  geom_line(alpha = 0.3, linewidth = 0.4) +
   geom_point(size = 2, alpha = 0.6) +
   # 叠加组均值趋势（粗线）
   stat_summary(aes(group = group), fun = mean,
-               geom = "line", linewidth = 1.5, color = "black") +
+               geom = "line", linewidth = 0.8, color = "black") +
   stat_summary(aes(group = group), fun = mean,
                geom = "point", size = 4, shape = 18, color = "black") +
-  scale_color_manual(values = c("#0072B5", "#BC3C29")) +
+  scale_color_manual(values = get_palette(2)) +
   labs(x = "Time point", y = "Outcome value",
        title = "Individual trajectories with group means") +
   theme_pub() +
@@ -1348,10 +1414,10 @@ p <- ggplot(df, aes(x = time, y = value, group = id, color = group)) +
 # 简化版：仅前后配对（2 个时间点）
 p_simple <- ggplot(df_wide, aes(x = 1, y = pre_value)) +
   geom_segment(aes(xend = 2, yend = post_value, color = group),
-               alpha = 0.4, linewidth = 0.8) +
+               alpha = 0.4, linewidth = 0.4) +
   geom_point(aes(color = group), size = 3) +
   geom_point(aes(x = 2, y = post_value, color = group), size = 3) +
-  scale_color_manual(values = c("#0072B5", "#BC3C29")) +
+  scale_color_manual(values = get_palette(2)) +
   scale_x_continuous(breaks = c(1, 2), labels = c("Pre", "Post")) +
   labs(x = "", y = "Outcome value",
        title = "Paired pre-post comparison") +
@@ -1391,12 +1457,12 @@ df <- data.frame(
 )
 
 p <- ggplot(df, aes(x = year, y = prevalence)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#0072B5", alpha = 0.2) +
-  geom_line(color = "#0072B5", linewidth = 1.2) +
-  geom_point(size = 3, color = "#0072B5") +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = get_hero_color(), alpha = 0.2) +
+  geom_line(color = get_hero_color(), linewidth = 0.8) +
+  geom_point(size = 3, color = get_hero_color()) +
   # 可选：添加趋势线
   geom_smooth(method = "lm", se = FALSE, linetype = "dashed",
-              color = "#BC3C29", linewidth = 0.8) +
+              color = get_baseline_color(), linewidth = 0.4) +
   scale_x_continuous(breaks = seq(2010, 2024, 2)) +
   labs(x = "Year", y = "Prevalence (%)",
        title = "Temporal trend of prevalence (95% CI)") +
