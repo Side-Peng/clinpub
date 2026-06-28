@@ -5,7 +5,10 @@
 ### From Plugin Marketplace (Recommended)
 
 ```bash
-claude plugin install clinpub
+# Add the marketplace first
+claude plugin marketplace add Side-Peng/clinpub
+# Install the plugin
+claude plugin install clinpub@clinpub
 ```
 
 ### From Local Source (Development)
@@ -83,7 +86,7 @@ export UNPAYWALL_EMAIL="your@email.com"  # Optional, Unpaywall PDF access
 ## Updating
 
 ```bash
-claude plugin update clinpub
+claude plugin update clinpub@clinpub
 ```
 
 Or re-install from source:
@@ -96,7 +99,7 @@ claude --plugin-dir ./clinpub
 ## Uninstalling
 
 ```bash
-claude plugin uninstall clinpub
+claude plugin uninstall clinpub@clinpub
 ```
 
 ## Troubleshooting
