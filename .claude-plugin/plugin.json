@@ -1,7 +1,7 @@
 {
   "name": "clinpub",
   "displayName": "ClinPub — Clinical Publication Pipeline",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Reads CSV/XLSX data, runs R-based statistical analysis, generates publication-grade figures, searches literature (PubMed), writes IMRAD manuscripts, and simulates peer review.",
   "author": {
     "name": "Side-Peng",

@@ -6,6 +6,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-06-29
+
+### Added — 共享图表配置脚本（_figure_config.R）
+- **`pipeline/templates/_figure_config.R`**: 共享图表配置模板，整合 `theme_pub()`、`get_palette()`、`save_figure()` 等可视化函数
+- **Phase 2 `generate_figure_config` 步骤**: 从模板生成 `04_Outputs/_figure_config.R`，所有方法 R 脚本通过 `source()` 加载
+- **`r_patterns.md §1.0.1`**: 新增共享配置脚本使用说明，§1.1–§1.5 代码段标注为参考实现
+- **跨文档约束**: `AGENTS.md`、`analyst-agent.md`、`modify-agent.md`、`agent-contracts.md` 统一添加 `_figure_config.R` 引用规则与代码独立性例外说明
+- **终验检查项**: 分析工作流新增第 7 项验证 — 确认 `_figure_config.R` 存在且所有方法脚本包含 `source()` 调用
+
 ### Added — 原生文献检索能力
 - **`scripts/ncbi_search.py`**: 多数据库主入口（PubMed / Gene / Protein / dbSNP / ClinVar / Taxonomy 等，vendor 自 `github.com/Side-Peng/ncbi-search`，MIT）
 - **`scripts/pubmed_search.py`**: PubMed 专用检索（MeSH 自动扩展、年份/类型过滤）
@@ -21,6 +30,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **`AGENTS.md`**: `## External Skills` 段删除 `ncbi-search` 条目；Agent Routing 表补充内置脚本备注；Quirks 段注明 v2.1 起 native
 - **`README.md`**: 中英文「关联技能 / External Skills」表删除 `ncbi-search`
 - **`INSTALL.md`**: Claude Code skills 列表删除 `ncbi-search`（已是内置能力）
+
+### Fixed
+- **`marketplace.json`**: source 格式从 `git:` 改为相对路径 `'./'`，修复插件市场显示问题
+- **`README.md`**: 版本徽章修正为实际版本号，marketplace 安装命令纠正
 
 ### Removed
 - 所有 agent / workflow / reference 文档中的 `skill("ncbi-search")` 调用与 ncbi-search 可用性检测逻辑
