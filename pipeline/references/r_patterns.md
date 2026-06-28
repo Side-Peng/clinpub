@@ -47,6 +47,37 @@
 
 ---
 
+## 1.0.1 共享配置脚本（_figure_config.R）
+
+> **强制规则**：Phase 2 生成的每个分析方法 R 脚本，必须在 library() 之后立即 source() 共享配置脚本。
+> 禁止在方法脚本中重复定义 theme_pub、get_palette 等函数。
+
+### 使用方式
+
+```r
+# 每个方法 R 脚本的标准开头
+library(ggplot2)
+library(dplyr)
+# ... 其他 library ...
+
+# 加载共享配置（必须在 library 之后、任何绘图代码之前）
+source("04_Outputs/_figure_config.R")
+
+# 然后直接使用：
+# - apply_theme() — 替代 + theme_pub()
+# - get_palette(n) — 替代手动配色
+# - save_figure(path, plot) — 替代手动 ggsave
+```
+
+### 修改图表风格
+
+编辑 `04_Outputs/_figure_config.R` 或修改 `project_config.yml` 的 quality 段，然后重跑受影响的方法脚本即可。
+
+> **注意**：下方 §1.1–§1.5 中的代码片段为参考实现，已全部整合到 `pipeline/templates/_figure_config.R` 模板中。
+> Phase 2 启动时会从模板生成 `04_Outputs/_figure_config.R`，方法脚本不应重复定义这些函数。
+
+---
+
 ## 1.1 色彩规范与选色协议
 
 ### 核心原则
@@ -129,6 +160,8 @@ scale_color_viridis_d(option = "D", begin = 0.1, end = 0.9)
 - 多个 biomarker 之间使用同一色系区分强度，而非不同色系
 
 ### 配色配置协议（Color Config Protocol）
+
+> 以下配置读取逻辑和函数定义为参考实现，已整合到 `_figure_config.R`。方法脚本通过 `source("04_Outputs/_figure_config.R")` 直接使用 `get_palette()`、`get_continuous_scale()` 等函数，不应重复定义。
 
 > **强制规则**：在生成任何使用 `scale_fill_*` / `scale_color_*` 的 R 代码之前，必须先读取 `project_config.yml` 的 `quality.color_palette` 段，并根据用户配置生成配色。
 
@@ -238,6 +271,8 @@ p + get_continuous_scale()
 ---
 
 ## 1.2 出版级主题 `theme_pub()`
+
+> 以下 `theme_pub()`、`theme_pub_light()`、`apply_theme()` 函数定义为参考实现，已整合到 `_figure_config.R`。方法脚本通过 `source("04_Outputs/_figure_config.R")` 直接使用 `apply_theme()`，不应重复定义这些函数。
 
 所有 ggplot2 图表**必须**应用此主题。
 
@@ -429,6 +464,8 @@ apply_theme <- function() {
 
 ## 1.3 图表保存规范
 
+> 以下代码为参考实现，已整合到 `_figure_config.R` 中的 `save_figure()` 函数和 `PUBLICATION_DPI`/`FIGURE_FORMAT` 常量。方法脚本应使用 `save_figure()` 而非直接调用 `ggsave()`。
+
 ```r
 # 出版级分辨率常量 — 与 journal_standards.md::FIGURE_DPI 保持一致
 PUBLICATION_DPI <- 300
@@ -496,6 +533,8 @@ theme_pub(base_family = "Arial")
 
 ## 1.4 显著性标注规则
 
+> 以下 `format_pval()` 函数为参考实现，已整合到 `_figure_config.R`。方法脚本直接使用 `format_pval()` 即可。
+
 ### p 值格式化
 
 ```r
@@ -537,6 +576,8 @@ geom_signif(
 ---
 
 ## 1.5 比例指标的置信区间（Wilson Score）
+
+> 以下 `wilson_ci()` 函数为参考实现，已整合到 `_figure_config.R`。方法脚本直接使用 `wilson_ci()` 即可。
 
 用于敏感度、特异度、患病率等比例指标的 CI 计算。（优于正态近似法，尤其样本量较小时。）
 

@@ -122,7 +122,7 @@ Discuss the proposed plan with user and finalize:
 
 1. **Method list**: User adds, removes, or adjusts methods
 2. **Method parameters**: Variable selection strategy, model covariates, reference groups
-3. **Figure/table preferences**: Color palette (see r_patterns.md §1.1 Color Config Protocol), output format, dimensions, **theme style** (see r_patterns.md §1.2 Config Protocol)
+3. **Figure/table preferences**: Color palette (see r_patterns.md §1.1 Color Config Protocol), output format, dimensions, **theme style** (see r_patterns.md §1.2 Config Protocol). Confirmed theme/color settings will be written into `_figure_config.R` — a shared configuration script sourced by all method R scripts to ensure visual consistency.
 4. **Train/validation split**: If prediction/ML methods confirmed, discuss ratio
 5. **Multiple comparison correction**: FDR vs Bonferroni vs none
 6. **Significance level**: default α=0.05
@@ -229,6 +229,24 @@ color_palette_config:
 ```
 </step>
 
+<step name="generate_figure_config" priority="high">
+After discussing and confirming theme/color configuration, before executing analysis waves, generate the shared figure configuration script:
+
+1. Read `project_config.yml` sections `quality.theme` and `quality.color_palette`
+2. Copy `pipeline/templates/_figure_config.R` template to `04_Outputs/_figure_config.R`
+3. Verify the script can be sourced without errors:
+   ```bash
+   Rscript -e 'source("04_Outputs/_figure_config.R"); cat("Figure config OK\n")'
+   ```
+
+**Mandatory rules for all subsequent method R scripts:**
+- `source("04_Outputs/_figure_config.R")` must appear immediately after `library()` calls
+- Use `apply_theme()` instead of manual `theme_pub()` calls
+- Use `get_palette(n)` instead of hand-picked colors
+- Use `save_figure()` for unified export
+- Do NOT redefine `theme_pub`, `get_palette`, or other functions already defined in `_figure_config.R`
+</step>
+
 <step name="execute_waves" priority="high">
 Execute the confirmed analysis plan **wave by wave, dynamically**.
 
@@ -247,6 +265,8 @@ for wave_num in sorted(analysis_plan.waves.keys()):
 Each method execution:
 1. Creates directory `03_AnalysisMethods/{id}/` and `04_Outputs/{id}/` (see r_patterns.md §1.7)
 2. Generates R/Python code based on the method's `type`, `method`, and `formula` fields
+   - **Mandatory**: Every R script must `source("04_Outputs/_figure_config.R")` after `library()` calls
+   - **Prohibited**: Redefining `theme_pub`, `get_palette`, `save_figure` etc. in method scripts
 3. Runs the code, verifies outputs exist, writes 方法说明.md
 
 **Wave frequency is not fixed.** If the plan has 1 wave, execute 1. If it has 6 waves, execute 6.
@@ -275,6 +295,7 @@ After all waves complete, final verification:
 4. Code independently runnable from cleaned.csv
 5. R version and key package versions documented
 6. MANIFEST.yaml exists in `04_Outputs/` listing writer-agent as consumer
+7. **Shared config check**: `04_Outputs/_figure_config.R` exists and every R script in `03_AnalysisMethods/` contains `source("04_Outputs/_figure_config.R")` (verify via grep)
 
 If manifest is missing, write it here: `04_Outputs/MANIFEST.yaml` documenting each method's outputs and statistics.
 </step>
@@ -332,8 +353,10 @@ See @./pipeline/workflows/milestone.md for full protocol.
 <success_criteria>
 - Data structure diagnosed and documented
 - Analysis plan proposed, discussed, and user-confirmed
+- Shared figure config script (`_figure_config.R`) generated and sourced by all method R scripts
 - Each confirmed method has complete figure + table + 方法说明
 - All figures meet publication-grade standards (≥300 DPI, theme_pub)
+- All method figures share consistent style (theme, color palette, DPI) via `_figure_config.R`
 - Statistical reports complete with effect size + 95%CI + p-value
 - Dependency-aware execution order respected (wave N+1 waits for wave N user confirmation)
 - Code independently reproducible from cleaned.csv

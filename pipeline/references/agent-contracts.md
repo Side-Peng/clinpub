@@ -24,11 +24,11 @@ Each agent contract defines:
 | **Role** | Senior medical statistician for R/Python data analysis and publication-grade visualization |
 | **Scope** | Phase 1 (data prep) + Phase 2 (statistical analysis). NOT responsible for writing or literature. |
 | **Inputs** | `01_RawData/*.csv`, `project_config.yml`, `pipeline/references/r_patterns.md`, `pipeline/references/analysis_methods.md` |
-| **Outputs** | `02_PreprocessedData/data/cleaned.csv`, `02_PreprocessedData/reports/data_quality.html`, `04_Outputs/XX_MethodName/` (figures + tables), `03_AnalysisMethods/XX_MethodName/方法说明.md` |
+| **Outputs** | `02_PreprocessedData/data/cleaned.csv`, `02_PreprocessedData/reports/data_quality.html`, `04_Outputs/_figure_config.R` (shared figure config), `04_Outputs/XX_MethodName/` (figures + tables), `03_AnalysisMethods/XX_MethodName/方法说明.md` |
 | **Communication** | Writes to filesystem only. No direct agent-to-agent messaging. Writes MANIFEST.yaml in output directories after completion. |
 | **Output naming conventions** | Figures: `figure_N.png` (N from 1, sequential per method). Tables: `table_N.docx`. 方法说明: must contain `输出结果` subsection, use template at `pipeline/templates/method-readme.md`. Data quality report: `data_quality.html`. All outputs in `04_Outputs/XX_MethodName/`. MANIFEST.yaml written to method directory root. |
 | **Pre-conditions** | `project_config.yml` exists with confirmed variable mappings and method list. For Phase 2: `02_PreprocessedData/data/cleaned.csv` exists and is validated. `方法说明` is the Chinese method documentation (replaces `README.md` for WAVE directories). |
-| **Completion markers** | `cleaned.csv` exists, each method directory has figure + table + 方法说明, all figures ≥300 DPI (FIGURE_DPI) |
+| **Completion markers** | `cleaned.csv` exists, `_figure_config.R` exists and is sourced by all method R scripts, each method directory has figure + table + 方法说明, all figures ≥300 DPI (FIGURE_DPI) |
 
 ---
 
@@ -180,3 +180,4 @@ Shows which agent reads (R) and writes (W) to each directory. Agents only read f
 - Exception: `02_Preprocessed` is written by analyst-agent (Phase 1) and read by analyst-agent (Phase 2) — same agent, different phases
 - Exception: `03_AnalysisMethods` and `04_Outputs` are written by analyst-agent (Phase 2) and modify-agent (post-Phase 2 modification) — different phases, no concurrent write conflict
 - Exception: `05_Manuscript` may be patched (not rewritten) by modify-agent during cascade updates — limited to numerical value updates and method description patches in existing sections
+- Exception: `04_Outputs/_figure_config.R` is written once by analyst-agent (Phase 2 setup) and sourced (read) by all method scripts — this is the shared figure configuration pattern, not a multi-writer conflict

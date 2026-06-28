@@ -106,6 +106,8 @@ data_path <- "01_RawData/data.csv"
 data <- read.csv(global_path)
 ```
 
+**Exception**: `_figure_config.R` is the only permitted shared script — all method R scripts `source("04_Outputs/_figure_config.R")` to import visualization configuration (theme, color palette, DPI). This is a "global configuration" pattern, not "global state". The script is generated once during Phase 2 setup from `pipeline/templates/_figure_config.R`.
+
 ### Phase Ordering Enforcement
 
 Hooks in `hooks/` block writes to directories belonging to future phases:
@@ -182,6 +184,7 @@ Project_Root/
 | `pipeline/references/journal_standards.md` | Before Phase 3 writing (journal requirements) |
 | `pipeline/references/gates.md` | At phase transitions (4 quality gates: IRB, data, analysis, submission) |
 | `pipeline/references/r_patterns.md` | When writing R visualization code (theme_pub, KM curves, heatmap) |
+| `pipeline/templates/_figure_config.R` | Phase 2 setup: shared figure config template (copied to `04_Outputs/_figure_config.R`) |
 | `pipeline/references/agent-contracts.md` | Agent roles, I/O contracts, read/write matrix |
 | `pipeline/references/mandatory-initial-read.md` | Required context loading sequence for every agent |
 | `pipeline/references/comparison-methods.md` | Group comparison decision tree (2-group, 3+ group, paired) |

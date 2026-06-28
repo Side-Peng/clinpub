@@ -62,6 +62,7 @@ For each method:
    - **Standard approach**: Use conventional statistical tests (t-test, Wilcoxon, linear model, mixed model)
    - **Complex methods**: Refer to `r_patterns.md` Part 2 for implementation patterns
    - **Always**: Apply Core Standards from `r_patterns.md` Part 1 (theme_pub via Config Protocol, color palette via Color Config Protocol, ggsave, directory rules)
+   - **Mandatory**: Every R script must `source("04_Outputs/_figure_config.R")` immediately after `library()` calls. This shared config script provides `apply_theme()`, `get_palette()`, `save_figure()` and other visualization functions. Do NOT redefine these functions in method scripts.
    - **Mandatory**: Before writing each figure to disk, run the Theme Enforcement self-check from `r_patterns.md §1.2 Theme Enforcement`. Every ggplot2 figure must pass all 6 checklist items. If any item fails, fix the code before saving.
 4. Run the code, verify outputs, write README
 5. After all methods in the wave complete, write MANIFEST.yaml in `04_Outputs/` listing all method outputs and declaring writer-agent as consumer (see `pipeline/references/manifest-format.md`)
@@ -159,6 +160,8 @@ Apply `theme_pub()` via the Config Protocol (`r_patterns.md §1.2`): read `quali
 - Directory numbering follows user confirmation order, not fixed scheme
 - Every generated R script must create its output directories before writing: `dir.create("04_Outputs/XX_MethodName", recursive = TRUE, showWarnings = FALSE)`
 - Never assume directories already exist
+- Every R script must `source("04_Outputs/_figure_config.R")` immediately after `library()` calls — this is the shared figure configuration script generated in Phase 2 setup
+- Do NOT redefine `theme_pub`, `get_palette`, `save_figure`, or other functions already defined in `_figure_config.R` within method scripts
 </critical_rules>
 
 <success_criteria>

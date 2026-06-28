@@ -107,6 +107,7 @@ Project_Root/
 │   │   └── 方法说明.md
 │   └── ...                     ← additional confirmed methods
 ├── 04_Outputs/                 ← one subdirectory per confirmed method
+│   ├── _figure_config.R       ← auto-generated in Phase 2 (generate_figure_config step)
 │   ├── 01_BaselineTable/
 │   ├── 02_GroupComparison/
 │   └── ...                     ← additional confirmed methods
@@ -123,7 +124,8 @@ Project_Root/
    - `04_Outputs/{method_id}/` — will hold figures and tables
 2. In each `03_AnalysisMethods/{method_id}/`, create a placeholder `方法说明.md` using the template from `pipeline/templates/method-readme.md`. The placeholder should have the method title filled in (e.g., `# 基线特征表 — 方法说明`) and all other sections left as template stubs (to be filled by Phase 2).
 3. `04_Outputs/{method_id}/` directories are created empty — outputs are generated in Phase 2.
-4. If the user has not yet confirmed specific methods at this point, defer subdirectory creation until methods are confirmed (but they must exist before Phase 0 milestone closes).
+4. `04_Outputs/_figure_config.R` is NOT created during Phase 0 — it will be auto-generated in Phase 2's `generate_figure_config` step from `pipeline/templates/_figure_config.R`.
+5. If the user has not yet confirmed specific methods at this point, defer subdirectory creation until methods are confirmed (but they must exist before Phase 0 milestone closes).
 </step>
 
 <step name="generate_config" priority="high">

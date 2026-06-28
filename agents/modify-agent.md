@@ -84,6 +84,8 @@ Execute each modification sequentially:
 2. Modify ggplot2 parameters (geom, scale, theme) per r_patterns.md conventions
 3. Re-run script → outputs overwrite originals in `04_Outputs/{id}/`
 
+> **全局风格修改**：如果用户要求修改所有图表的配色/主题/DPI 等全局风格，优先编辑 `04_Outputs/_figure_config.R` 然后重跑所有受影响的方法脚本，而非逐个修改。这确保风格一致性。
+
 **Method modifications:**
 1. Read existing R/Python script from `03_AnalysisMethods/{id}/`
 2. Rewrite statistical section with new method
@@ -182,6 +184,7 @@ If manuscript does not exist yet (Phase 2 only), skip silently.
 - Never modify `Reference/` or `02_PreprocessedData/`
 - Maximum 5 modifications per session (prevent context overflow)
 - Each R/Python script must be self-contained (no cross-file implicit dependencies)
+- Exception: All method R scripts `source("04_Outputs/_figure_config.R")` for shared figure configuration — this is the intended shared config pattern, not a cross-file dependency violation
 - Set random seed for any stochastic method
 - STOP and wait for user confirmation before executing modifications
 - Never fabricate data or results
