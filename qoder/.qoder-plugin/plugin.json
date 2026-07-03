@@ -1,0 +1,24 @@
+{
+  "name": "clinpub",
+  "displayName": "临床研究发表管线",
+  "version": "1.0.0",
+  "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Covers data cleaning, adaptive statistical analysis, IMRAD manuscript writing, peer review simulation, and topic mining.",
+  "descriptionZh": "端到端临床数据分析与发表管线，面向 SCI Q1/Q2 期刊。涵盖数据清洗、自适应统计分析、IMRAD 论文写作、同行评审模拟和选题挖掘。",
+  "author": {
+    "name": "Side-Peng"
+  },
+  "category": "research",
+  "tags": ["clinical-research", "sci-publication", "statistical-analysis", "manuscript-writing", "peer-review"],
+  "skills": [
+    "skills/编排器",
+    "skills/知识库",
+    "skills/项目初始化",
+    "skills/数据清洗",
+    "skills/统计分析",
+    "skills/论文写作",
+    "skills/同行评审",
+    "skills/选题挖掘",
+    "skills/阶段里程碑",
+    "skills/分析修改"
+  ]
+}

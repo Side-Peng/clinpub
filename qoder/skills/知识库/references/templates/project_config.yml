@@ -1,0 +1,134 @@
+# ============================================================
+# 项目配置文件模板
+# 由 Clinical Analysis Skill 在项目初始化时自动生成
+# ============================================================
+
+project:
+  name: "项目名称"
+  description: "项目描述"
+  design: "队列研究"                    # RCT / 队列研究 / 病例对照 / 横断面 / 描述性
+  sample_size: 0
+  target_journal: "SCI Q1/Q2"
+  reporting_standard: "STROBE"         # CONSORT / STROBE / PRISMA
+
+variables:
+  outcome: ""                          # 结局变量名
+  outcome_type: "binary"               # binary / continuous / survival
+  exposure: []                         # 暴露/预测变量
+  covariates: []                       # 协变量
+  time_variable: ""                    # 生存分析用（随访时间）
+  event_variable: ""                   # 生存分析用（事件发生）
+  group_variable: ""                   # 分组变量
+  id_variable: ""                      # 患者标识符
+
+paths:
+  raw_data: "01_RawData"
+  preprocessed: "02_PreprocessedData"
+  methods: "03_AnalysisMethods"
+  outputs: "04_Outputs"
+  reference: "Reference"
+  manuscript: "05_Manuscript"
+  progress: "06_ProgressReports"
+  global: "00_Global"
+
+# ============================================================
+# analysis_plan: 由 Phase 2 动态生成，非手动填写。
+# Claude 在 diagnose → propose → confirm 流程后，
+# 将用户确认的分析方案写入此处。
+# 波次数量不固定（可能 1 波、3 波、6 波），
+# 完全取决于项目需求。
+# ============================================================
+analysis_plan:
+  # 示例（由 Claude 在 Phase 2 讨论后自动填充）：
+  # waves:
+  #   1:
+  #     label: "基线描述"
+  #     methods:
+  #       - id: "01_BaselineTable"
+  #         type: baseline
+  #         data: "cleaned.csv"
+  #         timepoint: "baseline"
+  #   2:
+  #     label: "组间比较"
+  #     methods:
+  #       - id: "02_TwoGroupComparison"
+  #         type: comparison
+  #         method: "wilcox.test"
+  #         grouping: "Treatment"
+  waves: {}
+
+journal:
+  name: ""                        # 期刊名
+  tier: "Q1"                      # Q1/Q2/Q3/Q4 — 对应 journal_standards.md 分级标准
+  word_limit: 5000                # 正文字数限制
+  abstract_limit: 300             # 摘要字数限制
+  reference_style: "vancouver"    # 参考文献格式
+  figure_limit: 6                 # 图表数量限制
+  data_sharing: "required"        # 数据共享要求
+  specific_requirements: []       # 期刊特定要求（覆盖默认标准）
+
+language:
+  manuscript: "zh-CN"             # 论文语言 (zh-CN / en-US)
+  figures_tables: "en"            # 图表语言
+  statistics: "R"                 # 统计主语言
+
+quality:
+  journal_level: "Q1"                  # Q1 / Q2
+  figure_dpi: 300
+  figure_format: "png"                 # png / pdf / tiff
+  figure_font: "Arial"
+  figure_font_size: 10
+  # --- theme_pub 自定义参数（Phase 2 discuss_and_confirm 阶段填写）---
+  # 未配置的字段使用 r_patterns.md §1.2 的默认值
+  theme:
+    variant: "theme_pub"               # theme_pub / theme_pub_light
+    base_size: 11                      # 基础字号
+    base_family: "sans"                # 字体族（Windows 映射到 Arial）
+    legend_position: "right"           # right / bottom / top / none
+    title_hjust: 0                     # 标题对齐：0=左对齐(Nature), 0.5=居中
+    panel_border: true                 # true=有边框, false=无边框
+  # --- 配色自定义参数（Phase 2 discuss_and_confirm 阶段填写）---
+  # 未配置的字段使用 r_patterns.md §1.1 的默认值
+  color_palette:
+    preset: "auto"                     # auto / nature / okabe-ito / brewer-set1 / brewer-dark2 / brewer-set2 / viridis / custom
+    custom_colors: []                  # 自定义色值列表，如 ["#FF6B6B", "#4ECDC4", "#45B7D1"]
+    group_mapping: {}                  # 分组名→色值映射，如 {Treatment: "#0072B5", Control: "#BC3C29"}
+    continuous: "viridis"              # 连续变量色标：viridis / magma / plasma / inferno
+
+analysis:
+  missing_threshold_low: 0.05          # 缺失率 < 5% 可删除/填充
+  missing_threshold_mid: 0.20          # 缺失率 5-20% 需插补
+  missing_threshold_high: 0.20         # 缺失率 > 20% 讨论是否保留
+  significance_level: 0.05
+  multiple_comparison: "fdr"           # fdr / bonferroni / none
+
+# ============================================================
+# citation_strategy: 由 Phase 3 writing workflow 的
+# discuss_citation_strategy 步骤动态生成，非手动填写。
+# 各段引用数量弹性 ±20%，总量 30-55 为硬约束。
+# ============================================================
+citation_strategy:
+  section_targets:
+    introduction: 10-15
+    methods: 3-5
+    results: 0-3
+    discussion: 15-25
+  total_range: [30, 55]
+  year_range:
+    max_years_ago: 5
+    landmark_exceptions: []
+  if_preference:
+    min_if: null
+    note: ""
+
+# ============================================================
+# 导入模式配置（仅在导入已有项目时填写）
+# ============================================================
+import:
+  mode: false                        # 是否为导入模式
+  date: ""                           # 导入日期
+  source_description: ""             # 导入来源描述
+  starting_phase: 0                  # 导入后的起始 Phase
+  skipped_phases: []                 # 跳过的 Phase 列表，如 [0, 1]
+  imported_files: []                 # 已导入的文件列表: [{source, target, role}]
+  unverified_gates: []               # 未验证的 Gate 列表: [{gate, reason, status}]
