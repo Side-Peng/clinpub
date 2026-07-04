@@ -1,0 +1,26 @@
+{
+    "version":  "2.2.0",
+    "name":  "clinpub",
+    "skills":  "./skills/",
+    "description":  "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Reads CSV/XLSX data, runs R-based statistical analysis, generates publication-grade figures, searches literature (PubMed), writes IMRAD manuscripts, and simulates peer review.",
+    "author":  {
+                   "email":  "1304916798@qq.com",
+                   "url":  "https://github.com/Side-Peng/clinpub",
+                   "name":  "Side-Peng"
+               },
+    "interface":  {
+                      "developerName":  "Side-Peng",
+                      "displayName":  "ClinPub - Clinical Publication Pipeline",
+                      "capabilities":  [
+                                           "data-analysis",
+                                           "statistical-analysis",
+                                           "manuscript-writing",
+                                           "peer-review",
+                                           "literature-search"
+                                       ],
+                      "longDescription":  "ClinPub is a structured clinical data analysis and publication pipeline that acts as a senior medical statistician and academic writing consultant. It processes patient-level data through 5 phases to produce publication-ready manuscripts targeting SCI Q1/Q2 journals.",
+                      "shortDescription":  "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals.",
+                      "defaultPrompt":  "Help me analyze clinical data and write a publication.",
+                      "category":  "Research"
+                  }
+}
