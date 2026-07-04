@@ -1,136 +1,206 @@
-﻿# ClinPub Codex Plugin - Installation Guide
+﻿# ClinPub Installation Guide
 
-## Overview
+## 🚀 Installation
 
-ClinPub has been successfully converted from Claude Code plugin format to Codex plugin format.
+### OpenAI Codex
 
-## Changes Made
-
-1. **Plugin Manifest**: Converted from `.claude-plugin/plugin.json` to `.codex-plugin/plugin.json`
-2. **Skills Structure**: Converted `commands/*.md` to `skills/*/SKILL.md` format
-3. **Preserved Components**: 
-   - All pipeline workflows, references, and templates
-   - All agent definitions
-   - All Python scripts
-   - All hook implementations
-   - Requirements file
-
-## Installation
-
-### Option 1: Local Development Installation
+#### Option 1: Local Development
 
 ```bash
-# Navigate to the codex directory
-cd "D:\Projects\Skills_Makeing\02_Gsd Like Scientific pipeline\clinpub\codex"
+# Clone the repository
+git clone https://github.com/Side-Peng/clinpub.git
+cd clinpub/codex
 
 # Install as local plugin
 codex plugin install ./clinpub
 ```
 
-### Option 2: Add to Personal Marketplace
+#### Option 2: Add to Personal Marketplace
 
 ```bash
 # Add to personal marketplace
-codex plugin marketplace add "D:\Projects\Skills_Makeing\02_Gsd Like Scientific pipeline\clinpub\codex"
+codex plugin marketplace add /path/to/clinpub/codex
 
 # Then install from marketplace
 codex plugin install clinpub
 ```
 
-## Plugin Structure
+### Claude Code
 
-```
-clinpub/
-├── .codex-plugin/
-│   └── plugin.json          # Plugin manifest
-├── skills/                  # 11 skills (converted from commands)
-│   ├── clinpub-overview/
-│   ├── clinpub-data2idea/
-│   ├── clinpub-init/
-│   ├── clinpub-data-prep/
-│   ├── clinpub-analysis/
-│   ├── clinpub-writing/
-│   ├── clinpub-review/
-│   ├── clinpub-milestone/
-│   ├── clinpub-modify/
-│   ├── clinpub-do/
-│   └── clinpub-next-step/
-├── agents/                  # 8 specialized agents
-├── pipeline/                # Workflows, references, templates
-├── scripts/                 # Python scripts
-├── hooks/                   # Hook implementations
-├── requirements.txt         # Python dependencies
-└── README.md               # Documentation
-```
-
-## Skills (11 total)
-
-| Skill | Description |
-|-------|-------------|
-| `clinpub-overview` | Command reference overview |
-| `clinpub-data2idea` | Topic mining from data |
-| `clinpub-init` | Phase 0: Project initialization |
-| `clinpub-data-prep` | Phase 1: Data cleaning |
-| `clinpub-analysis` | Phase 2: Statistical analysis |
-| `clinpub-writing` | Phase 3: IMRAD manuscript writing |
-| `clinpub-review` | Phase 4: Peer review simulation |
-| `clinpub-milestone` | Phase gate review |
-| `clinpub-modify` | Modify analysis outputs |
-| `clinpub-do` | Workspace state router |
-| `clinpub-next-step` | Auto-advance to next phase |
-
-## Usage
-
-After installation, use the skills in Codex:
+#### Option 1: Plugin Marketplace (Recommended)
 
 ```bash
-# Start with project initialization
-clinpub:init
+# Add marketplace
+claude plugin marketplace add Side-Peng/clinpub
 
-# Or check current status
-clinpub:do
-
-# Or auto-advance to next step
-clinpub:next-step
+# Install plugin
+claude plugin install clinpub@clinpub
 ```
 
-## Dependencies
-
-Install R and Python dependencies:
+#### Option 2: Local Development
 
 ```bash
-# Python dependencies
+git clone https://github.com/Side-Peng/clinpub.git
+claude --plugin-dir ./clinpub
+```
+
+## 📦 Dependencies
+
+### R Packages
+
+```r
+install.packages(c(
+  "dplyr", "tidyr", "stringr", "readr", "readxl",
+  "survival", "lme4", "glmnet", "pROC",
+  "gtsummary", "flextable", "openxlsx",
+  "ggplot2", "ggpubr", "patchwork", "survminer", "ggsurvfit", "ggsignif",
+  "here", "fs", "yaml", "RColorBrewer", "viridis"
+))
+```
+
+### Python Packages
+
+```bash
 pip install -r requirements.txt
-
-# R dependencies (run in R)
-install.packages(c("dplyr","tidyr","ggplot2","gtsummary","survival","lme4","glmnet","pROC","ggpubr","patchwork","survminer","ggsurvfit","ggsignif","flextable","openxlsx","here","fs","stringr","readr","readxl","yaml","RColorBrewer","viridis"))
 ```
 
-## Environment Variables (Optional)
-
-- `NCBI_API_KEY` - Improves PubMed rate limit
-- `TAVILY_API_KEY` - For Tavily search
-- `UNPAYWALL_EMAIL` - For Unpaywall PDF access
-
-## Validation
-
-The plugin has been validated and passes all checks:
+Or install manually:
 
 ```bash
-python "C:\Users\13049\.codex\skills\.system\plugin-creator\scripts\validate_plugin.py" ".\codex\clinpub"
-# Output: Plugin validation passed
+pip install pandas numpy requests openpyxl
 ```
 
-## Next Steps
+## 🔧 Environment Variables (Optional)
 
-1. Install the plugin using one of the methods above
-2. Test the plugin with a sample clinical dataset
-3. Report any issues to the repository
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `NCBI_API_KEY` | Optional | PubMed API rate limit increase |
+| `TAVILY_API_KEY` | Optional | Tavily search API |
+| `UNPAYWALL_EMAIL` | Optional | Unpaywall PDF access |
 
-## Repository
+### Setting Environment Variables
 
-https://github.com/Side-Peng/clinpub
+#### Windows (PowerShell)
 
-## Author
+```powershell
+# Temporary
+$env:NCBI_API_KEY="your_api_key"
 
-Side-Peng (1304916798@qq.com)
+# Permanent
+[Environment]::SetEnvironmentVariable("NCBI_API_KEY", "your_api_key", "User")
+```
+
+#### macOS/Linux
+
+```bash
+# Add to ~/.bashrc or ~/.zshrc
+export NCBI_API_KEY="your_api_key"
+export TAVILY_API_KEY="your_api_key"
+export UNPAYWALL_EMAIL="your_email@example.com"
+```
+
+## ✅ Verification
+
+### For Codex Plugin
+
+```bash
+# Validate plugin structure
+codex plugin validate ./clinpub
+
+# Check installed plugins
+codex plugin list
+```
+
+### For Claude Code Plugin
+
+```bash
+# Validate plugin structure
+claude plugin validate ./clinpub --strict
+
+# Check installed plugins
+claude plugin list
+```
+
+## 🔍 Testing
+
+### Test R Installation
+
+```bash
+Rscript -e 'library(dplyr); library(ggplot2); cat("R packages OK\n")'
+```
+
+### Test Python Installation
+
+```bash
+python -c "import pandas; import numpy; print('Python packages OK')"
+```
+
+### Test PubMed Search
+
+```bash
+python scripts/ncbi_search.py "clinical trial" --database pubmed --max-results 5
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### 1. R Package Installation Fails
+
+```bash
+# Install dependencies
+sudo apt-get install libcurl4-openssl-dev libssl-dev libxml2-dev
+
+# Then retry
+Rscript -e 'install.packages(c("httr", "xml2"))'
+```
+
+#### 2. Python Module Not Found
+
+```bash
+# Ensure you're using the right Python
+which python
+python --version
+
+# Reinstall requirements
+pip install -r requirements.txt --force-reinstall
+```
+
+#### 3. PubMed API Rate Limit
+
+Set your NCBI API key:
+
+```bash
+export NCBI_API_KEY="your_api_key_here"
+```
+
+Get your API key at: https://www.ncbi.nlm.nih.gov/account/settings/
+
+#### 4. Plugin Validation Fails
+
+```bash
+# Check JSON syntax
+python -c "import json; json.load(open('.codex-plugin/plugin.json'))"
+
+# Check for BOM
+python -c "with open('.codex-plugin/plugin.json', 'rb') as f: print(f.read(3))"
+```
+
+## 📚 Next Steps
+
+After installation:
+
+1. **Read the documentation**: [README.md](README.md)
+2. **Start with Phase 0**: `clinpub:init`
+3. **Check current status**: `clinpub:do`
+4. **View command reference**: `clinpub:overview`
+
+## 🆘 Getting Help
+
+- **Issues**: https://github.com/Side-Peng/clinpub/issues
+- **Discussions**: https://github.com/Side-Peng/clinpub/discussions
+- **Email**: 1304916798@qq.com
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details
