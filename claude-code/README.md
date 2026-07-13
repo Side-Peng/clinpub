@@ -80,7 +80,7 @@ claude --plugin-dir ./clinpub
 ```bash
 /clinpub:overview               # 查看命令参考
 /clinpub:data2idea data.csv     # 从数据中挖掘选题
-/clinpub:init                   # 阶段 0：项目初始化
+/clinpub:initialize                   # 阶段 0：项目初始化
 /clinpub:data-prep              # 阶段 1：数据准备
 /clinpub:analysis               # 阶段 2：统计分析
 /clinpub:writing                # 阶段 3：论文撰写
@@ -167,7 +167,7 @@ Project_Root/
 |---|---|---|
 | `/clinpub:overview` | — | 命令参考总览 |
 | `/clinpub:data2idea <file>` | — | 从数据中挖掘选题 |
-| `/clinpub:init` | 0 | 项目初始化或导入已有项目 |
+| `/clinpub:initialize` | 0 | 项目初始化或导入已有项目 |
 | `/clinpub:data-prep` | 1 | 数据清洗 → cleaned.csv |
 | `/clinpub:analysis` | 2 | 自适应统计分析 |
 | `/clinpub:writing` | 3 | IMRAD 论文撰写 |
@@ -365,7 +365,7 @@ See [INSTALL.md](INSTALL.md) for detailed instructions.
 ```bash
 /clinpub:overview               # View command reference
 /clinpub:data2idea data.csv     # Mine topics from data
-/clinpub:init                   # Phase 0: Initialize project
+/clinpub:initialize                   # Phase 0: Initialize project
 /clinpub:data-prep              # Phase 1: Data cleaning
 /clinpub:analysis               # Phase 2: Statistical analysis
 /clinpub:writing                # Phase 3: Manuscript drafting
@@ -452,7 +452,7 @@ Project_Root/
 |---|---|---|
 | `/clinpub:overview` | — | Command reference overview |
 | `/clinpub:data2idea <file>` | — | Topic mining from data |
-| `/clinpub:init` | 0 | Project setup or import existing |
+| `/clinpub:initialize` | 0 | Project setup or import existing |
 | `/clinpub:data-prep` | 1 | Data cleaning → cleaned.csv |
 | `/clinpub:analysis` | 2 | Adaptive statistical analysis |
 | `/clinpub:writing` | 3 | IMRAD manuscript drafting |

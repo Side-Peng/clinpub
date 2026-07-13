@@ -10,7 +10,7 @@ ClinPub is a structured clinical data analysis and publication pipeline that act
 
 | Phase | Command | Purpose | Key Output |
 |-------|---------|---------|------------|
-| 0 | `clinpub:init` | Project initialization or import | `project_config.yml` |
+| 0 | `clinpub:initialize` | Project initialization or import | `project_config.yml` |
 | 1 | `clinpub:data-prep` | Data cleaning and EDA | `cleaned.csv` |
 | 2 | `clinpub:analysis` | Statistical analysis | `04_Outputs/` |
 | 3 | `clinpub:writing` | IMRAD manuscript writing | `manuscript.md` |
@@ -43,7 +43,7 @@ codex plugin install clinpub
 
 ```bash
 # Start with Phase 0
-clinpub:init
+clinpub:initialize
 
 # After Phase 0 completes and user signs off, proceed to Phase 1
 clinpub:data-prep

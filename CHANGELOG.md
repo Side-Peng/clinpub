@@ -36,6 +36,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- **`/clinpub:init` 重命名为 `/clinpub:initialize`**: 避免与 Claude 原生 `/init` 命令冲突，原生命令恢复可用。插件命名空间仍保持 `clinpub`，命令行为不变。
+
 ## [2.2.0] - 2026-06-29
 
 ### Added 鈥?鍏变韩鍥捐〃閰嶇疆鑴氭湰锛坃figure_config.R锛?- **`pipeline/templates/_figure_config.R`**: 鍏变韩鍥捐〃閰嶇疆妯℃澘锛屾暣鍚?`theme_pub()`銆乣get_palette()`銆乣save_figure()` 绛夊彲瑙嗗寲鍑芥暟

@@ -1,5 +1,5 @@
 ---
-name: init
+name: initialize
 description: "Phase 0: Initialize or import a clinical research project. Detect existing artifacts and import into clinpub structure, or start fresh. Discuss study design, variables, analysis methods with user; generate project_config.yml, directory structure, and .clinpub/ artifacts."
 argument-hint: ""
 allowed-tools:

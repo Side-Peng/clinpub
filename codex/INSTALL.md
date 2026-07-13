@@ -191,7 +191,7 @@ python -c "with open('.codex-plugin/plugin.json', 'rb') as f: print(f.read(3))"
 After installation:
 
 1. **Read the documentation**: [README.md](README.md)
-2. **Start with Phase 0**: `clinpub:init`
+2. **Start with Phase 0**: `clinpub:initialize`
 3. **Check current status**: `clinpub:do`
 4. **View command reference**: `clinpub:overview`
 

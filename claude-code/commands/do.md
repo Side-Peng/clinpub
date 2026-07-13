@@ -95,7 +95,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 
 | 路由目标 Phase | 命令名称 | 执行方式 |
 |---------------|---------|---------|
-| Phase 0 | `/clinpub:init` | 确认后提示用户执行 |
+| Phase 0 | `/clinpub:initialize` | 确认后提示用户执行 |
 | Phase 1 | `/clinpub:data-prep` | 确认后提示用户执行 |
 | Phase 2 | `/clinpub:analysis` | 确认后提示用户执行 |
 | Phase 3 | `/clinpub:writing` | 确认后提示用户执行 |
@@ -152,7 +152,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 ```
 当前状态: 项目未初始化
 检测结果: STATE.md 不存在或无 Phase 标识行
-建议: /clinpub:init  → 初始化项目配置和目录结构
+建议: /clinpub:initialize  → 初始化项目配置和目录结构
       /clinpub:data2idea    → 从数据中挖掘论文选题（无需初始化）
 请输入对应的命令名称继续，或输入 'exit' 取消。
 ```
@@ -176,7 +176,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 │ │     当前状态: Phase 0 (项目初始化) — 未完成                │
 │ │     project_config.yml 不存在或关键字段为空                │
 │ │     建议:                                                  │
-│ │       /clinpub:init    → 初始化项目                │
+│ │       /clinpub:initialize    → 初始化项目                │
 └──────────────────────────────────────────────────────────────┘
 
 **Phase 1 ~ 4 各 Phase 的检测结果格式**

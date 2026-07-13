@@ -37,7 +37,7 @@ After installation, restart Claude Code, then:
 ```bash
 /clinpub:overview                  # Command reference overview
 /clinpub:data2idea data.csv       # Topic mining from data
-/clinpub:init                     # Phase 0: Project initialization
+/clinpub:initialize                     # Phase 0: Project initialization
 /clinpub:data-prep                # Phase 1: Data preparation
 /clinpub:analysis                 # Phase 2: Statistical analysis
 /clinpub:writing                  # Phase 3: Manuscript writing

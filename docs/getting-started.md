@@ -64,7 +64,7 @@ claude plugin install clinpub
 
 ## 4. Phase 0 — 项目初始化
 
-**命令**：`/clinpub:init`
+**命令**：`/clinpub:initialize`
 
 Claude 会与你讨论：
 
@@ -198,7 +198,7 @@ Writer Agent 模拟同行评审：
 | ------------------------------- | -------------------------- |
 | `/clinpub:overview`             | 主入口，查看命令参考       |
 | `/clinpub:data2idea data.csv` | 不做分析，先从数据挖掘选题 |
-| `/clinpub:init`       | 初始化项目目录和配置       |
+| `/clinpub:initialize`       | 初始化项目目录和配置       |
 | `/clinpub:data-prep`          | 仅跑 Phase 1 数据清洗      |
 | `/clinpub:analysis`           | 仅跑 Phase 2 统计分析      |
 | `/clinpub:writing`            | 仅跑 Phase 3 论文撰写      |

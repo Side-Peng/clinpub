@@ -144,7 +144,7 @@ Project_Root/
 |---------|-------|-------------|
 | `/clinpub:overview` | — | Command reference overview |
 | `/clinpub:data2idea` | — | Topic mining from data |
-| `/clinpub:init` | 0 | Project setup or import existing project (auto-detects artifacts) |
+| `/clinpub:initialize` | 0 | Project setup or import existing project (auto-detects artifacts) |
 | `/clinpub:data-prep` | 1 | Data cleaning → cleaned.csv |
 | `/clinpub:analysis` | 2 | Statistical analysis (methods proposed dynamically) |
 | `/clinpub:writing` | 3 | IMRAD manuscript drafting |

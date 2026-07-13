@@ -281,7 +281,7 @@ analysis:
 
 > `idea/to_project_config.yml` 已根据选题生成。请确认变量映射和分析方法是否符合预期：
 >
-> - 确认无误 → 将文件重命名为 `project_config.yml`，然后使用 `/clinpub:init` 启动管线
+> - 确认无误 → 将文件重命名为 `project_config.yml`，然后使用 `/clinpub:initialize` 启动管线
 > - 需要调整 → 告诉我哪些地方需要修改，我会重新生成
 
 **Prioritize config fields in this order when values can't be determined:**

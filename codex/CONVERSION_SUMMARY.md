@@ -144,7 +144,7 @@ After installation, use the skills in Codex:
 
 ```bash
 # Start with project initialization
-clinpub:init
+clinpub:initialize
 
 # Or check current status
 clinpub:do
@@ -163,7 +163,7 @@ If you have an existing Claude Code project:
 1. **Backup your data**: Your clinical data files are not affected
 2. **Project structure remains the same**: `.clinpub/`, `01_RawData/`, etc.
 3. **Commands map directly**: 
-   - `/clinpub:init` → `clinpub:init`
+   - `/clinpub:initialize` → `clinpub:initialize`
    - `/clinpub:data-prep` → `clinpub:data-prep`
    - etc.
 
