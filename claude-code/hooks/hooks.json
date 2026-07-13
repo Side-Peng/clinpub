@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-workflow-guard.js\"",
+            "command": "node \"%CLAUDE_PLUGIN_ROOT%\\hooks\\clinpub-workflow-guard.js\"",
             "timeout": 5000
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-phase-boundary.sh\"",
+            "command": "bash \"%CLAUDE_PLUGIN_ROOT%\\hooks\\clinpub-phase-boundary.sh\"",
             "timeout": 5000
           }
         ]
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-prompt-guard.js\"",
+            "command": "node \"%CLAUDE_PLUGIN_ROOT%\\hooks\\clinpub-prompt-guard.js\"",
             "timeout": 3000
           }
         ]
