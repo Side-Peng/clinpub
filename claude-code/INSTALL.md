@@ -5,23 +5,31 @@
 ### From Plugin Marketplace (Recommended)
 
 ```bash
-# Add the marketplace first
+# Add the marketplace source first
 claude plugin marketplace add Side-Peng/clinpub
 # Install the plugin
-claude plugin install clinpub@clinpub
+claude plugin install clinpub
 ```
 
 ### From Local Source (Development)
 
 ```bash
-claude --plugin-dir ./claude-code
+cd clinpub/claude-code
+claude --plugin-dir .
+```
+
+Or from the project root:
+
+```bash
+claude --plugin-dir ./clinpub/claude-code
 ```
 
 ### From Git Repository
 
 ```bash
 git clone https://github.com/Side-Peng/clinpub.git
-claude --plugin-dir ./claude-code
+cd clinpub/clinpub/claude-code
+claude --plugin-dir .
 ```
 
 ## Validate Installation
@@ -86,7 +94,7 @@ export UNPAYWALL_EMAIL="your@email.com"  # Optional, Unpaywall PDF access
 ## Updating
 
 ```bash
-claude plugin update clinpub@clinpub
+claude plugin update clinpub
 ```
 
 Or re-install from source:
@@ -99,7 +107,7 @@ claude --plugin-dir ./claude-code
 ## Uninstalling
 
 ```bash
-claude plugin uninstall clinpub@clinpub
+claude plugin uninstall clinpub
 ```
 
 ## Troubleshooting
@@ -107,7 +115,7 @@ claude plugin uninstall clinpub@clinpub
 | Problem | Solution |
 |---------|----------|
 | Commands not found after install | Restart Claude Code to reload plugins |
-| `/clinpub:overview` not appearing | Run `claude --plugin-dir ./claude-code` again, then restart |
+| `/clinpub:overview` not appearing | Run `claude --plugin-dir ./clinpub/claude-code` again, then restart |
 | R package errors | Run the `install.packages()` command above |
 | Python import errors | Run `pip install -r requirements.txt` |
 | PubMed search fails | Set `NCBI_API_KEY` env var |

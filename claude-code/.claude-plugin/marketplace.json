@@ -10,7 +10,7 @@
       "displayName": "ClinPub — Clinical Publication Pipeline",
       "source": "./",
       "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals.",
-      "version": "2.1.0",
+      "version": "2.2.1",
       "author": {
         "name": "Side-Peng",
         "email": "1304916798@qq.com"

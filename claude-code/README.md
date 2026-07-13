@@ -56,17 +56,24 @@
 ### 方式一：插件市场（推荐）
 
 ```bash
-# 先添加 marketplace
+# 先添加 marketplace 源
 claude plugin marketplace add Side-Peng/clinpub
-# 再安装插件
-claude plugin install clinpub@clinpub
+# 再安装插件（不需要 @clinpub 后缀）
+claude plugin install clinpub
 ```
 
 ### 方式二：本地开发
 
 ```bash
 git clone https://github.com/Side-Peng/clinpub.git
-claude --plugin-dir ./claude-code
+cd clinpub/clinpub/claude-code
+claude --plugin-dir .
+```
+
+或从项目目录：
+
+```bash
+claude --plugin-dir ./clinpub/claude-code
 ```
 
 ### 方式三：手动安装
@@ -341,17 +348,24 @@ pandas >= 2.0, numpy >= 1.24, requests >= 2.31, openpyxl >= 3.1
 ### Option 1: Plugin Marketplace (Recommended)
 
 ```bash
-# Add marketplace first
+# Add the marketplace source first
 claude plugin marketplace add Side-Peng/clinpub
-# Then install the plugin
-claude plugin install clinpub@clinpub
+# Then install the plugin (no @clinpub suffix needed)
+claude plugin install clinpub
 ```
 
 ### Option 2: Local Development
 
 ```bash
 git clone https://github.com/Side-Peng/clinpub.git
-claude --plugin-dir ./claude-code
+cd clinpub/clinpub/claude-code
+claude --plugin-dir .
+```
+
+Or from the project root:
+
+```bash
+claude --plugin-dir ./clinpub/claude-code
 ```
 
 ### Option 3: Manual Install

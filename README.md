@@ -45,9 +45,10 @@ Phase 0          Phase 1         Phase 2           Phase 3         Phase 4
 
 ```bash
 # 开发模式
-claude --plugin-dir ./claude-code
+claude --plugin-dir ./clinpub/claude-code
 
-# Marketplace
+# Marketplace（先添加源再安装）
+claude plugin marketplace add Side-Peng/clinpub
 claude plugin install clinpub
 ```
 
