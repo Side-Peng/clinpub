@@ -36,6 +36,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.2.1] - 2026-07-10
+
 ### Changed
 - **`/clinpub:init` 重命名为 `/clinpub:initialize`**: 避免与 Claude 原生 `/init` 命令冲突，原生命令恢复可用。插件命名空间仍保持 `clinpub`，命令行为不变。
 
