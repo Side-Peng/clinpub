@@ -18,7 +18,7 @@
 
 | 平台 | 目录 | 状态 | 安装方式 |
 |------|------|------|----------|
-| [Claude Code](claude-code/) | `claude-code/` | v2.2.0 稳定版 | `claude --plugin-dir ./claude-code` 或 marketplace |
+| [Claude Code](claude-code/) | `claude-code/` | v2.2.1 稳定版 | `claude --plugin-dir ./claude-code` 或 marketplace |
 | [OpenAI Codex](codex/) | `codex/` | ✅ v2.2.0 稳定版 | `codex plugin install ./codex/clinpub` 或 marketplace |
 | [QoderWork](qoder/) | `qoder/` | v1.0.0 首发版 | 复制到 `~/.qoderworkcn/plugins-custom/clinpub` |
 
@@ -119,7 +119,7 @@ clinpub/
 |------|------|------|
 | `overview` | — | 命令参考概览 |
 | `data2idea <file>` | — | 从数据中挖掘选题 |
-| `init` | 0 | 项目设置或导入现有项目 |
+| `initialize` | 0 | 项目设置或导入现有项目 |
 | `data-prep` | 1 | 数据清洗 → cleaned.csv |
 | `analysis` | 2 | 自适应统计分析 |
 | `writing` | 3 | IMRAD 论文撰写 |
