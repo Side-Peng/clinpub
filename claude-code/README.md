@@ -66,7 +66,7 @@ claude plugin install clinpub@clinpub
 
 ```bash
 git clone https://github.com/Side-Peng/clinpub.git
-claude --plugin-dir ./clinpub
+claude --plugin-dir ./claude-code
 ```
 
 ### 方式三：手动安装
@@ -351,7 +351,7 @@ claude plugin install clinpub@clinpub
 
 ```bash
 git clone https://github.com/Side-Peng/clinpub.git
-claude --plugin-dir ./clinpub
+claude --plugin-dir ./claude-code
 ```
 
 ### Option 3: Manual Install

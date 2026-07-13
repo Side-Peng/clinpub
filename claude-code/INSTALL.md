@@ -14,14 +14,14 @@ claude plugin install clinpub@clinpub
 ### From Local Source (Development)
 
 ```bash
-claude --plugin-dir ./clinpub
+claude --plugin-dir ./claude-code
 ```
 
 ### From Git Repository
 
 ```bash
 git clone https://github.com/Side-Peng/clinpub.git
-claude --plugin-dir ./clinpub
+claude --plugin-dir ./claude-code
 ```
 
 ## Validate Installation
@@ -93,7 +93,7 @@ Or re-install from source:
 
 ```bash
 git pull origin main
-claude --plugin-dir ./clinpub
+claude --plugin-dir ./claude-code
 ```
 
 ## Uninstalling
@@ -107,7 +107,7 @@ claude plugin uninstall clinpub@clinpub
 | Problem | Solution |
 |---------|----------|
 | Commands not found after install | Restart Claude Code to reload plugins |
-| `/clinpub:overview` not appearing | Run `claude --plugin-dir ./clinpub` again, then restart |
+| `/clinpub:overview` not appearing | Run `claude --plugin-dir ./claude-code` again, then restart |
 | R package errors | Run the `install.packages()` command above |
 | Python import errors | Run `pip install -r requirements.txt` |
 | PubMed search fails | Set `NCBI_API_KEY` env var |

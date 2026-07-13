@@ -216,7 +216,7 @@ claude plugin install clinpub
 ### 安装位置
 
 - **插件安装**：由 Claude Code Plugin 系统管理（`~/.claude/plugins/cache/`）
-- **开发模式**：`claude --plugin-dir ./clinpub`
+- **开发模式**：`claude --plugin-dir ./claude-code`
 
 ### 验证安装
 

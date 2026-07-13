@@ -36,7 +36,7 @@ codex plugin install clinpub
 
 ```bash
 # Install as Claude Code Plugin (development)
-claude --plugin-dir ./clinpub
+claude --plugin-dir ./claude-code
 
 # Install from marketplace (production)
 claude plugin install clinpub
