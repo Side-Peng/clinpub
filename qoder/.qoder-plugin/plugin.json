@@ -10,15 +10,15 @@
   "category": "research",
   "tags": ["clinical-research", "sci-publication", "statistical-analysis", "manuscript-writing", "peer-review"],
   "skills": [
-    "skills/编排器",
-    "skills/知识库",
-    "skills/项目初始化",
-    "skills/数据清洗",
-    "skills/统计分析",
-    "skills/论文写作",
-    "skills/同行评审",
-    "skills/选题挖掘",
-    "skills/阶段里程碑",
-    "skills/分析修改"
+    "./skills/编排器",
+    "./skills/知识库",
+    "./skills/项目初始化",
+    "./skills/数据清洗",
+    "./skills/统计分析",
+    "./skills/论文写作",
+    "./skills/同行评审",
+    "./skills/选题挖掘",
+    "./skills/阶段里程碑",
+    "./skills/分析修改"
   ]
 }
