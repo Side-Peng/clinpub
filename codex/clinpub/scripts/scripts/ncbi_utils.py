@@ -9,15 +9,25 @@ Author: 亮子 (OpenClaw Assistant)
 # Vendored from github.com/Side-Peng/ncbi-search (MIT)
 
 import time
+import re
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from typing import Optional
+from typing import Optional, List
 
 # Rate limiting state
 LAST_REQUEST_TIME = 0
 MIN_REQUEST_INTERVAL = 0.34  # ~3 requests/second without API key
 SESSION = None
+
+# Known gene symbols — shared across NCBI search scripts
+GENE_SYMBOLS: List[str] = [
+    "APOE", "APP", "BDNF", "BRCA1", "BRCA2", "EGFR",
+    "GDNF", "IFNG", "IL10", "IL1B", "IL6", "KRAS",
+    "MAPT", "MYC", "NGF", "NTF3", "PSEN1", "PSEN2",
+    "PTEN", "SNCA", "TARDBP", "TGFB1", "TNF", "TP53",
+    "TREM2", "VEGF",
+]
 
 
 def create_session():

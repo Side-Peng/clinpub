@@ -2,12 +2,12 @@
 
 # Raw data — never commit patient data
 01_RawData/
-*.csv
-*.xlsx
-*.xls
-*.sav
-*.dta
-*.sas7bdat
+01_RawData/*.csv
+01_RawData/*.xlsx
+01_RawData/*.xls
+01_RawData/*.sav
+01_RawData/*.dta
+01_RawData/*.sas7bdat
 
 # Preprocessed data
 02_PreprocessedData/data/

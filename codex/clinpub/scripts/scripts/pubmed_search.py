@@ -36,31 +36,10 @@ except ImportError:
     sys.exit(1)
 
 
-def create_session():
-    """Create a session with retry logic."""
-    session = requests.Session()
-    retry_strategy = Retry(
-        total=3,
-        backoff_factor=1,
-        status_forcelist=[429, 500, 502, 503, 504],
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    session.mount("https://", adapter)
-    session.mount("http://", adapter)
-    return session
-
-
-# Global session
-SESSION = None
-
 # NCBI E-Utilities Base URLs
 EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 ESEARCH_URL = f"{EUTILS_BASE}/esearch.fcgi"
 EFETCH_URL = f"{EUTILS_BASE}/efetch.fcgi"
-
-# Rate limiting
-LAST_REQUEST_TIME = 0
-MIN_REQUEST_INTERVAL = 0.34
 
 # Known MeSH terms for common medical concepts
 MESH_TERMS = {
@@ -106,13 +85,7 @@ MESH_TERMS = {
     "angiogenesis": "Angiogenesis",
 }
 
-# Gene symbols (common ones)
-GENE_SYMBOLS = [
-    "APOE", "APP", "PSEN1", "PSEN2", "TREM2", "MAPT", "SNCA", "TARDBP",
-    "BRCA1", "BRCA2", "TP53", "EGFR", "KRAS", "MYC", "PTEN", "VEGF",
-    "IL6", "TNF", "IFNG", "IL1B", "IL10", "TGFB1",
-    "BDNF", "NGF", "GDNF", "NTF3",
-]
+from ncbi_utils import GENE_SYMBOLS, rate_limit, get_session
 
 # Stop words to exclude from query
 STOP_WORDS = {
@@ -313,9 +286,7 @@ def search_pubmed(
     api_key: Optional[str] = None
 ) -> Dict[str, Any]:
     """Search PubMed and return PMIDs."""
-    global SESSION
-    if SESSION is None:
-        SESSION = create_session()
+    session = get_session()
     
     rate_limit(api_key)
     
@@ -330,7 +301,7 @@ def search_pubmed(
     if api_key:
         params["api_key"] = api_key
     
-    response = SESSION.get(ESEARCH_URL, params=params, timeout=30)
+    response = session.get(ESEARCH_URL, params=params, timeout=30)
     response.raise_for_status()
     
     data = response.json()
@@ -347,9 +318,7 @@ def fetch_articles(
     api_key: Optional[str] = None
 ) -> List[Dict[str, Any]]:
     """Fetch article details by PMID."""
-    global SESSION
-    if SESSION is None:
-        SESSION = create_session()
+    session = get_session()
     
     if not pmids:
         return []
@@ -366,7 +335,7 @@ def fetch_articles(
     if api_key:
         params["api_key"] = api_key
     
-    response = SESSION.get(EFETCH_URL, params=params, timeout=60)
+    response = session.get(EFETCH_URL, params=params, timeout=60)
     response.raise_for_status()
     
     return parse_pubmed_xml(response.text)

@@ -8,33 +8,148 @@ on:
       - "v*"
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - name: claude-code
+            dir: claude-code
+            plugin: .claude-plugin/plugin.json
+            commands: commands/*.md
+            hooks: hooks/hooks.json
+          - name: codex
+            dir: codex/clinpub
+            plugin: .codex-plugin/plugin.json
+            commands: skills/clinpub-*/SKILL.md
+            hooks: hooks/hooks.json
+          - name: qoder
+            dir: qoder
+            plugin: .qoder-plugin/plugin.json
+            commands: skills/*/SKILL.md
+            hooks: ""  # Qoder uses PreToolUse config, no hooks.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate ${{ matrix.platform.name }} Plugin
+        working-directory: ${{ matrix.platform.dir }}
+        run: |
+          echo "=== Validating ${{ matrix.platform.name }} ==="
+
+          # Validate plugin manifest
+          echo "Checking plugin manifest..."
+          test -f "${{ matrix.platform.plugin }}" || { echo "Missing ${{ matrix.platform.plugin }}"; exit 1; }
+          node -e "
+            const p = require('./${{ matrix.platform.plugin }}');
+            if (!p.name || !p.version) { console.error('Invalid plugin.json'); process.exit(1); }
+            console.log('Plugin:', p.name, 'v' + p.version);
+          "
+
+          # Validate commands/skills
+          echo "Checking commands..."
+          ls ${{ matrix.platform.commands }} > /dev/null 2>&1 || { echo "No command files found"; exit 1; }
+          echo "  Found: $(ls ${{ matrix.platform.commands }} | wc -l) command files"
+
+          # Validate hooks (skip for Qoder)
+          if [ -n "${{ matrix.platform.hooks }}" ]; then
+            echo "Checking hooks..."
+            test -f "${{ matrix.platform.hooks }}" || { echo "Missing hooks.json"; exit 1; }
+            node -e "
+              const h = require('./${{ matrix.platform.hooks }}');
+              if (!h.hooks) { console.error('Invalid hooks.json'); process.exit(1); }
+              console.log('Hooks OK:', Object.keys(h.hooks).join(', '));
+            "
+          fi
+
+          echo "=== ${{ matrix.platform.name }} validation passed ==="
+
+  consistency:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Cross-Platform File Consistency
+        run: |
+          echo "=== Checking cross-platform file consistency ==="
+          ERRORS=0
+
+          # Check Python scripts: claude-code vs codex vs qoder
+          SCRIPTS="data_profiler.py ncbi_search.py ncbi_utils.py pubmed_fetch.py pubmed_search.py"
+          for script in $SCRIPTS; do
+            CC="claude-code/scripts/$script"
+            CX="codex/clinpub/scripts/scripts/$script"
+            QD="qoder/scripts/$script"
+
+            if [ -f "$CC" ] && [ -f "$CX" ] && [ -f "$QD" ]; then
+              CC_HASH=$(md5sum "$CC" | cut -d' ' -f1)
+              CX_HASH=$(md5sum "$CX" | cut -d' ' -f1)
+              QD_HASH=$(md5sum "$QD" | cut -d' ' -f1)
+
+              if [ "$CC_HASH" = "$CX_HASH" ] && [ "$CX_HASH" = "$QD_HASH" ]; then
+                echo "  OK: $script (all platforms match)"
+              else
+                echo "  MISMATCH: $script"
+                echo "    claude-code: $CC_HASH"
+                echo "    codex:       $CX_HASH"
+                echo "    qoder:       $QD_HASH"
+                ERRORS=$((ERRORS + 1))
+              fi
+            else
+              echo "  MISSING: $script"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          # Check project_config.yml template consistency
+          CFG_FILES="claude-code/pipeline/templates/project_config.yml codex/clinpub/pipeline/templates/project_config.yml qoder/skills/知识库/references/templates/project_config.yml"
+          CFG_HASHES=""
+          for cfg in $CFG_FILES; do
+            if [ -f "$cfg" ]; then
+              CFG_HASHES="$CFG_HASHES $(md5sum "$cfg" | cut -d' ' -f1)"
+            fi
+          done
+          UNIQUE_HASHES=$(echo "$CFG_HASHES" | tr ' ' '\n' | sort -u | wc -l)
+          if [ "$UNIQUE_HASHES" -eq 1 ]; then
+            echo "  OK: project_config.yml template (all platforms match)"
+          else
+            echo "  MISMATCH: project_config.yml template"
+            ERRORS=$((ERRORS + 1))
+          fi
+
+          # Check agents consistency (claude-code vs codex only, qoder uses different format)
+          AGENTS="analyst-agent.md clinpub-executor.md clinpub-planner.md clinpub-verifier.md modify-agent.md reference-agent.md topic-miner-agent.md writer-agent.md"
+          for agent in $AGENTS; do
+            CC="claude-code/agents/$agent"
+            CX="codex/clinpub/agents/$agent"
+            if [ -f "$CC" ] && [ -f "$CX" ]; then
+              CC_HASH=$(md5sum "$CC" | cut -d' ' -f1)
+              CX_HASH=$(md5sum "$CX" | cut -d' ' -f1)
+              if [ "$CC_HASH" != "$CX_HASH" ]; then
+                echo "  MISMATCH: agents/$agent"
+                ERRORS=$((ERRORS + 1))
+              fi
+            fi
+          done
+
+          echo ""
+          if [ $ERRORS -eq 0 ]; then
+            echo "=== All cross-platform files consistent ==="
+          else
+            echo "=== $ERRORS file(s) inconsistent across platforms ==="
+            exit 1
+          fi
+
   release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: claude-code
+    needs: [validate, consistency]
     permissions:
       contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Validate Plugin Structure
-        run: |
-          echo "Validating .claude-plugin/plugin.json..."
-          test -f .claude-plugin/plugin.json || { echo "Missing plugin.json"; exit 1; }
-          node -e "const p = require('./.claude-plugin/plugin.json'); if (!p.name || !p.version) { console.error('Invalid plugin.json'); process.exit(1); } console.log('Plugin:', p.name, 'v' + p.version);"
-          echo "Validating commands/ directory..."
-          ls commands/*.md > /dev/null 2>&1 || { echo "No command files found"; exit 1; }
-          echo "Validating hooks/hooks.json..."
-          test -f hooks/hooks.json || { echo "Missing hooks.json"; exit 1; }
-          node -e "const h = require('./hooks/hooks.json'); if (!h.hooks) { console.error('Invalid hooks.json'); process.exit(1); } console.log('Hooks OK:', Object.keys(h.hooks).join(', '));"
-          echo "Plugin validation passed."
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

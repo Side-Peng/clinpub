@@ -125,31 +125,7 @@ DATABASES = {
     },
 }
 
-# Known gene symbols
-GENE_SYMBOLS = [
-    "APOE", "APP", "PSEN1", "PSEN2", "TREM2", "MAPT", "SNCA", "TARDBP",
-    "BRCA1", "BRCA2", "TP53", "EGFR", "KRAS", "MYC", "PTEN", "VEGF",
-    "IL6", "TNF", "IFNG", "IL1B", "IL10", "TGFB1", "BDNF", "NGF",
-]
-
-# Rate limiting
-LAST_REQUEST_TIME = 0
-MIN_REQUEST_INTERVAL = 0.34
-SESSION = None
-
-
-def create_session():
-    """Create a session with retry logic."""
-    session = requests.Session()
-    retry_strategy = Retry(
-        total=3,
-        backoff_factor=1,
-        status_forcelist=[429, 500, 502, 503, 504],
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    session.mount("https://", adapter)
-    session.mount("http://", adapter)
-    return session
+from ncbi_utils import GENE_SYMBOLS, rate_limit, get_session
 
 
 def get_api_key(args: argparse.Namespace) -> Optional[str]:
@@ -157,16 +133,6 @@ def get_api_key(args: argparse.Namespace) -> Optional[str]:
     if args.api_key:
         return args.api_key
     return os.environ.get("NCBI_API_KEY")
-
-
-def rate_limit(api_key: Optional[str]):
-    """Enforce rate limiting."""
-    global LAST_REQUEST_TIME
-    interval = 0.11 if api_key else MIN_REQUEST_INTERVAL
-    elapsed = time.time() - LAST_REQUEST_TIME
-    if elapsed < interval:
-        time.sleep(interval - elapsed)
-    LAST_REQUEST_TIME = time.time()
 
 
 def detect_database(query: str) -> str:
@@ -220,9 +186,7 @@ def search_database(
     organism: Optional[str] = None
 ) -> Dict[str, Any]:
     """Search any NCBI database."""
-    global SESSION
-    if SESSION is None:
-        SESSION = create_session()
+    session = get_session()
     
     rate_limit(api_key)
     
@@ -244,7 +208,7 @@ def search_database(
     if api_key:
         params["api_key"] = api_key
     
-    response = SESSION.get(ESEARCH_URL, params=params, timeout=30)
+    response = session.get(ESEARCH_URL, params=params, timeout=30)
     response.raise_for_status()
     
     data = response.json()
@@ -264,9 +228,7 @@ def fetch_summary(
     api_key: Optional[str] = None
 ) -> List[Dict[str, Any]]:
     """Fetch summary for records using ESummary."""
-    global SESSION
-    if SESSION is None:
-        SESSION = create_session()
+    session = get_session()
     
     if not ids:
         return []
@@ -282,7 +244,7 @@ def fetch_summary(
     if api_key:
         params["api_key"] = api_key
     
-    response = SESSION.get(ESUMMARY_URL, params=params, timeout=60)
+    response = session.get(ESUMMARY_URL, params=params, timeout=60)
     response.raise_for_status()
     
     data = response.json()
