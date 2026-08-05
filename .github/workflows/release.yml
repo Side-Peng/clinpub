@@ -111,10 +111,11 @@ jobs:
           done
 
           # Check project_config.yml template consistency
-          # Locate the qoder copy via git tree (avoids non-ASCII paths in this file)
+          # Locate the qoder copy via git tree (avoids non-ASCII paths in this file);
+          # core.quotepath=false keeps UTF-8 paths unescaped for rev-parse
           CC_HASH=$(blob_hash "claude-code/pipeline/templates/project_config.yml")
           CX_HASH=$(blob_hash "codex/clinpub/pipeline/templates/project_config.yml")
-          QD_CFG_PATH=$(git ls-tree -r --name-only HEAD qoder | grep 'project_config\.yml' | head -1)
+          QD_CFG_PATH=$(git -c core.quotepath=false ls-tree -r --name-only HEAD qoder | grep 'project_config\.yml' | head -1)
           QD_HASH=$(blob_hash "$QD_CFG_PATH")
           if [ -n "$CC_HASH" ] && [ "$CC_HASH" = "$CX_HASH" ] && [ "$CX_HASH" = "$QD_HASH" ]; then
             echo "  OK: project_config.yml template (all platforms match)"
