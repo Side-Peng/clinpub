@@ -85,64 +85,55 @@ jobs:
 
       - name: Check Cross-Platform File Consistency
         run: |
-          echo "=== Checking cross-platform file consistency ==="
+          echo "=== Checking cross-platform file consistency (git blob hashes) ==="
           ERRORS=0
+
+          # Helper: blob hash of a path in HEAD (empty if missing)
+          blob_hash() {
+            git rev-parse "HEAD:$1" 2>/dev/null || echo ""
+          }
 
           # Check Python scripts: claude-code vs codex vs qoder
           SCRIPTS="data_profiler.py ncbi_search.py ncbi_utils.py pubmed_fetch.py pubmed_search.py pmc_fetch.py test_ncbi.py"
           for script in $SCRIPTS; do
-            CC="claude-code/scripts/$script"
-            CX="codex/clinpub/scripts/scripts/$script"
-            QD="qoder/scripts/$script"
-
-            if [ -f "$CC" ] && [ -f "$CX" ] && [ -f "$QD" ]; then
-              CC_HASH=$(md5sum "$CC" | cut -d' ' -f1)
-              CX_HASH=$(md5sum "$CX" | cut -d' ' -f1)
-              QD_HASH=$(md5sum "$QD" | cut -d' ' -f1)
-
-              if [ "$CC_HASH" = "$CX_HASH" ] && [ "$CX_HASH" = "$QD_HASH" ]; then
-                echo "  OK: $script (all platforms match)"
-              else
-                echo "  MISMATCH: $script"
-                echo "    claude-code: $CC_HASH"
-                echo "    codex:       $CX_HASH"
-                echo "    qoder:       $QD_HASH"
-                ERRORS=$((ERRORS + 1))
-              fi
+            CC_HASH=$(blob_hash "claude-code/scripts/$script")
+            CX_HASH=$(blob_hash "codex/clinpub/scripts/scripts/$script")
+            QD_HASH=$(blob_hash "qoder/scripts/$script")
+            if [ -n "$CC_HASH" ] && [ "$CC_HASH" = "$CX_HASH" ] && [ "$CX_HASH" = "$QD_HASH" ]; then
+              echo "  OK: $script (all platforms match)"
             else
-              echo "  MISSING: $script"
+              echo "  MISMATCH: $script"
+              echo "    claude-code: ${CC_HASH:-MISSING}"
+              echo "    codex:       ${CX_HASH:-MISSING}"
+              echo "    qoder:       ${QD_HASH:-MISSING}"
               ERRORS=$((ERRORS + 1))
             fi
           done
 
           # Check project_config.yml template consistency
-          CFG_FILES="claude-code/pipeline/templates/project_config.yml codex/clinpub/pipeline/templates/project_config.yml qoder/skills/知识库/references/templates/project_config.yml"
-          CFG_HASHES=""
-          for cfg in $CFG_FILES; do
-            if [ -f "$cfg" ]; then
-              CFG_HASHES="$CFG_HASHES $(md5sum "$cfg" | cut -d' ' -f1)"
-            fi
-          done
-          UNIQUE_HASHES=$(echo "$CFG_HASHES" | tr ' ' '\n' | sort -u | wc -l)
-          if [ "$UNIQUE_HASHES" -eq 1 ]; then
+          # Locate the qoder copy via git tree (avoids non-ASCII paths in this file)
+          CC_HASH=$(blob_hash "claude-code/pipeline/templates/project_config.yml")
+          CX_HASH=$(blob_hash "codex/clinpub/pipeline/templates/project_config.yml")
+          QD_CFG_PATH=$(git ls-tree -r --name-only HEAD qoder | grep 'project_config\.yml' | head -1)
+          QD_HASH=$(blob_hash "$QD_CFG_PATH")
+          if [ -n "$CC_HASH" ] && [ "$CC_HASH" = "$CX_HASH" ] && [ "$CX_HASH" = "$QD_HASH" ]; then
             echo "  OK: project_config.yml template (all platforms match)"
           else
             echo "  MISMATCH: project_config.yml template"
+            echo "    claude-code: ${CC_HASH:-MISSING}"
+            echo "    codex:       ${CX_HASH:-MISSING}"
+            echo "    qoder:       ${QD_HASH:-MISSING}"
             ERRORS=$((ERRORS + 1))
           fi
 
           # Check agents consistency (claude-code vs codex only, qoder uses different format)
           AGENTS="analyst-agent.md clinpub-executor.md clinpub-planner.md clinpub-verifier.md modify-agent.md reference-agent.md topic-miner-agent.md writer-agent.md"
           for agent in $AGENTS; do
-            CC="claude-code/agents/$agent"
-            CX="codex/clinpub/agents/$agent"
-            if [ -f "$CC" ] && [ -f "$CX" ]; then
-              CC_HASH=$(md5sum "$CC" | cut -d' ' -f1)
-              CX_HASH=$(md5sum "$CX" | cut -d' ' -f1)
-              if [ "$CC_HASH" != "$CX_HASH" ]; then
-                echo "  MISMATCH: agents/$agent"
-                ERRORS=$((ERRORS + 1))
-              fi
+            CC_HASH=$(blob_hash "claude-code/agents/$agent")
+            CX_HASH=$(blob_hash "codex/clinpub/agents/$agent")
+            if [ -n "$CC_HASH" ] && [ "$CC_HASH" != "$CX_HASH" ]; then
+              echo "  MISMATCH: agents/$agent"
+              ERRORS=$((ERRORS + 1))
             fi
           done
 
