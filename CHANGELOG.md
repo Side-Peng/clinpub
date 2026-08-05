@@ -6,6 +6,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed — Claude Code
+- **消除 hooks 双重定义**: hooks 配置仅内联保留于 `.claude-plugin/plugin.json`（官方支持的“或”选项之一），删除冗余的 `hooks/hooks.json`，避免双重执行风险（参考 anthropics/claude-code#34573）。CI 校验同步改为验证 plugin.json 内联 hooks 字段。
+
+### Changed
+- **文献搜索脚本升级**: 同步 ncbi-search v3——新增 `pmc_fetch.py`（PMC 开放获取全文）、`test_ncbi.py`（单元测试），升级 `ncbi_utils.py`（SQLite 缓存）/`ncbi_search.py`（EFetch 摘要）/`pubmed_search.py`（宽松 NL 策略）/`pubmed_fetch.py`（自动分批）至三平台一致（claude-code / codex / qoder）。
+- **CI 一致性检查**: 纳入新增脚本 `pmc_fetch.py`、`test_ncbi.py`；同步 `data_profiler.py` 至三平台一致。
+
+## [2.3.0] - 2026-07-28
+
+> 本次改动仅作用于 **Claude Code 版本**（`claude-code/`）。codex / qoder 版本暂未同步。
+
+### Added — Claude Code
+- **`/clinpub:improving`**: 独立的论文持续改进工具——自审稿件 → 生成修改计划 → 用户确认 → 直接修稿（全文 + 分析代码重跑 + 数值级联）。不写回复信、不模拟审稿人，可反复调用。新增 `commands/improving.md` 与 `pipeline/workflows/improving.md`。
+- **`/clinpub:coverletter`**: 依据初始化设定的目标期刊，联网搜集期刊官网投稿要求（WebSearch/WebFetch，含离线回退），生成量身定制的 Cover Letter（输出 `05_Manuscript/cover_letter.md`）。新增 `commands/coverletter.md` 与 `pipeline/workflows/coverletter.md`。
+
+### Changed — Claude Code
+- **`/clinpub:review` 改为“投稿后”流程**: 由“模拟审稿”改为处理用户提供的真实审稿意见——录入意见 → 撰写逐条回复信 + 改进方向 → 用户确认 → 调用 `improving` 执行修稿（单一修稿实现，不重复）。改写 `commands/review.md` 与 `pipeline/workflows/review.md`。
+- **初始化显式询问目标期刊**: `initialize` / `init-project.md` 将目标期刊提升为必问项，不再预设；`project_config.yml` 模板去除 `target_journal: "SCI Q1/Q2"` 默认值。适配任意临床研究文章类型。
+- **管线收敛为 Phase 0-3**: 写作（Phase 3）为核心管线终点；improving / coverletter / review 与 modify 一样为“随时可调用”的独立工具，不占 Phase 编号。相应更新 hooks（workflow-guard.js / phase-boundary.sh）、编排器（overview / do / next-step）、门控（gates.md）、里程碑（milestone.md）及相关参考文档。
+- **文案去期刊硬绑定**: 移除文档/清单中的 “SCI Q1/Q2”“simulated peer review” 硬绑定表述。
+- **版本**: `2.2.1 → 2.3.0`（claude-code 插件与 npm 元数据）。
+
 ## [2.2.1] - 2026-07-10
 
 ### Changed

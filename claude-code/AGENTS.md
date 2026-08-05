@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## What This Is
 
-A Claude Code **Plugin** (`clinpub`). End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Distributed via the Claude Code plugin system (`.claude-plugin/plugin.json`).
+A Claude Code **Plugin** (`clinpub`). End-to-end clinical data analysis and publication pipeline that adapts to any clinical research article type. Distributed via the Claude Code plugin system (`.claude-plugin/plugin.json`).
 
 ## Build, Install & Test Commands
 
@@ -41,7 +41,7 @@ Workflows (pipeline/workflows/*.md) → Phase orchestration (DISCUSS→PLAN→EX
 Agents (agents/*.md)               → 8 specialized AI role cards (fresh context each)
   ↓
 Scripts (scripts/*.py)             → R/Python analysis tools
-Hooks (hooks/hooks.json + *.js/*.sh) → Workflow enforcement (phase guard, prompt injection)
+Hooks (*.js/*.sh)                 → Workflow enforcement (phase guard, prompt injection)
 ```
 
 **Three-layer routing**: user invokes command → workflow orchestrates → agent executes with fresh context.
@@ -50,9 +50,9 @@ Hooks (hooks/hooks.json + *.js/*.sh) → Workflow enforcement (phase guard, prom
 
 ```
 .claude-plugin/plugin.json  → Plugin manifest (identity + metadata)
-commands/*.md               → 11 flat command files (auto-discovered by plugin system)
+commands/*.md               → 13 flat command files (auto-discovered by plugin system)
 agents/*.md                 → 8 specialized agents (auto-discovered)
-hooks/hooks.json            → Declarative hook configuration (3 PreToolUse hooks)
+hooks/*.js/*.sh             → Hook implementation scripts (declared inline in plugin.json)
 pipeline/                   → Workflows, references, templates (loaded via @./ references)
 ```
 
@@ -134,23 +134,25 @@ Project_Root/
 ├── 03_AnalysisMethods/        # Phase 2 — Method code + 方法说明 docs
 ├── 04_Outputs/                # Phase 2 — Figures + tables + MANIFEST.yaml
 ├── Reference/                 # Phase 3 — Literature (references.bib, citation_map.md)
-├── 05_Manuscript/             # Phase 3-4 — IMRAD drafts, review, final
+├── 05_Manuscript/             # Phase 3 — IMRAD drafts; post-writing tools add cover_letter / reviewer response / final/
 └── project_config.yml         # Phase 0 — Central config (study type, variables, journal)
 ```
 
-## Commands (11 plugin commands)
+## Commands (13 plugin commands)
 
 | Command | Phase | What It Does |
 |---------|-------|-------------|
 | `/clinpub:overview` | — | Command reference overview |
 | `/clinpub:data2idea` | — | Topic mining from data |
-| `/clinpub:initialize` | 0 | Project setup or import existing project (auto-detects artifacts) |
+| `/clinpub:initialize` | 0 | Project setup or import existing project (auto-detects artifacts); asks target journal |
 | `/clinpub:data-prep` | 1 | Data cleaning → cleaned.csv |
 | `/clinpub:analysis` | 2 | Statistical analysis (methods proposed dynamically) |
-| `/clinpub:writing` | 3 | IMRAD manuscript drafting |
-| `/clinpub:review` | 4 | Peer review simulation + revision |
+| `/clinpub:writing` | 3 | IMRAD manuscript drafting (core pipeline终点) |
+| `/clinpub:improving` | tool | Self-review + directly revise manuscript & analysis (repeatable) |
+| `/clinpub:coverletter` | tool | Gather target-journal submission requirements → cover letter |
+| `/clinpub:review` | tool | Post-submission: real reviewer comments → response letter → delegate revision to improving |
 | `/clinpub:milestone` | gate | Phase gate verification with user sign-off |
-| `/clinpub:modify` | — | Modify analysis outputs (figure style, method, variables) |
+| `/clinpub:modify` | tool | Modify analysis outputs or add new analysis methods (figure style, method, variables) |
 
 `commands/do.md` and `commands/next-step.md` are routing/advancement helpers (breakpoint resume and step advancement), not in the main command table.
 

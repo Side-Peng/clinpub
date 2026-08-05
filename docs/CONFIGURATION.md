@@ -227,7 +227,7 @@ claude plugin install clinpub
 
 ## Hooks 配置
 
-Hooks 声明式配置于 `hooks/hooks.json`（Plugin 系统自动加载）：
+Hooks 内联声明于 `.claude-plugin/plugin.json` 的 `hooks` 字段（官方支持的内联方式，Plugin 系统自动加载；`hooks/` 目录仅存放脚本实现）：
 
 ```json
 {
@@ -235,20 +235,22 @@ Hooks 声明式配置于 `hooks/hooks.json`（Plugin 系统自动加载）：
     "PreToolUse": [
       {
         "matcher": "Write|Edit",
-        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-workflow-guard.js\"", "timeout": 5000 }]
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-workflow-guard.js\"", "timeout": 5 }]
       },
       {
         "matcher": "Bash",
-        "hooks": [{ "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-phase-boundary.sh\"", "timeout": 5000 }]
+        "hooks": [{ "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-phase-boundary.sh\"", "timeout": 5 }]
       },
       {
         "matcher": "Read",
-        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-prompt-guard.js\"", "timeout": 3000 }]
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/clinpub-prompt-guard.js\"", "timeout": 3 }]
       }
     ]
   }
 }
 ```
+
+> 注：插件 hooks 官方支持两种位置——`hooks/hooks.json` 或 `plugin.json` 内联（二选一）。本项目选择内联方式，避免与 `hooks.json` 加载路径相关的已知问题（anthropics/claude-code#34573）。Codex 平台仍使用 `hooks/hooks.json`（其机制不同）。
 
 ## 目录结构配置
 

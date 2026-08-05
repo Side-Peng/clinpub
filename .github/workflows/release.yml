@@ -17,7 +17,7 @@ jobs:
             dir: claude-code
             plugin: .claude-plugin/plugin.json
             commands: commands/*.md
-            hooks: hooks/hooks.json
+            hooks: inline  # hooks declared in plugin.json (official inline option)
           - name: codex
             dir: codex/clinpub
             plugin: .codex-plugin/plugin.json
@@ -51,8 +51,20 @@ jobs:
           ls ${{ matrix.platform.commands }} > /dev/null 2>&1 || { echo "No command files found"; exit 1; }
           echo "  Found: $(ls ${{ matrix.platform.commands }} | wc -l) command files"
 
-          # Validate hooks (skip for Qoder)
-          if [ -n "${{ matrix.platform.hooks }}" ]; then
+          # Validate hooks
+          # claude-code: hooks declared inline in plugin.json (official "or" option)
+          # codex: hooks declared in hooks/hooks.json
+          # qoder: uses PreToolUse config, no hooks.json
+          if [ "${{ matrix.platform.hooks }}" = "inline" ]; then
+            echo "Checking hooks (inline in plugin.json)..."
+            node -e "
+              const p = require('./${{ matrix.platform.plugin }}');
+              if (!p.hooks || !p.hooks.PreToolUse || p.hooks.PreToolUse.length === 0) {
+                console.error('Missing inline hooks in plugin.json'); process.exit(1);
+              }
+              console.log('Hooks OK:', Object.keys(p.hooks).join(', '));
+            "
+          elif [ -n "${{ matrix.platform.hooks }}" ]; then
             echo "Checking hooks..."
             test -f "${{ matrix.platform.hooks }}" || { echo "Missing hooks.json"; exit 1; }
             node -e "
@@ -77,7 +89,7 @@ jobs:
           ERRORS=0
 
           # Check Python scripts: claude-code vs codex vs qoder
-          SCRIPTS="data_profiler.py ncbi_search.py ncbi_utils.py pubmed_fetch.py pubmed_search.py"
+          SCRIPTS="data_profiler.py ncbi_search.py ncbi_utils.py pubmed_fetch.py pubmed_search.py pmc_fetch.py test_ncbi.py"
           for script in $SCRIPTS; do
             CC="claude-code/scripts/$script"
             CX="codex/clinpub/scripts/scripts/$script"

@@ -22,18 +22,26 @@ Before any search, confirm the runtime environment:
 Invocation pattern used by every search step below:
 
 ```bash
-# Main entry (auto-detect intent)
+# Main entry (auto-detect intent, PubMed returns abstracts via EFetch)
 python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<query>" [options]
 
-# PubMed with filters
+# PubMed with filters + tiered abstract display
 python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<query>" \
-  --db pubmed --years <N> --type <type> --max <N>
+  --db pubmed --years <N> --type <type> --max <N> --abstract <none|preview|full>
 
-# Batch PMID fetch (full record, includes abstract)
-python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_fetch.py" <PMID1> <PMID2> ... --format json
+# PubMed natural language query (relaxed NL strategy, MeSH auto-detection)
+python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_search.py" "<query>" [options]
+
+# Batch PMID fetch (full record, includes abstract, auto-batched 200/batch)
+python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_fetch.py" <PMID1> <PMID2> ... --abstract full --format json
+
+# PMC Open Access full text (JATS XML → sectioned prose)
+python "${CLAUDE_PLUGIN_ROOT}/scripts/pmc_fetch.py" <PMCID|PMID> [--pmid] [--outline] [--max-chars N]
 ```
 
-**摘要获取**: `ncbi_search.py` 使用 ESummary API，不返回摘要。写入 `reference_library.json` 前，必须对搜索结果中有 PMID 的文献调用 `pubmed_fetch.py` 获取完整摘要（EFetch XML），提取 `abstract` 字段存入引用库。
+**摘要获取**: `ncbi_search.py` 使用 EFetch API，支持三级摘要显示：`--abstract none`（仅标题）、`preview`（前 1000 字符，默认）、`full`（完整摘要）。写入 `reference_library.json` 前，对搜索结果中有 PMID 的文献调用 `pubmed_fetch.py --abstract full` 获取完整摘要。
+
+**全文获取**: 需要文献正文全文时，使用 `pmc_fetch.py`（仅限 PMC 开放获取子集）。先用 `--outline` 查看章节结构，再决定是否取全文。非 OA 文献标注 `Open Access Full Text: No`。
 
 Never call `skill("ncbi-search")` — the capability is native to clinpub.
 </step>
@@ -80,8 +88,8 @@ Search strategies by trigger phase:
 - Supplementary search per chapter topic via built-in `ncbi_search.py`
 - Full-text retrieval via DOI → Unpaywall → pdf-reader
 
-**Phase 4 (review):**
-- Targeted supplementary search for reviewer-raised topics via built-in `ncbi_search.py`
+**Post-writing (improving / review tools):**
+- Targeted supplementary search for self-review gaps or reviewer-raised topics via built-in `ncbi_search.py`
 </step>
 
 <step name="method_search" priority="high">
@@ -236,10 +244,18 @@ Track B 关键词（技术调研）：命令、钩子、workflow、配置、工�
 <step name="full_text_retrieval" priority="medium">
 For key references requiring full text:
 
-1. Use DOI to check open-access status via Unpaywall
-2. If OA available: download PDF → extract full text using pdf-reader skill
-3. If not OA: request user to provide PDF
-4. Extract: abstract, methods, key results, limitations
+1. **首选 PMC 全文**（内置脚本，零外部依赖）：
+   ```bash
+   # 先看章节大纲（节省 Token）
+   python "${CLAUDE_PLUGIN_ROOT}/scripts/pmc_fetch.py" <PMID> --pmid --outline
+   # 确认需要后获取全文（可截断）
+   python "${CLAUDE_PLUGIN_ROOT}/scripts/pmc_fetch.py" <PMID> --pmid --max-chars 5000
+   ```
+   仅 PMC 开放获取子集可返回正文；非 OA 文献标注 `Open Access Full Text: No`。
+2. If not in PMC: use DOI to check open-access status via Unpaywall
+3. If OA available: download PDF → extract full text using pdf-reader skill
+4. If not OA: request user to provide PDF
+5. Extract: abstract, methods, key results, limitations
 </step>
 
 <step name="output_generation" priority="high">
