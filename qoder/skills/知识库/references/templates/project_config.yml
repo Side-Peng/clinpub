@@ -8,7 +8,7 @@ project:
   description: "项目描述"
   design: "队列研究"                    # RCT / 队列研究 / 病例对照 / 横断面 / 描述性
   sample_size: 0
-  target_journal: "SCI Q1/Q2"
+  target_journal: ""                   # 目标投稿期刊——初始化时由用户指定，不预设（适配任意临床研究文章）
   reporting_standard: "STROBE"         # CONSORT / STROBE / PRISMA
 
 variables:
@@ -58,7 +58,7 @@ analysis_plan:
   waves: {}
 
 journal:
-  name: ""                        # 期刊名
+  name: ""                        # 期刊名——初始化时询问用户后填入（不预设，未定可留空）
   tier: "Q1"                      # Q1/Q2/Q3/Q4 — 对应 journal_standards.md 分级标准
   word_limit: 5000                # 正文字数限制
   abstract_limit: 300             # 摘要字数限制
