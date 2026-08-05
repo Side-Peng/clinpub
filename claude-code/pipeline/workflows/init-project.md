@@ -62,12 +62,15 @@ On user rejection → Continue with standard initialization below.
 </step>
 
 <step name="discuss_research_framework" priority="first">
+This pipeline adapts to any clinical research article type — no journal is preset.
+
 Discuss with user before creating anything:
 
 1. **Study basics**: title, research type, objectives, hypotheses
 2. **Data overview**: source, sample size, key variables (outcome, exposure, covariates)
 3. **Analysis methods**: select from candidate pool (baseline table, group comparison, regression, survival, subgroup, sensitivity, correlation, ROC, marker panel, ML)
-4. **Expected output**: target journal, needed figure/table types, language preferences
+4. **Target submission journal (ask explicitly)**: use AskUserQuestion to ask the user for the intended submission journal — journal name + tier (Q1/Q2/Q3/Q4). Do NOT preset or assume any journal. If the user is undecided, accept "待定" and note that `/clinpub:writing` and `/clinpub:coverletter` will re-confirm the journal later.
+5. **Expected output**: needed figure/table types, language preferences
 
 **Study type auto-inference** (when user is uncertain):
 - Randomized group variable → suggest RCT
@@ -136,6 +139,7 @@ Key sections:
 - `variables`: outcome, outcome_type, exposure, covariates, time_variable, event_variable, group_variable, id_variable
 - `paths`: all directory paths
 - `methods_to_run`: user-confirmed methods (dynamically numbered)
+- `journal`: name + tier from the user's explicit answer in step 1 — do NOT preset. `project.target_journal` and `journal.name` are written from that answer (or left empty / "待定" if the user is undecided).
 - `language`: manuscript language, figures/tables language, statistics language
 - `quality`: journal level, figure DPI, format, font, font size
 - `analysis`: missing value thresholds, significance level, multiple comparison method

@@ -36,20 +36,22 @@ STATE.md Phase 读取:
 Phase 0: -f project_config.yml + 验证 project.name != "项目名称"
 Phase 1: -f 02_PreprocessedData/data/cleaned.csv
 Phase 2: -d 04_Outputs && ls 04_Outputs/ 非空 + project_config.yml analysis_plan.waves
-Phase 3: -f 05_Manuscript/manuscript.md
-Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
+Phase 3: -f 05_Manuscript/manuscript.md  （核心管线终点）
 ```
+Phase 3 完成后，improving / coverletter / review 为独立工具（需已有手稿），不占 Phase 编号。
 </interfaces>
 
 <execution_context>
-@./pipeline/workflows/init-project.md
-@./pipeline/workflows/data-prep.md
-@./pipeline/workflows/analysis.md
-@./pipeline/workflows/writing.md
-@./pipeline/workflows/review.md
-@./pipeline/workflows/next-step.md
-@./pipeline/workflows/milestone.md
-@./pipeline/references/checkpoints.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/init-project.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/data-prep.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/analysis.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/writing.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/improving.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/coverletter.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/review.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/next-step.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/milestone.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/checkpoints.md"`
 </execution_context>
 
 <process>
@@ -76,15 +78,18 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 | 1 | `(初始化\|init\|开始\|创建项目\|新建)` | init | 高 — 非清洗/分析语境 |
 | 2 | `(清洗\|clean\|数据质量\|缺失\|异常值\|cleaned)` | data-prep | 高 — 特异性数据处理术语 |
 | 3 | `(选题\|话题挖掘\|idea\|数据探索\|data2idea)` | data2idea | 高 — 选题挖掘术语 |
-| 4 | `(分析\|统计\|结果\|图\|表\|analysis\|figure\|table\|回归\|生存\|ROC)` | analysis | 高 — 分析术语 |
-| 5 | `(写\|稿\|手稿\|文献\|引用\|writing\|IMRAD\|论文\|manuscript)` | writing | 高 — 写作术语 |
-| 6 | `(审稿\|review\|修订\|修改\|意见\|审阅\|response)` | review | 高 — 审稿术语 |
-| 7 | `(推进\|下一步\|继续\|next\|advance)` | next-step | 高 — 推进术语 |
-| 8 | `(状态\|摘要\|总览\|当前\|情况\|see\|status\|什么阶段)` | 回退到无参 | 明确表达"查看状态"意图，不是特定命令 |
+| 4 | `(审稿\|审稿意见\|reviewer\|回复信\|response\|rebuttal\|返修\|大修\|小修\|拒稿)` | review（投稿后） | 高 — 投稿后审稿回复术语（先于"稿"）|
+| 5 | `(投稿信\|cover.?letter\|coverletter\|submission letter)` | coverletter | 高 — 投稿信术语 |
+| 6 | `(改进\|完善\|润色\|自审\|打磨\|精修\|修订\|改稿\|improving)` | improving | 高 — 稿件改进术语（先于"稿"）|
+| 7 | `(分析\|统计\|结果\|图\|表\|analysis\|figure\|table\|回归\|生存\|ROC)` | analysis | 高 — 分析术语 |
+| 8 | `(写\|稿\|手稿\|文献\|引用\|writing\|IMRAD\|论文\|manuscript)` | writing | 高 — 写作术语 |
+| 9 | `(推进\|下一步\|继续\|next\|advance)` | next-step | 高 — 推进术语 |
+| 10 | `(状态\|摘要\|总览\|当前\|情况\|see\|status\|什么阶段)` | 回退到无参 | 明确表达"查看状态"意图，不是特定命令 |
 
 **匹配规则**:
 - 命中高优先级关键词立即路由，不继续检查低优先级（D-02：NL 优先于状态检测）
-- 命中第 7 组关键词 → 执行无参状态检测流程（D-04：明确表达查看状态，回退到摘要）
+- review / coverletter / improving 组置于 writing 组之前，避免"审稿/投稿信/改稿"被 writing 组的"稿"抢先命中
+- 命中第 9 组（推进）→ 执行自动推进；命中第 10 组（状态）→ 执行无参状态检测流程（D-04）
 - 没有命中任何关键词组 → 回退到无参行为（D-04：推断不出明确意图）
 - **跨组冲突时**（如同时包含"分析"和"写"）：以优先级高的为准（Group 编号小的优先），不按文本位置判断
 - **反模式规避**: 不要匹配停用词（"看"、"查"、"项目"、"做"、"搞"、"弄"、"整"），只匹配上表中特异性术语
@@ -93,13 +98,15 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 
 路由使用 SKILL.md 定义的命令名称格式：
 
-| 路由目标 Phase | 命令名称 | 执行方式 |
+| 路由目标 | 命令名称 | 执行方式 |
 |---------------|---------|---------|
 | Phase 0 | `/clinpub:initialize` | 确认后提示用户执行 |
 | Phase 1 | `/clinpub:data-prep` | 确认后提示用户执行 |
 | Phase 2 | `/clinpub:analysis` | 确认后提示用户执行 |
 | Phase 3 | `/clinpub:writing` | 确认后提示用户执行 |
-| Phase 4 | `/clinpub:review` | 确认后提示用户执行 |
+| 独立工具·改进 | `/clinpub:improving` | 确认后提示用户执行（需已有手稿） |
+| 独立工具·投稿信 | `/clinpub:coverletter` | 确认后提示用户执行（需已有手稿） |
+| 独立工具·审稿回复 | `/clinpub:review` | 确认后提示用户执行（投稿后，需审稿意见） |
 | 选题挖掘 | `/clinpub:data2idea` | 确认后提示用户执行（无需初始化） |
 | 自动推进 | `/clinpub:next-step` | 确认后提示用户执行 |
 | Phase 检查 | `/clinpub:milestone N` | 确认后提示用户执行 |
@@ -131,8 +138,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
    Phase 0: project_config.yml 存在且关键字段有效
    Phase 1: -f 02_PreprocessedData/data/cleaned.csv
    Phase 2: -d 04_Outputs && ls 04_Outputs/ 非空
-   Phase 3: -f 05_Manuscript/manuscript.md
-   Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
+   Phase 3: -f 05_Manuscript/manuscript.md  （核心管线终点）
 ```
 
 **反模式规避**: 
@@ -179,7 +185,7 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 │ │       /clinpub:initialize    → 初始化项目                │
 └──────────────────────────────────────────────────────────────┘
 
-**Phase 1 ~ 4 各 Phase 的检测结果格式**
+**Phase 1 ~ 3 各 Phase 的检测结果格式**
 （统一使用以下模板，替换 N 和 name）：
 
 ```
@@ -199,8 +205,12 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 |------------|---------|-------------|-------------|
 | Phase 1 | cleaned.csv 存在 | data-prep (重入刷新), next-step | data-prep (继续清洗) |
 | Phase 2 | 04_Outputs/ 非空 | analysis (继续分析), next-step | analysis (开始分析) |
-| Phase 3 | manuscript.md 存在 | writing (继续撰写), next-step | writing (开始撰写) |
-| Phase 4 | final/ 有输出 | review (继续修改), 全部完成庆祝 | review (开始审稿) |
+| Phase 3 | manuscript.md 存在 | 核心管线完成；建议 improving / coverletter / review 工具 | writing (继续撰写) |
+
+**Phase 3 完成后（核心管线终点）**：不再有 Phase 4。建议独立工具（均需已有手稿）——
+- `improving`：自审并直接修稿（可反复）
+- `coverletter`：按目标期刊生成投稿信
+- `review`：投稿后，录入真实审稿意见并回复+修稿
 
 **Phase 2 的特殊处理:**
 在建议 analysis 命令时，检测 `project_config.yml analysis_plan.waves`：如果 `waves: {}`（空），在建议中注明"尚未定义 Wave 结构，需要从基线描述开始"；如果 waves 非空，注明"已有 {N} 个 Wave，继续分析"。
@@ -246,6 +256,6 @@ Phase 4: -d 05_Manuscript/final && ls 05_Manuscript/final/ 非空
 - 带 NL 输入时正确推断意图并路由到对应命令
 - NL 推断失败时正确回退到无参行为（显示状态摘要）
 - 路由后等待用户确认，不自动执行目标命令
-- 所有 8 个命令的路由映射完整（init, data-prep, analysis, writing, review, next-step, milestone, data2idea）
+- 命令路由映射完整（init, data-prep, analysis, writing, improving, coverletter, review, next-step, milestone, data2idea）
 - 不匹配停用词（"看"、"查"、"项目"、"做"）
 </success_criteria>

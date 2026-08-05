@@ -60,7 +60,7 @@ claude plugin install clinpub
 | `milestone` | Phase gate review |
 | `next-step` | Auto-advance to next phase |
 | `do` | Workspace state router |
-| `modify` | Modify analysis outputs |
+| `modify` | Modify analysis outputs or add new analysis methods |
 | `overview` | Command reference |
 
 ## 🏗️ Architecture

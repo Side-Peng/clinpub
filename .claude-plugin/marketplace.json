@@ -9,8 +9,8 @@
       "name": "clinpub",
       "displayName": "ClinPub — Clinical Publication Pipeline",
       "source": "./claude-code/",
-      "description": "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Reads CSV/XLSX data, runs R-based statistical analysis, generates publication-grade figures, searches literature (PubMed), writes IMRAD manuscripts, and simulates peer review.",
-      "version": "2.2.1",
+      "description": "End-to-end clinical data analysis and publication pipeline that adapts to any clinical research article type. Reads CSV/XLSX data, runs R-based statistical analysis, generates publication-grade figures, searches literature (PubMed), writes IMRAD manuscripts, and supports post-writing improvement, cover-letter generation, and post-submission reviewer response.",
+      "version": "2.3.0",
       "author": {
         "name": "Side-Peng",
         "email": "1304916798@qq.com"

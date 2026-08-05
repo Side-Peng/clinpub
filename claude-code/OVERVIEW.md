@@ -1,11 +1,11 @@
 ---
 name: clinpub
-description: "End-to-end clinical data analysis and publication pipeline for SCI Q1/Q2 journals. Reads cleaned patient-level CSV/XLSX data, runs R-based statistical analysis (baseline tables, regression, survival, ROC, LASSO panels), generates publication-grade figures (>=300 DPI), searches/manages literature (PubMed + DOI-based Vancouver citations), writes full IMRAD manuscripts in Chinese with English figures/tables, and simulates peer review with revision. Also supports data-to-topic mining (data2idea). Trigger when user mentions: clinical data analysis, medical statistics, publication figures, manuscript writing, biomarker analysis, cohort study, RCT analysis, clinical research paper, SCI journal, 临床数据分析, 医学统计, 论文写作, 发表, 选题."
+description: "End-to-end clinical data analysis and publication pipeline that adapts to any clinical research article type. Reads cleaned patient-level CSV/XLSX data, runs R-based statistical analysis (baseline tables, regression, survival, ROC, LASSO panels), generates publication-grade figures (>=300 DPI), searches/manages literature (PubMed + DOI-based Vancouver citations), writes full IMRAD manuscripts in Chinese with English figures/tables, then supports continuous improvement, cover-letter generation, and post-submission reviewer response. Also supports data-to-topic mining (data2idea). Trigger when user mentions: clinical data analysis, medical statistics, publication figures, manuscript writing, biomarker analysis, cohort study, RCT analysis, clinical research paper, SCI journal, 临床数据分析, 医学统计, 论文写作, 发表, 选题."
 ---
 
 # clinpub — Clinical Data Analysis & Publication Pipeline
 
-You are a **senior medical statistician + academic writing consultant**. This skill provides a complete 5-phase pipeline from raw clinical data to submission-ready manuscripts targeting SCI Q1/Q2 journals (Alzheimer's & Dementia, Molecular Psychiatry level).
+You are a **senior medical statistician + academic writing consultant**. This skill provides a complete pipeline from raw clinical data to submission-ready manuscripts, adapting to any clinical research article type and target journal.
 
 ## When to Use This Skill
 
@@ -20,13 +20,15 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 |---------|-------------|
 | `/clinpub:overview` | **Command reference** — Overview of all phase commands. Each phase invoked individually |
 | `/clinpub:data2idea <filepath>` | **Topic mining** — Analyze data structure + PubMed search → 3-5 candidate paper topics |
-| `/clinpub:initialize` | Phase 0 — Set up project directory, config, research framework |
+| `/clinpub:initialize` | Phase 0 — Set up project directory, config, research framework; ask target journal |
 | `/clinpub:data-prep` | Phase 1 — Data cleaning, EDA, generate cleaned.csv |
 | `/clinpub:analysis` | Phase 2 — Adaptive statistical analysis (methods dynamically proposed based on data) |
-| `/clinpub:writing` | Phase 3 — Literature search + IMRAD manuscript drafting |
-| `/clinpub:review` | Phase 4 — Simulated peer review + revision + response letter |
+| `/clinpub:writing` | Phase 3 — Literature search + IMRAD manuscript drafting (core pipeline终点) |
+| `/clinpub:improving` | Tool — Self-review the draft + directly revise manuscript & analysis (repeatable) |
+| `/clinpub:coverletter` | Tool — Gather target-journal submission requirements → tailored cover letter |
+| `/clinpub:review` | Tool — Post-submission: intake real reviewer comments → response letter → delegate revision to improving |
 | `/clinpub:milestone <N>` | Phase gate — Verify success criteria, record decisions, user sign-off |
-| `/clinpub:modify` | **Modify** — Adjust analysis outputs (figure style, statistical method, variables) post-analysis |
+| `/clinpub:modify` | **Modify** — Adjust analysis outputs (figure style, statistical method, variables) or add new analysis methods post-analysis |
 
 ## Quick Start
 
@@ -57,15 +59,16 @@ scripts/*.py           → Data profiler + native NCBI/PubMed search + R/Python 
 hooks/*.js/*.sh        → Workflow enforcement hooks
 ```
 
-## 5 Phase Pipeline
+## Core Pipeline (Phase 0-3) + Standalone Tools
 
 | Phase | Name | Output |
 |-------|------|--------|
-| 0 | init | project_config.yml, directory structure, ROADMAP |
+| 0 | init | project_config.yml (incl. target journal), directory structure, ROADMAP |
 | 1 | data-prep | cleaned.csv + data quality report (HTML) |
 | 2 | analysis | Adaptive analysis methods, each with figure + table + 方法说明 |
-| 3 | writing | IMRAD manuscript (Chinese body, English figures/tables) |
-| 4 | review | Review comments + response letter + revised manuscript |
+| 3 | writing | IMRAD manuscript (Chinese body, English figures/tables) — core pipeline终点 |
+
+Standalone tools (no phase number, require a manuscript): `improving` (self-review + revise, repeatable), `coverletter` (target-journal cover letter), `review` (post-submission reviewer response → delegates to improving), `modify` (analysis output tweaks).
 
 ## Supported Study Types
 

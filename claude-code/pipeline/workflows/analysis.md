@@ -157,7 +157,7 @@ Discuss the proposed plan with user and finalize:
    - If user has no preference, keep `auto` (backward compatible)
    - Write confirmed values to `project_config.yml` under `quality.color_palette`
 
-<!-- 方法搜索触发（Phase 4 方法增强） -->
+<!-- 方法搜索触发（improving/review 工具触发的方法增强） -->
 **方法搜索提示：**
 如果用户提到不熟悉的统计方法（如"这个方法我不太熟悉"、"帮我查一下 XX 检验"），
 在讨论过程中自动触发 `reference-agent` 的 `method_search` 模式（见 `agents/reference-agent.md §method_search`）：
@@ -263,7 +263,7 @@ for wave_num in sorted(analysis_plan.waves.keys()):
 ```
 
 Each method execution:
-1. Creates directory `03_AnalysisMethods/{id}/` and `04_Outputs/{id}/` (see r_patterns.md §1.7)
+1. Creates directory `03_AnalysisMethods/{id}/` and `04_Outputs/{id}/` — **both must be created together**, never one without the other. Method ID must follow `{NN}_{MethodName}` format (e.g., `06_SensitivityAnalysis`), bare underscore prefix like `_sensitivity` is prohibited.
 2. Generates R/Python code based on the method's `type`, `method`, and `formula` fields
    - **Mandatory**: Every R script must `source("04_Outputs/_figure_config.R")` after `library()` calls
    - **Prohibited**: Redefining `theme_pub`, `get_palette`, `save_figure` etc. in method scripts
@@ -273,9 +273,9 @@ Each method execution:
 
 **After all waves execute**, proceed to `verify_outputs`.
 
-**During Phase 3 (writing) or Phase 4 (review):** If the user requests additional analyses, create a new wave and execute it. Append to the plan:
+**During Phase 3 (writing) or via the post-writing improving / review tools:** If the user requests additional analyses (e.g., driven by self-review or reviewer comments), create a new wave and execute it. Append to the plan:
 ```yaml
-# Appended during Phase 4
+# Appended during a post-writing improving/review pass
     4:
       label: "审稿人要求补充分析"
       methods:
@@ -296,6 +296,7 @@ After all waves complete, final verification:
 5. R version and key package versions documented
 6. MANIFEST.yaml exists in `04_Outputs/` listing writer-agent as consumer
 7. **Shared config check**: `04_Outputs/_figure_config.R` exists and every R script in `03_AnalysisMethods/` contains `source("04_Outputs/_figure_config.R")` (verify via grep)
+8. **Directory consistency check**: `03_AnalysisMethods/` and `04_Outputs/` must have matching subdirectory names — every method directory in one must exist in the other
 
 If manifest is missing, write it here: `04_Outputs/MANIFEST.yaml` documenting each method's outputs and statistics.
 </step>

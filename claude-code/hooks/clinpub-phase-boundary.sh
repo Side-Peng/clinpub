@@ -92,12 +92,6 @@ check_data_exists() {
         return 1
       fi
       ;;
-    4)
-      if [ ! -f "$PROJECT_DIR/$MANUSCRIPT_FILE" ]; then
-        echo -e "${RED}BLOCK: $MANUSCRIPT_FILE not found. Complete Phase 3 writing first.${NC}"
-        return 1
-      fi
-      ;;
   esac
 
   return 0
@@ -111,7 +105,7 @@ main() {
   command=$(echo "$input" | grep -o '"command":"[^"]*"' | head -1 | cut -d'"' -f4 2>/dev/null || echo "")
 
   if [ -z "$command" ]; then
-    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","decision":"allow"}}'
+    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow"}}'
     exit 0
   fi
 
@@ -119,7 +113,7 @@ main() {
   if [ -f "$STATE_FILE" ] && grep -q "import_mode:.*true" "$STATE_FILE" 2>/dev/null; then
     # Only bypass if STATE.md has full structure (not crash residue)
     if grep -qE "阶段：Phase\s*[0-9]+" "$STATE_FILE" 2>/dev/null; then
-      echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","decision":"allow"}}'
+      echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow"}}'
       exit 0
     fi
     # Crash residue: fall through to normal phase boundary checks
@@ -131,32 +125,32 @@ main() {
     target_phase=2
   elif echo "$command" | grep -qi "data_prep\|preprocess\|clean.*data\|$PREPROCESSED_DIR"; then
     target_phase=1
-  elif echo "$command" | grep -qi "manuscript\|writing\|05_Manuscript"; then
+  elif echo "$command" | grep -qi "manuscript\|writing\|05_Manuscript\|review\|final"; then
+    # Phase 3 owns 05_Manuscript. Post-writing tools (improving / coverletter / review)
+    # also operate on the manuscript and require Phase 3 to be reached.
     target_phase=3
-  elif echo "$command" | grep -qi "review\|final"; then
-    target_phase=4
   fi
 
   if [ "$target_phase" -lt 0 ]; then
-    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","decision":"allow"}}'
+    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow"}}'
     exit 0
   fi
 
   if ! check_phase_boundary "$target_phase" >/dev/null 2>&1; then
     local reason
     reason=$(check_phase_boundary "$target_phase" 2>&1 | grep "BLOCK:" | head -1)
-    echo "{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"decision\":\"block\",\"reason\":\"$reason\"}}" >&2
+    echo "{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"additionalContext\":\"$reason\"}}" >&2
     exit 2
   fi
 
   if ! check_data_exists "$target_phase" >/dev/null 2>&1; then
     local reason
     reason=$(check_data_exists "$target_phase" 2>&1 | grep "BLOCK:" | head -1)
-    echo "{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"decision\":\"block\",\"reason\":\"$reason\"}}" >&2
+    echo "{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"additionalContext\":\"$reason\"}}" >&2
     exit 2
   fi
 
-  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","decision":"allow"}}'
+  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow"}}'
 }
 
 main

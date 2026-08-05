@@ -45,8 +45,8 @@ grep -A 100 "analysis_plan:" project_config.yml | grep -E "^\s+\d+:" | wc -l
 </interfaces>
 
 <execution_context>
-@./pipeline/references/checkpoints.md
-@./pipeline/templates/milestone.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/checkpoints.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/templates/milestone.md"`
 </execution_context>
 
 <process>
@@ -192,25 +192,17 @@ Phase 2 (统计分析) — 当前 Wave 未完成
 ```
 ```
 
-### 2.4 Phase 3 验证（手稿撰写）
+### 2.4 Phase 3 验证（手稿撰写 — 核心管线终点）
 
 ```
 验证：
   - 05_Manuscript/manuscript.md 存在
   - 05_Manuscript/ 下至少有一个完整的 IMRAD 章节
 
-通过 → 跳转到「4. 推进到下一 Phase」
-不通过 → 输出未完成项列表
-```
-
-### 2.5 Phase 4 验证（同行评审）
-
-```
-验证：
-  - 05_Manuscript/final/ 下至少有一个经过修改的终稿
-  - 响应函（response letter）存在
-
-通过 → 输出庆祝信息: "所有 Phase 已完成！🎉"
+通过 → 核心管线完成（Phase 3 为最后一个编号阶段）。输出完成信息并建议独立工具：
+  - /clinpub:improving   → 自审并直接修稿（可反复）
+  - /clinpub:coverletter → 按目标期刊生成投稿信
+  - /clinpub:review      → 投稿后，录入真实审稿意见并回复 + 修稿
 不通过 → 输出未完成项列表
 ```
 
@@ -247,15 +239,11 @@ elif CURRENT_PHASE == 2:
     推进到下一 Phase（Phase 3）+ 警告
 
 elif CURRENT_PHASE == 3:
-  # Phase 3 无 Wave 结构 → 直接推进到 Phase 4
-  推进到下一 Phase（Phase 4）
-
-elif CURRENT_PHASE == 4:
-  # Phase 4 是最后一个 Phase
+  # Phase 3 是最后一个编号阶段（核心管线终点），无下一 Phase
   if ALL_COMPLETED:
-    输出: "🎉 恭喜！所有 Phase 已完成！"
+    输出: "🎉 核心管线已完成（Phase 0-3）。后续可用独立工具：improving（改进）/ coverletter（投稿信）/ review（投稿后审稿回复）。"
   else:
-    输出: "Phase 4 未完成，请继续 /clinpub:review"
+    输出: "Phase 3 未完成，请继续 /clinpub:writing"
 ```
 
 ### 3.2 Wave 推进（同 Phase 内）
@@ -353,7 +341,7 @@ MILESTONE_PATH=".clinpub/phases/{N}-{phase-slug}/MILESTONE.md"
 - Phase 1 (数据清洗): {✅ 已完成 / ⏳ 未完成 / —}
 - Phase 2 (统计分析): {✅ 已完成 / ⏳ 进行中 / —}
 - Phase 3 (手稿撰写): {✅ 已完成 / ⏳ 进行中 / —}
-- Phase 4 (同行评审): {✅ 已完成 / ⏳ 进行中 / —}
+- 独立工具 (改进/投稿信/审稿回复): {可用 / —}
 
 ---
 
@@ -364,12 +352,12 @@ MILESTONE_PATH=".clinpub/phases/{N}-{phase-slug}/MILESTONE.md"
 
 | 场景 | `/clear` 后执行 | 进度总结示例 |
 |------|----------------|-------------|
-| Wave 推进 (Phase 2) | `/clinpub:analysis` — 继续下一 Wave 分析 | Phase 1 ✅ \| Phase 2 ⏳ Wave 2 \| Phase 3-4 ⏳ |
-| Phase 0→1 推进 | `/clinpub:data-prep` — 进入数据清洗 | Phase 1 ⏳ 当前 \| Phase 2-4 ⏳ |
-| Phase 1→2 推进 | `/clinpub:analysis` — 进入统计分析 | Phase 1 ✅ \| Phase 2 ⏳ 当前 \| Phase 3-4 ⏳ |
-| Phase 2→3 推进 | `/clinpub:writing` — 进入手稿撰写 | Phase 1 ✅ \| Phase 2 ✅ \| Phase 3 ⏳ 当前 \| Phase 4 ⏳ |
-| Phase 3→4 推进 | `/clinpub:review` — 进入同行评审 | Phase 1-3 ✅ \| Phase 4 ⏳ 当前 |
-| 全部完成 | `/clinpub:milestone 4` — 最终签字 | 全部 ✅ 🎉 |
+| Wave 推进 (Phase 2) | `/clinpub:analysis` — 继续下一 Wave 分析 | Phase 1 ✅ \| Phase 2 ⏳ Wave 2 \| Phase 3 ⏳ |
+| Phase 0→1 推进 | `/clinpub:data-prep` — 进入数据清洗 | Phase 1 ⏳ 当前 \| Phase 2-3 ⏳ |
+| Phase 1→2 推进 | `/clinpub:analysis` — 进入统计分析 | Phase 1 ✅ \| Phase 2 ⏳ 当前 \| Phase 3 ⏳ |
+| Phase 2→3 推进 | `/clinpub:writing` — 进入手稿撰写 | Phase 1 ✅ \| Phase 2 ✅ \| Phase 3 ⏳ 当前 |
+| Phase 3 完成（核心终点） | `/clinpub:improving`（改进）/ `/clinpub:coverletter`（投稿信）/ `/clinpub:review`（投稿后） | Phase 1-3 ✅ 🎉 核心完成 |
+| 阶段签字 | `/clinpub:milestone <N>` — 阶段关卡签字 | 对应 Phase ✅ |
 
 ### 5.3 STATE.md 同步
 

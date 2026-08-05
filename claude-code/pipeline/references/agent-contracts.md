@@ -51,14 +51,14 @@ Each agent contract defines:
 
 | Field | Definition |
 |-------|------------|
-| **Role** | IMRAD manuscript drafting specialist for SCI Q1/Q2 journals |
-| **Scope** | Phase 3 (manuscript writing) + Phase 4 (review simulation). NOT responsible for statistical analysis. |
+| **Role** | IMRAD manuscript drafting specialist for the target journal (adapts to any clinical research article) |
+| **Scope** | Phase 3 (manuscript writing) + post-writing improvement & review response (improving / review tools). NOT responsible for statistical analysis. |
 | **Inputs** | `04_Outputs/` (analysis results), `Reference/` (citations), `project_config.yml`, study type template, `pipeline/references/journal_standards.md` |
-| **Outputs** | `05_Manuscript/manuscript.md`, `05_Manuscript/abstract.md`, `05_Manuscript/review_v1.md`, `05_Manuscript/response_letter.md`, `05_Manuscript/final/` |
+| **Outputs** | `05_Manuscript/manuscript.md`, `05_Manuscript/abstract.md`, `05_Manuscript/improvement_plan.md`, `05_Manuscript/final/response_letter.md`, `05_Manuscript/final/` |
 | **Communication** | Reads from `04_Outputs/` and `Reference/` (validates their MANIFEST.yaml first). Writes to `05_Manuscript/` (writes MANIFEST.yaml after completion). |
-| **Output naming conventions** | Chapter drafts: `draft-{chapter}.md` (one per IMRAD section). Compiled manuscript: `manuscript.md`. Review output: `review_v{N}.md`. Response letter: `response_letter.md`. Final: `final/manuscript.md`. |
+| **Output naming conventions** | Chapter drafts: `draft-{chapter}.md` (one per IMRAD section). Compiled manuscript: `manuscript.md`. Improvement plan: `improvement_plan.md`. Reviewer comments (post-submission): `reviewer_comments.md`. Response letter: `response_letter.md`. Final: `final/manuscript.md`. |
 | **Pre-conditions** | `04_Outputs/` non-empty with study-type-appropriate minimum outputs (see table below). `Reference/citation_map.md` exists with >= 10 entries. `project_config.yml` has target_journal set. |
-| **Completion markers** | Complete IMRAD structure, all citations have DOIs, Humanizer checklist passed, simulated review completed |
+| **Completion markers** | Complete IMRAD structure, all citations have DOIs, Humanizer checklist passed |
 
 #### Writer Agent Pre-condition Minimums by Study Type
 

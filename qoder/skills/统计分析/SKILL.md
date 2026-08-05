@@ -211,6 +211,8 @@ for wave_num in sorted(analysis_plan.waves.keys()):
 ### 每个方法执行流程
 
 1. 创建目录 `03_AnalysisMethods/{id}/` 和 `04_Outputs/{id}/`
+   - **强制**: 两个目录必须同时创建，缺一不可
+   - 方法 ID 必须遵循 `{NN}_{MethodName}` 格式（如 `01_BaselineTable`），禁止使用裸下划线前缀（如 `_sensitivity`）
 2. 生成 R/Python 代码:
    - **强制**: 每个 R 脚本在 `library()` 后立即 `source("04_Outputs/_figure_config.R")`
    - **禁止**: 在方法脚本中重新定义共享函数
@@ -250,6 +252,7 @@ for wave_num in sorted(analysis_plan.waves.keys()):
 5. R 版本和关键包版本已记录
 6. MANIFEST.yaml 存在于 `04_Outputs/`
 7. **共享配置检查**: `_figure_config.R` 存在且每个 R 脚本包含 source 语句
+8. **目录一致性检查**: `03_AnalysisMethods/` 与 `04_Outputs/` 的子目录必须一一对应，无缺失
 
 ---
 
@@ -317,8 +320,8 @@ Phase 2 核验完成
 - 始终从 cleaned.csv 读取——不从原始数据或中间文件读取
 - 报告效应量 + 95%CI + 精确 p 值
 - 应用 FDR/Bonferroni 多重比较校正
-- 目录编号遵循用户确认顺序
-- 每个 R 脚本必须先创建输出目录: `dir.create("04_Outputs/XX_Method", recursive = TRUE, showWarnings = FALSE)`
+- 方法 ID 必须遵循 `{NN}_{MethodName}` 格式（如 `01_BaselineTable`），禁止使用裸下划线前缀（如 `_sensitivity`）
+- 每个 R 脚本必须先创建输出目录：`dir.create("04_Outputs/{id}/", ..., showWarnings = FALSE)` 和 `dir.create("03_AnalysisMethods/{id}/", ..., showWarnings = FALSE)`，两个目录必须同时创建
 - 每个 R 脚本必须 `source("04_Outputs/_figure_config.R")`
 
 ---

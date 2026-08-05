@@ -38,14 +38,14 @@ Phase 3: IMRAD manuscript writing with dual-mode support.
 </objective>
 
 <execution_context>
-@./pipeline/workflows/writing.md
-@./pipeline/references/journal_standards.md
-@./pipeline/references/reference-library.md
-@./pipeline/contexts/writing.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/writing.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/journal_standards.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/reference-library.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/contexts/writing.md"`
 </execution_context>
 
 <process>
-Execute the writing workflow from @./pipeline/workflows/writing.md end-to-end.
+Execute the writing workflow from pipeline/workflows/writing.md end-to-end.
 
 关键决策步骤（必须依次执行，不可跳过）：
 

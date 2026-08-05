@@ -115,19 +115,19 @@ function main() {
 
       // Only guard Read operations on data files
       if (tool_name !== "Read") {
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
         return;
       }
 
       const filePath = tool_input.file_path;
       if (!filePath || !isDataFile(filePath)) {
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
         return;
       }
 
       // Check file exists and is readable
       if (!fs.existsSync(filePath)) {
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
         return;
       }
 
@@ -143,17 +143,17 @@ function main() {
           JSON.stringify({
             hookSpecificOutput: {
               hookEventName: "PreToolUse",
-              decision: "allow",
+              permissionDecision: "allow",
               additionalContext: `Warning: Potential prompt injection detected in ${path.basename(filePath)}. Suspicious patterns found at: ${summary}. Proceed with caution and verify file contents manually.`
             }
           })
         );
       } else {
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
       }
     } catch (e) {
       // On error, allow (don't break workflow)
-      console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+      console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
     }
   });
 }

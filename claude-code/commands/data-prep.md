@@ -19,7 +19,7 @@ Supports re-entry: if project_config.yml exists with valid fields, auto-refreshe
 </objective>
 
 <execution_context>
-@./pipeline/workflows/data-prep.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/data-prep.md"`
 </execution_context>
 
 <process>
@@ -36,7 +36,7 @@ Supports re-entry: if project_config.yml exists with valid fields, auto-refreshe
 4. **如果任何检查不通过** -> 输出 "未检测到完整项目配置，进入全新数据清洗流程"，然后进入正常的 data-prep 工作流
 5. 注意：不添加任何 PreToolUse hook 逻辑（D-07），所有检测在命令层面完成
 
-Execute the data-prep workflow from @./pipeline/workflows/data-prep.md end-to-end.
+Execute the data-prep workflow from pipeline/workflows/data-prep.md end-to-end.
 </process>
 
 <success_criteria>

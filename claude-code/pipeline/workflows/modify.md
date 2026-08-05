@@ -1,10 +1,10 @@
 ---
 name: modify
-description: "Ad-hoc modification orchestration: Load analysis context → define modifications with user → execute changes → verify outputs → update PLAN.md. Supports figure style adjustments and statistical method changes on completed Phase 2 outputs."
+description: "Ad-hoc modification orchestration: Load analysis context → define modifications with user → execute changes → verify outputs → update PLAN.md. Supports figure style adjustments, statistical method changes, and new analysis method addition on completed Phase 2 outputs."
 ---
 
 <purpose>
-Enable targeted modifications to analysis outputs after Phase 2 completion. Orchestrate the modify-agent through a structured define→execute→verify→record cycle. Can be invoked from any phase (Phase 2, 3, or 4) when the user needs to adjust analysis results.
+Enable targeted modifications to analysis outputs after Phase 2 completion, including adding new analysis methods that conform to clinpub conventions (read existing code and data first, then implement). Orchestrate the modify-agent through a structured define→execute→verify→record cycle. Can be invoked from any phase (Phase 2, 3, or 4) when the user needs to adjust analysis results or add new analyses.
 </purpose>
 
 <required_reading>
@@ -63,6 +63,8 @@ echo "Pre-modification baseline: $PRE_MODIFY_HASH"
 
 Execution order: style changes first (low risk), then variable changes, then method changes, then new methods. This ordering minimizes cascading failures.
 
+**For new methods**: Method ID must follow `{NN}_{MethodName}` format (e.g., `06_SensitivityAnalysis`), bare underscore prefix like `_sensitivity` is prohibited. Both `03_AnalysisMethods/{id}/` and `04_Outputs/{id}/` must be created together.
+
 If a modification requires a package not installed, report and skip. Do not auto-install packages.
 </step>
 
@@ -81,6 +83,8 @@ For each successfully modified method:
 If verification fails for any modification:
 - Report the specific failure
 - Offer to re-run that modification or skip it
+
+**New method post-verification**: Confirm `03_AnalysisMethods/{id}/` and `04_Outputs/{id}/` both exist — if one is missing, create it immediately.
 </step>
 
 <step name="cascade_manuscript_update" priority="medium">

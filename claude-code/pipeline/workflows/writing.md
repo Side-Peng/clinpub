@@ -4,7 +4,7 @@ description: "Phase 3 orchestration: IMRAD manuscript pipeline with two modes. S
 ---
 
 <purpose>
-Draft a complete IMRAD manuscript in Chinese (English figures/tables) targeting SCI Q1/Q2 journals. Two-agent workflow: Reference Agent conducts literature search, Writer Agent writes following the appropriate study type template.
+Draft a complete IMRAD manuscript in Chinese (English figures/tables) tailored to the target journal set at initialization (adapts to any clinical research article type). Two-agent workflow: Reference Agent conducts literature search, Writer Agent writes following the appropriate study type template.
 </purpose>
 
 <required_reading>
@@ -403,15 +403,15 @@ If user requests changes, address them. If approved, proceed to milestone.
 </step>
 
 <step name="milestone" priority="high">
-Execute the milestone workflow to formally close Phase 3 and gate into Phase 4:
+Execute the milestone workflow to formally close Phase 3 — the final numbered phase (core pipeline complete):
 
 ```bash
 # The milestone workflow will:
 # 1. Verify success criteria for Phase 3
 # 2. Collect writing decisions (study type template, target journal)
 # 3. Generate .clinpub/phases/03-writing/MILESTONE.md
-# 4. Update ROADMAP.md: Phase 3 → ✅ Complete, Phase 4 → 🔄 In Progress
-# 5. Update STATE.md: current_phase → 4
+# 4. Update ROADMAP.md: Phase 3 → ✅ Complete (core pipeline complete)
+# 5. Update STATE.md: mark Phase 3 complete
 # 6. Request user sign-off
 ```
 
@@ -419,9 +419,12 @@ See @./pipeline/workflows/milestone.md for full protocol.
 
 <output name="signoff_prompt" format="user_facing">
 ────────────────────────────────
-✅ Phase 3 核验完成
+✅ Phase 3 核验完成 — 核心管线完成（Phase 0-3）
 
-请确认：输入 "approved" 进入 Phase 4（审稿模拟），或描述需要调整的地方。
+请确认：输入 "approved" 收尾。手稿完成后可按需使用独立工具：
+- /clinpub:improving   → 自审并直接改进稿件（可反复）
+- /clinpub:coverletter → 按目标期刊生成投稿信
+- /clinpub:review      → 投稿后，录入真实审稿意见并回复 + 修稿
 ────────────────────────────────
 </output>
 </step>

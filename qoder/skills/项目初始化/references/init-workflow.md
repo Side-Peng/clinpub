@@ -109,11 +109,13 @@ variables:
 
 paths:
   raw_data: "01_RawData"
-  preprocessed_data: "02_PreprocessedData"
-  analysis_methods: "03_AnalysisMethods"
+  preprocessed: "02_PreprocessedData"
+  methods: "03_AnalysisMethods"
   outputs: "04_Outputs"
   reference: "Reference"
   manuscript: "05_Manuscript"
+  progress: "06_ProgressReports"
+  global: "00_Global"
 
 methods_to_run:
   - id: "01_BaselineTable"

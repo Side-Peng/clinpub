@@ -4,10 +4,10 @@
 
 ### 临床数据分析与发表管线
 
-*面向 SCI Q1/Q2 期刊的端到端临床数据分析与发表加速器。*
+*适配各类临床研究文章的端到端临床数据分析与发表加速器。*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](CHANGELOG.md)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Node](https://img.shields.io/badge/Node-%3E%3D22.0.0-green.svg)](package.json)
 
@@ -29,13 +29,14 @@
 
 **clinpub** 扮演**资深医学统计学家 + 学术写作顾问**。处理已整理的患者级数据（每行一个患者，每列一个变量），输出统计结果、出版级图表和可投稿论文。
 
-**目标期刊**: Alzheimer's & Dementia, Molecular Psychiatry 及其他 SCI Q1/Q2 期刊。
+**适用范围**: 适配 RCT、队列、病例对照、横断面、描述性等各类临床研究文章；目标期刊在初始化时由用户指定，不预设。
 
 ---
 
 ## 功能特性
 
-- **5 阶段管线**: 初始化 → 数据准备 → 统计分析 → 论文撰写 → 审稿修稿，阶段间设有里程碑关卡
+- **4 阶段核心管线**: 初始化 → 数据准备 → 统计分析 → 论文撰写，阶段间设有里程碑关卡；写作完成即核心里程碑
+- **投稿后期工具**: `improving`（自审改进）、`coverletter`（按目标期刊生成投稿信）、`review`（投稿后处理真实审稿意见）——均为随时可调用的独立工具
 - **8 个专业 AI 智能体**: 选题挖掘、数据清洗、统计分析、文献检索、论文撰写、验证、规划、修改
 - **自适应分析**: 根据数据特征（分组、时间点、结局类型）动态推荐统计方法
 - **出版级输出**: ≥300 DPI 图表，可自定义 `theme_pub()` 主题与配色方案，Vancouver 引用格式含 DOI
@@ -90,8 +91,10 @@ claude --plugin-dir ./clinpub/claude-code
 /clinpub:initialize                   # 阶段 0：项目初始化
 /clinpub:data-prep              # 阶段 1：数据准备
 /clinpub:analysis               # 阶段 2：统计分析
-/clinpub:writing                # 阶段 3：论文撰写
-/clinpub:review                 # 阶段 4：审稿修稿
+/clinpub:writing                # 阶段 3：论文撰写（核心管线终点）
+/clinpub:improving              # 工具：自审 + 直接改进稿件与分析（可反复）
+/clinpub:coverletter            # 工具：按目标期刊生成投稿信
+/clinpub:review                 # 工具：投稿后，处理真实审稿意见
 /clinpub:milestone <N>          # 阶段关卡评审
 ```
 
@@ -106,8 +109,8 @@ claude --plugin-dir ./clinpub/claude-code
 ### 三层架构
 
 ```
-用户 → 命令 (commands/*.md — 11 个入口)
-       → 工作流 (pipeline/workflows/*.md — 10 个编排文件)
+用户 → 命令 (commands/*.md — 13 个入口)
+       → 工作流 (pipeline/workflows/*.md — 12 个编排文件)
          → 智能体 (agents/*.md — 8 个专业智能体，每次独立上下文)
            → 脚本 (scripts/*.py — 数据画像 + 内置 NCBI/PubMed 检索 + R/Python 工具)
            → 钩子 (hooks/ — 3 个 PreToolUse 守卫)
@@ -118,10 +121,10 @@ claude --plugin-dir ./clinpub/claude-code
 ```
 clinpub/
 ├── .claude-plugin/             # 插件清单 (plugin.json)
-├── commands/                   # 11 个命令入口
+├── commands/                   # 13 个命令入口
 ├── agents/                     # 8 个 AI 智能体
 ├── pipeline/
-│   ├── workflows/              # 10 个阶段编排文件
+│   ├── workflows/              # 12 个阶段/工具编排文件
 │   ├── references/             # 15 个参考文档
 │   ├── templates/              # 18 个模板（含 5 种研究类型）
 │   └── contexts/               # 2 个上下文配置
@@ -134,7 +137,7 @@ clinpub/
 ├── CHANGELOG.md                # 版本历史
 ├── CONTRIBUTING.md             # 贡献指南
 ├── INSTALL.md                  # 安装指南
-└── package.json                # npm 元数据 (v2.2.0)
+└── package.json                # npm 元数据 (v2.3.0)
 ```
 
 ### 用户项目目录
@@ -147,7 +150,7 @@ Project_Root/
 ├── 03_AnalysisMethods/         # 阶段 2 — 方法代码 + 方法说明
 ├── 04_Outputs/                 # 阶段 2 — 图表输出
 ├── Reference/                  # 阶段 3 — 文献
-├── 05_Manuscript/              # 阶段 3-4 — IMRAD 论文各章节
+├── 05_Manuscript/              # 阶段 3 — IMRAD 论文各章节；投稿工具产出投稿信/审稿回复/final
 └── project_config.yml          # 项目配置
 ```
 
@@ -160,11 +163,11 @@ Project_Root/
 | **Topic Miner Agent** | Python | 选题挖掘：数据画像、文献扫描、候选选题生成 |
 | **Analyst Agent** | R / Python | 数据清洗、统计分析、图表生成 |
 | **Reference Agent** | Python | 文献检索（PubMed）、PDF 阅读、引用管理 |
-| **Writer Agent** | — | IMRAD 论文撰写、图表整合、模拟审稿 |
+| **Writer Agent** | — | IMRAD 论文撰写、图表整合、改进修订与审稿回复 |
 | **Clinpub Planner** | — | 研究分析规划与波浪依赖图 |
 | **Clinpub Executor** | R / Python | 计划执行与原子提交 |
 | **Clinpub Verifier** | — | 跨阶段验证（15 种模式） |
-| **Modify Agent** | R | 分析产出修改：图表风格、方法、变量 |
+| **Modify Agent** | R | 分析产出修改：图表风格、方法、变量、新增方法 |
 
 ---
 
@@ -177,10 +180,12 @@ Project_Root/
 | `/clinpub:initialize` | 0 | 项目初始化或导入已有项目 |
 | `/clinpub:data-prep` | 1 | 数据清洗 → cleaned.csv |
 | `/clinpub:analysis` | 2 | 自适应统计分析 |
-| `/clinpub:writing` | 3 | IMRAD 论文撰写 |
-| `/clinpub:review` | 4 | 模拟审稿与修订 |
+| `/clinpub:writing` | 3 | IMRAD 论文撰写（核心管线终点） |
+| `/clinpub:improving` | 工具 | 自审 + 直接改进稿件与分析（可反复） |
+| `/clinpub:coverletter` | 工具 | 按目标期刊生成投稿信 |
+| `/clinpub:review` | 工具 | 投稿后：处理真实审稿意见 → 回复信 → 调用 improving 修稿 |
 | `/clinpub:milestone <N>` | 关卡 | 阶段关卡评审与用户签核 |
-| `/clinpub:modify` | post-2 | 修改分析产出 |
+| `/clinpub:modify` | 工具 | 修改分析产出或新增分析方法 |
 | `/clinpub:do` | — | 智能路由：自动检测状态并分发 |
 | `/clinpub:next-step` | — | 自动推进到下一步 |
 
@@ -195,7 +200,7 @@ Project_Root/
 | 伦理审查 | 阶段 0 → 1 | IRB 审批、去标识化、知情同意 |
 | 数据质量 | 阶段 1 → 2 | cleaned.csv 完整性、缺失率、样本量 |
 | 分析有效性 | 阶段 2 → 3 | 方法执行完整性、效应量报告 |
-| 投稿就绪 | 阶段 4 → 投稿 | IMRAD 完整、图表 ≥300 DPI、引用含 DOI |
+| 投稿就绪 | 投稿前 | IMRAD 完整、图表 ≥300 DPI、引用含 DOI、投稿信就绪 |
 
 ---
 
@@ -213,7 +218,7 @@ Project_Root/
 
 ## 工作流保护
 
-3 个 PreToolUse 钩子保护分析工作流（声明于 `hooks/hooks.json`）：
+3 个 PreToolUse 钩子保护分析工作流（内联声明于 `.claude-plugin/plugin.json`）：
 
 | 钩子 | 触发 | 作用 |
 |---|---|---|
@@ -321,13 +326,14 @@ pandas >= 2.0, numpy >= 1.24, requests >= 2.31, openpyxl >= 3.1
 
 **clinpub** acts as a **senior medical statistician + academic writing consultant**. It processes patient-level data (one patient per row, one variable per column) and outputs statistical results, publication-grade figures, and submission-ready manuscripts.
 
-**Target journals**: Alzheimer's & Dementia, Molecular Psychiatry, and other SCI Q1/Q2 journals.
+**Scope**: Adapts to any clinical research article type (RCT, cohort, case-control, cross-sectional, descriptive). The target journal is specified by the user at initialization — nothing is preset.
 
 ---
 
 ## Features
 
-- **5-phase pipeline**: Init → Data Prep → Analysis → Writing → Review, with milestone gates between phases
+- **4-phase core pipeline**: Init → Data Prep → Analysis → Writing, with milestone gates between phases (writing completes the core pipeline)
+- **Post-writing tools**: `improving` (self-review + revise), `coverletter` (target-journal cover letter), `review` (post-submission reviewer response) — standalone, invocable anytime a manuscript exists
 - **8 specialized AI agents**: Topic mining, data cleaning, statistical analysis, literature search, manuscript writing, verification, planning, and modification
 - **Adaptive analysis**: Dynamically proposes statistical methods based on data characteristics (groups, timepoints, outcome types)
 - **Publication-grade output**: ≥300 DPI figures, customizable `theme_pub()` theme and color palette, Vancouver citations with DOIs
@@ -382,8 +388,10 @@ See [INSTALL.md](INSTALL.md) for detailed instructions.
 /clinpub:initialize                   # Phase 0: Initialize project
 /clinpub:data-prep              # Phase 1: Data cleaning
 /clinpub:analysis               # Phase 2: Statistical analysis
-/clinpub:writing                # Phase 3: Manuscript drafting
-/clinpub:review                 # Phase 4: Peer review simulation
+/clinpub:writing                # Phase 3: Manuscript drafting (core pipeline终点)
+/clinpub:improving              # Tool: self-review + directly revise manuscript & analysis
+/clinpub:coverletter            # Tool: cover letter for the target journal
+/clinpub:review                 # Tool: post-submission — handle real reviewer comments
 /clinpub:milestone <N>          # Phase gate review
 ```
 
@@ -398,8 +406,8 @@ Full tutorial, example data, and FAQ → `docs/getting-started.md`
 ### Three-Layer Design
 
 ```
-USER → COMMANDS (commands/*.md — 11 entry points)
-         → WORKFLOWS (pipeline/workflows/*.md — 10 orchestration files)
+USER → COMMANDS (commands/*.md — 13 entry points)
+         → WORKFLOWS (pipeline/workflows/*.md — 12 orchestration files)
            → AGENTS (agents/*.md — 8 specialized agents, each with fresh context)
              → SCRIPTS (scripts/*.py — data profiler + native NCBI/PubMed search + R/Python tools)
              → HOOKS (hooks/ — 3 PreToolUse guards)
@@ -410,10 +418,10 @@ USER → COMMANDS (commands/*.md — 11 entry points)
 ```
 clinpub/
 ├── .claude-plugin/             # Plugin manifest (plugin.json)
-├── commands/                   # 11 slash command entry points
+├── commands/                   # 13 slash command entry points
 ├── agents/                     # 8 specialized AI agents
 ├── pipeline/
-│   ├── workflows/              # 10 phase orchestration files
+│   ├── workflows/              # 12 phase/tool orchestration files
 │   ├── references/             # 15 reference documents
 │   ├── templates/              # 18 templates (incl. 5 study types)
 │   └── contexts/               # 2 context configurations
@@ -426,7 +434,7 @@ clinpub/
 ├── CHANGELOG.md                # Version history
 ├── CONTRIBUTING.md             # Contribution guidelines
 ├── INSTALL.md                  # Installation guide
-└── package.json                # npm metadata (v2.2.0)
+└── package.json                # npm metadata (v2.3.0)
 ```
 
 ### User Project Directory
@@ -439,7 +447,7 @@ Project_Root/
 ├── 03_AnalysisMethods/         # Phase 2 — Method code + docs
 ├── 04_Outputs/                 # Phase 2 — Figures + tables
 ├── Reference/                  # Phase 3 — Literature
-├── 05_Manuscript/              # Phase 3-4 — IMRAD drafts
+├── 05_Manuscript/              # Phase 3 — IMRAD drafts; post-writing tools add cover letter / reviewer response / final/
 └── project_config.yml          # Central config
 ```
 
@@ -452,11 +460,11 @@ Project_Root/
 | **Topic Miner Agent** | Python | Topic mining: data profiling, literature scan, candidate topic generation |
 | **Analyst Agent** | R / Python | Data cleaning, statistical analysis, figure & table generation |
 | **Reference Agent** | Python | Literature search (PubMed), PDF reading, citation management |
-| **Writer Agent** | — | IMRAD manuscript drafting, figure integration, simulated review |
+| **Writer Agent** | — | IMRAD manuscript drafting, figure integration, improvement & review response |
 | **Clinpub Planner** | — | Research analysis planning with wave dependency graphs |
 | **Clinpub Executor** | R / Python | Plan execution with atomic commits |
 | **Clinpub Verifier** | — | Cross-phase verification (15 modes) |
-| **Modify Agent** | R | Post-analysis modification: figure style, methods, variables |
+| **Modify Agent** | R | Post-analysis modification: figure style, methods, variables, new method addition |
 
 ---
 
@@ -469,10 +477,12 @@ Project_Root/
 | `/clinpub:initialize` | 0 | Project setup or import existing |
 | `/clinpub:data-prep` | 1 | Data cleaning → cleaned.csv |
 | `/clinpub:analysis` | 2 | Adaptive statistical analysis |
-| `/clinpub:writing` | 3 | IMRAD manuscript drafting |
-| `/clinpub:review` | 4 | Peer review simulation + revision |
+| `/clinpub:writing` | 3 | IMRAD manuscript drafting (core pipeline终点) |
+| `/clinpub:improving` | tool | Self-review + directly revise manuscript & analysis (repeatable) |
+| `/clinpub:coverletter` | tool | Gather target-journal submission requirements → cover letter |
+| `/clinpub:review` | tool | Post-submission: real reviewer comments → response letter → delegate revision to improving |
 | `/clinpub:milestone <N>` | gate | Phase gate verification with user sign-off |
-| `/clinpub:modify` | post-2 | Modify analysis outputs |
+| `/clinpub:modify` | tool | Modify analysis outputs or add new analysis methods |
 | `/clinpub:do` | — | Smart router: auto-detect state and route |
 | `/clinpub:next-step` | — | Auto-advance to next step |
 
@@ -487,7 +497,7 @@ Project_Root/
 | IRB / Ethics | Phase 0 → 1 | IRB approval, de-identification, informed consent |
 | Data Quality | Phase 1 → 2 | cleaned.csv integrity, missing rate, sample size |
 | Analysis Validity | Phase 2 → 3 | All methods executed, effect sizes reported |
-| Submission | Phase 4 → Submit | IMRAD complete, figures ≥300 DPI, all citations have DOI |
+| Submission | Pre-submission | IMRAD complete, figures ≥300 DPI, all citations have DOI, cover letter ready |
 
 ---
 
@@ -505,7 +515,7 @@ Project_Root/
 
 ## Hooks
 
-3 PreToolUse hooks protect the analysis workflow (declared in `hooks/hooks.json`):
+3 PreToolUse hooks protect the analysis workflow (declared inline in `.claude-plugin/plugin.json`):
 
 | Hook | Trigger | Purpose |
 |---|---|---|

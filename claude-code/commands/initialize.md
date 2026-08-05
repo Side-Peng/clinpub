@@ -1,6 +1,6 @@
 ---
 name: initialize
-description: "Phase 0: Initialize or import a clinical research project. Detect existing artifacts and import into clinpub structure, or start fresh. Discuss study design, variables, analysis methods with user; generate project_config.yml, directory structure, and .clinpub/ artifacts."
+description: "Phase 0: Initialize or import a clinical research project. Detect existing artifacts and import into clinpub structure, or start fresh. Discuss study design, variables, analysis methods with user, and explicitly ask for the target submission journal (no journal is preset — adapts to any clinical research article); generate project_config.yml, directory structure, and .clinpub/ artifacts."
 argument-hint: ""
 allowed-tools:
   - Read
@@ -16,26 +16,26 @@ Phase 0: Initialize a new clinical research project or import an existing one. I
 </objective>
 
 <execution_context>
-@./pipeline/workflows/init-project.md
-@./pipeline/templates/project.md
-@./pipeline/templates/roadmap.md
-@./pipeline/templates/state.md
-@./pipeline/templates/method-readme.md
-@./pipeline/references/checkpoints.md
-@./pipeline/references/r_patterns.md
-@./pipeline/workflows/import-project.md
-@./pipeline/references/import-heuristics.md
-@./pipeline/templates/import-milestone.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/init-project.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/templates/project.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/templates/roadmap.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/templates/state.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/templates/method-readme.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/checkpoints.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/r_patterns.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/import-project.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/import-heuristics.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/templates/import-milestone.md"`
 </execution_context>
 
 <process>
-Execute the workflow from @./pipeline/workflows/init-project.md
+Execute the workflow from pipeline/workflows/init-project.md
 
 Key steps:
 1. Detect import mode: scan project root for existing research artifacts (CSV/XLSX/PNG/MD/BIB/R/Py files, standard clinpub directories)
 2. IF import mode detected → execute import-project.md workflow (scan → infer roles → confirm mapping → gap analysis → adapt structure → generate config → milestone)
 3. IF no artifacts found → execute standard initialization:
-   a. Discuss research framework with user (study type, variables, analysis methods, target journal)
+   a. Discuss research framework with user (study type, variables, analysis methods); explicitly ask for the target submission journal (name + tier) — do not preset, this pipeline adapts to any clinical research article type
    b. Create standard project directory structure
    c. Generate project_config.yml
    d. Create .clinpub/ planning artifacts (PROJECT.md, ROADMAP.md, STATE.md)

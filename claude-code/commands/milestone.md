@@ -17,13 +17,13 @@ This is the VERIFY step of the DISCUSS → PLAN → EXECUTE → VERIFY lifecycle
 </objective>
 
 <execution_context>
-@./pipeline/workflows/milestone.md
-@./pipeline/references/checkpoints.md
-@./pipeline/templates/milestone.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/milestone.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/checkpoints.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/templates/milestone.md"`
 </execution_context>
 
 <process>
-Execute the milestone workflow from @./pipeline/workflows/milestone.md end-to-end.
+Execute the milestone workflow from pipeline/workflows/milestone.md end-to-end.
 
 Triggers:
 - **Auto**: Called at the end of each phase workflow (init-project, data-prep, analysis, writing, review)

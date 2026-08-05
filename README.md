@@ -112,21 +112,25 @@ clinpub/
 | Clinpub Planner | — | 研究分析规划（波次依赖图） |
 | Clinpub Executor | R / Python | 计划执行（原子提交） |
 | Clinpub Verifier | — | 跨阶段验证（15 种模式） |
-| Modify Agent | R | 分析后修改：图表样式、方法、变量 |
+| Modify Agent | R | 分析后修改：图表样式、方法、变量、新增方法 |
 
 ## 📚 命令参考
+
+> 下表命令行为以 **Claude Code 版本 v2.3.0** 为准；codex / qoder 版本暂未同步本次改动（其 `review` 仍为经典“同行评审模拟”）。
 
 | 命令 | 阶段 | 描述 |
 |------|------|------|
 | `overview` | — | 命令参考概览 |
 | `data2idea <file>` | — | 从数据中挖掘选题 |
-| `initialize` | 0 | 项目设置或导入现有项目 |
+| `initialize` | 0 | 项目设置或导入现有项目（询问目标期刊） |
 | `data-prep` | 1 | 数据清洗 → cleaned.csv |
 | `analysis` | 2 | 自适应统计分析 |
-| `writing` | 3 | IMRAD 论文撰写 |
-| `review` | 4 | 同行评审模拟 + 修改 |
+| `writing` | 3 | IMRAD 论文撰写（核心管线终点） |
+| `improving` | 工具 | 自审 + 直接改进稿件与分析（可反复） |
+| `coverletter` | 工具 | 按目标期刊生成投稿信 |
+| `review` | 工具 | 投稿后：处理真实审稿意见 → 回复信 → 调用 improving 修稿 |
 | `milestone <N>` | gate | 阶段关卡验证 |
-| `modify` | post-2 | 修改分析输出 |
+| `modify` | 工具 | 修改分析输出或新增分析方法 |
 | `do` | — | 智能路由：自动检测状态并路由 |
 | `next-step` | — | 自动推进到下一步 |
 

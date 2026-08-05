@@ -65,7 +65,7 @@ clinpub:next-step
 # Route to appropriate command
 clinpub:do [intent]
 
-# Modify analysis outputs
+# Modify analysis outputs or add new analysis methods
 clinpub:modify [method ID]
 ```
 

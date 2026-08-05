@@ -35,8 +35,9 @@ Determine phase name from ROADMAP:
 | 0 | init |
 | 1 | data-prep |
 | 2 | analysis |
-| 3 | writing |
-| 4 | review |
+| 3 | writing (core pipeline终点) |
+
+Note: Phase 3 (writing) is the last numbered phase. Post-writing tools (improving / coverletter / review) are standalone and do not use milestone gating.
 </step>
 
 <step name="verify_success_criteria" priority="high">
@@ -64,18 +65,12 @@ Check all success criteria for the completed phase:
 - [ ] Code reads from cleaned.csv, independently runnable
 - [ ] R version and key package versions documented
 
-**Phase 3 (writing):**
+**Phase 3 (writing) — final numbered phase:**
 - [ ] IMRAD structure complete (all 5 sections)
 - [ ] All citations have DOIs
 - [ ] All figures/tables referenced in text
 - [ ] STROBE/CONSORT checklist covered
 - [ ] No AI-template patterns (Humanizer check passed)
-
-**Phase 4 (review):**
-- [ ] Review comments generated (Major/Minor)
-- [ ] All confirmed items addressed in manuscript
-- [ ] Response letter complete (point-by-point)
-- [ ] Final manuscript in 05_Manuscript/final/
 
 Use `checkpoint:verify` to present results to user.
 </step>

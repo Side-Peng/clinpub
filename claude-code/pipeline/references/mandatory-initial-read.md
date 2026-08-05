@@ -44,7 +44,7 @@ Depending on the current phase, also load:
 | Phase 1 — data-prep | `01_RawData/data_profile.json`, variable dictionary |
 | Phase 2 — analysis | `02_PreprocessedData/data/cleaned.csv` (header only), `03_AnalysisMethods/` 方法说明 list |
 | Phase 3 — writing | `Reference/citation_map.md`, `04_Outputs/` directory listing, study type template |
-| Phase 4 — review | `05_Manuscript/manuscript.md`, `Reference/references.bib` |
+| Post-writing tools — improving / coverletter / review | `05_Manuscript/manuscript.md`, `Reference/references.bib` (review also needs the user's reviewer comments) |
 
 ---
 
@@ -67,7 +67,7 @@ Based on loaded context, determine which agent(s) are needed:
 |------|-------|
 | Data cleaning, statistical analysis, figures | `analyst-agent` |
 | Literature search, citation management | `reference-agent` |
-| Manuscript drafting, peer review simulation | `writer-agent` |
+| Manuscript drafting, improvement & review response | `writer-agent` |
 | Topic mining from data | `topic-miner-agent` |
 | Research planning | `clinpub-planner` |
 | Analysis execution with commits | `clinpub-executor` |

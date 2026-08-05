@@ -1,129 +1,125 @@
 ﻿---
 name: review
-description: "Phase 4 orchestration: Simulated peer review and iterative manuscript revision. Generate review, confirm items with user, revise, produce response letter. Loop until user satisfaction."
+description: "Post-submission peer-review response workflow. Intake the reviewers' real comments provided by the user, draft a point-by-point response letter and improvement directions, confirm with the user, then delegate the actual revision to the improving workflow. Loops per revision round until the user is satisfied."
 ---
 
 <purpose>
-Simulate rigorous peer review at target journal level, then iteratively revise the manuscript. Each cycle: generate review → user confirms items → revise manuscript → produce response letter → loop until user is satisfied.
+Handle the post-submission phase: after the manuscript has been submitted and the journal returns reviewer comments, this workflow ingests the reviewers' real comments (provided by the user), drafts a point-by-point response letter plus concrete improvement directions, gets user confirmation, and then delegates the actual manuscript + analysis revision to the `improving` workflow. It does NOT simulate reviewers — real reviewer comments are required input.
 </purpose>
 
 <required_reading>
 @./pipeline/references/journal_standards.md
 @./pipeline/references/checkpoints.md
+@./pipeline/workflows/improving.md
 @./agents/writer-agent.md
 </required_reading>
 
 <process>
 
-<step name="discuss_review_scope" priority="first">
-Discuss review standards with user:
+<step name="validate_prerequisites" priority="first">
+Verify a submitted manuscript exists to revise:
 
-1. **Review rigor level** (default: target journal level — read from `project_config.yml` `journal.name` + `journal.tier`; if unconfigured, apply Q2 standards)
-2. **Focus areas**: any specific concerns the user wants reviewers to examine
-3. **Supplementary search**: any new literature to search based on review direction
+```bash
+PROJECT_DIR=$(pwd)
+MANUSCRIPT="$PROJECT_DIR/05_Manuscript/manuscript.md"
+```
+
+Checks:
+1. `05_Manuscript/manuscript.md` exists (the submitted draft) — if not, error: "No manuscript found. This command is for handling reviewer comments after submission. Run /clinpub:writing first."
+2. `project_config.yml` exists (journal name/tier, language) — if not, warn and continue.
 </step>
 
-<step name="generate_review" priority="high">
-Generate simulated peer review as `05_Manuscript/review_v1.md`:
+<step name="collect_reviewer_comments" priority="first">
+Reviewer comments are REQUIRED input — do not fabricate or simulate them.
 
-**Major comments** (prioritize):
-- Statistical methods appropriateness and completeness
-- Sample size and statistical power
-- Confounding control adequacy
-- Result interpretation and overclaiming
-- Study design limitations
+Prompt the user to provide the journal's reviewer comments in one of two ways:
+1. Paste the full reviewer/editor comments directly into the conversation, or
+2. Provide a file path (e.g., a saved decision letter under `05_Manuscript/`).
 
-**Minor comments**:
-- Language and grammar issues
-- Citation completeness and relevance
-- Figure/table formatting and clarity
-- Reporting standard compliance (STROBE/CONSORT)
+If the user provides neither, stop and explain: this command handles real post-submission reviewer feedback; to self-improve a draft without reviewers, use `/clinpub:improving`.
 
-Each comment includes:
-- Location (section, line)
-- Issue description
-- Suggested revision
-- Severity
+Optionally capture the editor's decision (major revision / minor revision / reject & resubmit) to calibrate tone and scope.
 </step>
 
-<step name="confirm_revision_items" priority="high">
-Present review to user:
+<step name="parse_comments" priority="high">
+Normalize the raw comments into a structured list and save to `05_Manuscript/reviewer_comments.md`:
 
-1. Show all review comments with categorization
-2. User confirms which items to address (may defer some)
-3. User may add additional revision requests
-4. Agree on revision scope before starting
+For each comment record:
+- Reviewer number and comment number (e.g., Reviewer 2, Comment 3)
+- Verbatim comment text (quoted)
+- Category: Major / Minor
+- Required action type: text edit / additional analysis / new literature / clarification / rebuttal (disagree with justification)
+- Affected manuscript location(s) if identifiable
+
+Present a concise summary table (reviewer x comment count, Major/Minor split) to the user.
 </step>
 
-<step name="revise_manuscript" priority="high">
-Revise manuscript addressing confirmed items:
+<step name="draft_response_and_directions" priority="high">
+For every comment, draft two linked artifacts:
 
-1. Address each comment systematically
-2. Track changes per comment
-3. Update citations if new references added
-4. Keep original + revised versions for comparison
-
-**For major comments**: may need supplementary analysis (re-run from Phase 2) or additional literature search (Reference Agent).
-**For minor comments**: direct edits to manuscript.
-</step>
-
-<step name="generate_response_letter" priority="high">
-Write point-by-point response letter:
-
+1. **Point-by-point response letter** (`05_Manuscript/final/response_letter.md`):
 ```markdown
 ## Reviewer 1, Comment 1
-> [Reviewer's comment]
+> [Reviewer's comment, verbatim]
 
-**Response**: [Explanation of changes made]
-**Changes**: [Location of changes in manuscript, line/page]
+**Response**: [How the concern is addressed — or a respectful rebuttal with rationale]
+**Changes**: [What will change in the manuscript, and where (section, line/page)]
 
 ## Reviewer 1, Comment 2
 ...
 ```
+Each response must: thank the reviewer, state what will change and why, and — if not changing — give a clear justification.
 
-Each response must:
-- Thank the reviewer for the comment
-- Explain what was changed and why
-- If not changed, provide rationale
-- Reference specific locations in revised manuscript
+2. **Improvement directions**: a concrete mapping from each comment to the revision actions `improving` will execute (text edits, analysis re-runs, figure changes, new citations). This becomes the confirmed scope handed to `improving`.
+
+Present both to the user.
 </step>
 
-<step name="verify_and_loop" priority="medium">
-After revision:
+<step name="checkpoint_confirm" priority="high">
+Get explicit user confirmation before revising:
 
-1. Verify all confirmed items are addressed
-2. Check response letter completeness
-3. Present to user for review
-4. If user requests more changes → loop back to step 2
-5. If user satisfied → proceed to milestone
+1. Show the response letter draft + improvement directions
+2. User edits/approves the response strategy (may adjust rebuttals, defer items, add requests)
+3. Agree on the revision scope for this round
+
+If user declines → stop (response letter draft is kept for manual use).
+If user confirms → proceed to execute.
+</step>
+
+<step name="execute_revisions" priority="high">
+Delegate the actual manuscript + analysis revision to the improving workflow, scoped to the confirmed reviewer-driven directions:
+
+Execute `@./pipeline/workflows/improving.md` with the confirmed improvement directions as the pre-agreed plan:
+- Skip improving's open-ended `self_review` (scope is already defined by reviewer comments); enter at its `execute_revisions` with the confirmed items.
+- improving handles: analysis re-runs (modify-agent), figure/table adjustments, literature additions (reference-agent), text revision (writer-agent), numeric cascade, and integrity verification.
+
+This keeps a single implementation of the revision logic (no duplication).
+</step>
+
+<step name="finalize" priority="high">
+Assemble the revision package and loop if needed:
+
+1. Write the revised manuscript to `05_Manuscript/final/manuscript.md` (keep the pre-revision version for comparison).
+2. Finalize `05_Manuscript/final/response_letter.md` with the actual change locations filled in from the improving pass.
+3. Update `Reference/references.bib` if new citations were added.
+4. Present to the user:
+   - If the user requests more changes → loop back to `parse_comments` / `draft_response_and_directions` for another revision round (e.g., a second reviewer round).
+   - If the user is satisfied → done.
 
 Final deliverables:
-- `05_Manuscript/review_v1.md` — review comments
-- `05_Manuscript/final/manuscript.md` — final accepted manuscript
-- `05_Manuscript/final/response_letter.md` — response to reviewers
-- Updated `Reference/references.bib` with any new citations
-</step>
+- `05_Manuscript/reviewer_comments.md` — normalized reviewer comments
+- `05_Manuscript/final/manuscript.md` — revised manuscript
+- `05_Manuscript/final/response_letter.md` — point-by-point response to reviewers
 
-<step name="milestone" priority="high">
-Execute the milestone workflow to formally close Phase 4 (project completion):
-
-```bash
-# The milestone workflow will:
-# 1. Verify success criteria for Phase 4
-# 2. Collect review decisions (comments addressed, response letter)
-# 3. Generate .clinpub/phases/04-review/MILESTONE.md
-# 4. Update ROADMAP.md: Phase 4 → ✅ Complete
-# 5. Update STATE.md: current_phase → complete
-# 6. Present project completion summary to user
-```
-
-See @./pipeline/workflows/milestone.md for full protocol.
-
-<output name="signoff_prompt" format="user_facing">
+<output name="done_prompt" format="user_facing">
 ────────────────────────────────
-✅ Phase 4 核验完成
+审稿意见处理完成（本轮）
 
-请确认：输入 "approved" 完成全部流程，或描述需要调整的地方。
+已生成：
+- 修订稿：05_Manuscript/final/manuscript.md
+- 回复信：05_Manuscript/final/response_letter.md
+
+请确认：输入 "approved" 结束本轮，或提供下一轮审稿意见继续。
 ────────────────────────────────
 </output>
 </step>
@@ -131,11 +127,12 @@ See @./pipeline/workflows/milestone.md for full protocol.
 </process>
 
 <success_criteria>
-- Review generated with Major and Minor categories
-- User confirmed revision items
-- All confirmed items addressed in manuscript
-- Point-by-point response letter complete
-- New citations added to references.bib
-- Final manuscript in 05_Manuscript/final/
-- User satisfied with revision
+- Manuscript prerequisite validated
+- Real reviewer comments collected from the user (never simulated) and normalized to `05_Manuscript/reviewer_comments.md`
+- Point-by-point response letter drafted with improvement directions
+- User confirmed the response strategy and revision scope
+- Actual revisions executed via the improving workflow (single source of revision logic)
+- Revised manuscript + response letter in `05_Manuscript/final/`
+- New citations (if any) added to references.bib
+- Supports multiple revision rounds until the user is satisfied
 </success_criteria>

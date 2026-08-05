@@ -48,10 +48,12 @@ After installation, restart Claude Code, then:
 /clinpub:initialize                     # Phase 0: Project initialization
 /clinpub:data-prep                # Phase 1: Data preparation
 /clinpub:analysis                 # Phase 2: Statistical analysis
-/clinpub:writing                  # Phase 3: Manuscript writing
-/clinpub:review                   # Phase 4: Peer review simulation
+/clinpub:writing                  # Phase 3: Manuscript writing (core pipeline终点)
+/clinpub:improving                # Tool: self-review + directly revise manuscript & analysis
+/clinpub:coverletter              # Tool: cover letter for the target journal
+/clinpub:review                   # Tool: post-submission — handle real reviewer comments
 /clinpub:milestone <N>            # Phase gate verification
-/clinpub:modify                   # Modify analysis outputs
+/clinpub:modify                   # Modify analysis outputs or add new analysis methods
 /clinpub:do                       # Breakpoint resume (work-in-progress)
 /clinpub:next-step                # Advance to next step
 ```

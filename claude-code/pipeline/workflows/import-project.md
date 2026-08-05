@@ -203,13 +203,10 @@ Analyze completeness of each Phase based on confirmed file mapping.
   - Reference library (.bib) exists → PASS
   - citation_map.md missing → WARN: "引用映射缺失，将在 Phase 3 生成"
 
-**Phase 4 (review)**:
-- Typically no existing artifacts; skip
-
 **Starting Phase determination** (based on highest Phase with core artifacts):
 - Has cleaned.csv (Phase 1 core) but no analysis outputs → suggest Phase 2
 - Has analysis outputs (Phase 2 core) but no manuscript → suggest Phase 3
-- Has manuscript sections (Phase 3 core) → suggest Phase 3 (续写) or Phase 4 (if complete)
+- Has manuscript sections (Phase 3 core) → suggest Phase 3 (续写); if the manuscript is complete, suggest post-writing tools (improving / coverletter / review)
 
 **Present gap analysis report**:
 

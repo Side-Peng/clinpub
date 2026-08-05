@@ -64,9 +64,9 @@
 
 ---
 
-### Gate 3.5: Writing Quality Gate (Phase 3 → Phase 4)
+### Gate 3.5: Writing Quality Gate (Phase 3 completion — core pipeline close)
 
-**Purpose**: Manuscript draft is complete enough for peer review simulation.
+**Purpose**: Manuscript draft is complete and internally consistent, closing the core pipeline. Downstream tools — improving (self-review + revise), coverletter (submission letter), and review (post-submission response) — are standalone and build on this draft.
 
 | Check | Required | Pass Condition |
 |-------|----------|----------------|
@@ -82,9 +82,9 @@
 
 ---
 
-### Gate 4: Submission Gate (Phase 4 → Submit)
+### Gate 4: Submission Readiness Gate (pre-submission)
 
-**Purpose**: Manuscript meets journal submission requirements.
+**Purpose**: Manuscript meets journal submission requirements before submission.
 
 | Check | Required | Pass Condition |
 |-------|----------|----------------|
@@ -95,13 +95,12 @@
 | Manuscript language consistent | Yes | Chinese manuscript body, English figures/tables |
 | All citations have DOIs | Yes | Every reference entry has valid DOI |
 | Citation-map alignment | Yes | Every in-text citation has bib entry and vice versa |
-| Cover letter complete | Yes | Addresses novelty, significance, conflict of interest |
-| Simulated peer review | Yes | review_v1.md exists with response letter |
+| Cover letter complete | Yes | `05_Manuscript/cover_letter.md` addresses novelty, significance, conflict of interest (produced by `/clinpub:coverletter`) |
 | No AI-template patterns | Yes | Humanizer checklist all clear |
 
 **Gate passage**: All checks pass.
 
-**Failure action**: Return to Phase 3/4. Specify which items need revision.
+**Failure action**: Return to Phase 3, or run `/clinpub:improving`. Specify which items need revision.
 
 ---
 

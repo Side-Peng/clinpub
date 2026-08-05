@@ -20,13 +20,13 @@ Wave 1 → Wave 2 → Wave 3 → Wave 4 with dependency tracking. Only execute u
 </objective>
 
 <execution_context>
-@./pipeline/workflows/analysis.md
-@./pipeline/references/analysis_methods.md
-@./pipeline/references/r_patterns.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/analysis.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/analysis_methods.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/r_patterns.md"`
 </execution_context>
 
 <process>
-Execute the analysis workflow from @./pipeline/workflows/analysis.md end-to-end.
+Execute the analysis workflow from pipeline/workflows/analysis.md end-to-end.
 </process>
 
 <success_criteria>

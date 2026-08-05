@@ -1,7 +1,7 @@
 ---
 name: 分析修改
-description: "Modify completed analysis outputs -- figure style or statistical method changes"
-description_zh: "修改已完成的分析输出——支持图表样式调整（颜色/字体/布局）和统计方法变更（检验更换/变量替换/参数调整）"
+description: "Modify completed analysis outputs or add new analysis methods -- figure style, statistical method changes, or new method implementation"
+description_zh: "修改已完成的分析输出或新增分析方法——支持图表样式调整（颜色/字体/布局）、统计方法变更（检验更换/变量替换/参数调整）和新增分析方法"
 version: 1.0.0
 user-invocable: true
 argument-hint: "[方法ID或简要描述，留空则交互选择]"
@@ -9,9 +9,9 @@ argument-hint: "[方法ID或简要描述，留空则交互选择]"
 
 # 分析修改
 
-修改已完成的阶段 2 分析输出。支持两类修改：图表样式调整和统计方法变更。
+修改已完成的阶段 2 分析输出，或新增分析方法。本命令的核心目的：在符合 clinpub 规范的前提下，阅读现有分析代码（`03_AnalysisMethods/`）和清洗数据（`cleaned.csv`），结合用户要求，修改现有方法或新增分析方法。
 
-可在任何阶段（阶段 2、3、4）调用，当用户需要调整分析结果时使用。
+可在任何阶段（阶段 2、3、4）调用，当用户需要调整分析结果或添加新分析时使用。
 
 ## 修改类别
 
@@ -100,10 +100,12 @@ OUTPUTS="$PROJECT_DIR/04_Outputs/"
 2. 重跑脚本 -> 覆盖输出
 
 **新方法**：
-1. 创建 `03_AnalysisMethods/{new_id}/` 和 `04_Outputs/{new_id}/`
-2. 编写新的 R/Python 脚本（自包含，从 cleaned.csv 读取）
-3. 运行脚本 -> 生成图表 + 表格 + 方法说明
-4. 将新方法追加到 PLAN.md
+1. 阅读 `03_AnalysisMethods/` 中现有脚本，保持命名、脚本结构、图表配置规范一致
+2. 为新方法分配 ID，必须遵循 `{NN}_{MethodName}` 格式（如 `06_SensitivityAnalysis`），禁止使用裸下划线前缀（如 `_sensitivity`）
+3. **同时**创建 `03_AnalysisMethods/{new_id}/` 和 `04_Outputs/{new_id}/`，缺一不可
+4. 编写新的 R/Python 脚本（自包含，从 cleaned.csv 读取）
+5. 运行脚本 -> 生成图表 + 表格 + 方法说明
+6. 将新方法追加到 PLAN.md
 
 **失败处理**：
 - R/Python 脚本失败 -> 尝试修复（最多 3 次）
@@ -180,6 +182,8 @@ PLAN.md 已更新修改历史
 - 不修改 `Reference/` 或 `02_PreprocessedData/`
 - 每次会话最多 5 项修改（防止上下文溢出）
 - 每个 R/Python 脚本必须自包含
+- 方法 ID 必须遵循 `{NN}_{MethodName}` 格式，禁止使用裸下划线前缀
+- 新增方法时必须同时创建 `03_AnalysisMethods/{id}/` 和 `04_Outputs/{id}/`，确保两目录同步
 - 例外：所有方法 R 脚本 `source("04_Outputs/_figure_config.R")` 是设计意图的共享配置
 - 随机方法设置随机种子
 - **必须等待用户确认后才执行修改**

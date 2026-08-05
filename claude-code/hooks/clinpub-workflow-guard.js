@@ -13,13 +13,14 @@ const path = require("path");
 
 const PROJECT_DIR = process.env.PROJECT_DIR || process.cwd();
 
-// clinpub canonical project directory layout per phase
+// clinpub canonical project directory layout per phase (core pipeline: 0-3).
+// Post-writing tools (improving / coverletter / review, like modify) are not phases;
+// their outputs live under 05_Manuscript (owned by Phase 3) and are allowed once Phase 3 is reached.
 const PHASE_MAP = {
   0: { name: "init", allowed_dirs: [".clinpub", "project_config.yml"] },
   1: { name: "data-prep", allowed_dirs: ["01_RawData", "02_PreprocessedData"] },
   2: { name: "analysis", allowed_dirs: ["03_AnalysisMethods", "04_Outputs"] },
   3: { name: "writing", allowed_dirs: ["05_Manuscript", "Reference"] },
-  4: { name: "review", allowed_dirs: ["05_Manuscript/final"] },
 };
 
 function getCurrentPhase() {
@@ -100,20 +101,20 @@ function main() {
 
       // Only guard file write operations
       if (!["Write", "Edit"].includes(tool_name)) {
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
         return;
       }
 
       const filePath = tool_input.file_path;
       if (!filePath) {
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
         return;
       }
 
       const currentPhase = getCurrentPhase();
       if (currentPhase < 0) {
         // No state file — allow (project may not be initialized)
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
         return;
       }
 
@@ -124,17 +125,17 @@ function main() {
         process.stderr.write(JSON.stringify({
           hookSpecificOutput: {
             hookEventName: "PreToolUse",
-            decision: "block",
-            reason: result.reason
+            permissionDecision: "deny",
+            additionalContext: result.reason
           }
         }) + '\n');
         process.exit(2);
       } else {
-        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+        console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
       }
     } catch (e) {
       // On parse error, allow (don't break workflow)
-      console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", decision: "allow" } }));
+      console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "allow" } }));
     }
   });
 }

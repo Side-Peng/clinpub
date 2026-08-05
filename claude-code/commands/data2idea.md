@@ -18,14 +18,14 @@ Clinical research topic mining consultant. Input patient-level CSV or XLSX data,
 </objective>
 
 <execution_context>
-@./pipeline/workflows/data2idea.md
-@./agents/topic-miner-agent.md
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/data2idea.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/agents/topic-miner-agent.md"`
 </execution_context>
 
 <process>
-Execute the data2idea workflow from @./pipeline/workflows/data2idea.md end-to-end.
+Execute the data2idea workflow from pipeline/workflows/data2idea.md end-to-end.
 
-The dedicated **topic-miner-agent** (@./agents/topic-miner-agent.md) handles execution:
+The dedicated **topic-miner-agent** (agents/topic-miner-agent.md) handles execution:
 
 1. **Data profiling**: Run data_profiler.py → variable inventory, distributions, missing patterns, study type prediction
 2. **Parallel literature scan**: Dispatch multiple subagents to search PubMed simultaneously — one per variable group — ensuring deep coverage and compound novelty detection
