@@ -2,7 +2,7 @@
 
 > ⚠️ **本文件描述 2.x 架构，尚未同步到 3.0。**
 > 3.0 的关键变更（迭代分析、递进写作、智能体 8→6、sections 结构）见
-> [CHANGELOG.md](../CHANGELOG.md) 的 `[3.0.0]` 与 [CLINPUB-3.0-DESIGN.md](CLINPUB-3.0-DESIGN.md)。
+> [CHANGELOG.md](../CHANGELOG.md) 的 `[3.0.0-preview.1]` 与 [CLINPUB-3.0-DESIGN.md](CLINPUB-3.0-DESIGN.md)。
 
 ## 系统概述
 

@@ -4,7 +4,7 @@ All notable changes to the clinpub project will be documented in this file.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [3.0.0] - 2026-10-18
+## [3.0.0-preview.1] - 2026-10-18
 
 > **破坏性变更**：不兼容 2.x 的项目状态（`.clinpub/` 结构与流程语义均变）。已有项目需重新初始化，或用 `import-project` 采纳现有材料。
 

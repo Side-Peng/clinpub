@@ -19,8 +19,8 @@
 | 平台 | 目录 | 状态 | 安装方式 |
 |------|------|------|----------|
 | **[DeepSeek Harness](docs/MIGRATION-TO-DSH.md)** | `.dsh/skills/` + `dsh/` | 🚧 **主版本（进行中）** | 仓库内自动发现；跨项目需链接到 `~/.agents/skills` |
-| [Claude Code](claude-code/) | `claude-code/` | ✅ v3.0.0 | `claude plugin install clinpub`（Marketplace）或 `claude --plugin-dir ./claude-code`（本地） |
-| [OpenAI Codex](codex/) | `codex/clinpub/` | ✅ v3.0.0 | `codex plugin install ./codex/clinpub`（本地）或 Marketplace |
+| [Claude Code](claude-code/) | `claude-code/` | ✅ v3.0.0-preview.1 | `claude plugin install clinpub`（Marketplace）或 `claude --plugin-dir ./claude-code`（本地） |
+| [OpenAI Codex](codex/) | `codex/clinpub/` | ✅ v3.0.0-preview.1 | `codex plugin install ./codex/clinpub`（本地）或 Marketplace |
 
 > **Qoder 平台已于 3.0 移除**（2026-10-18）。历史版本可从 git 记录中取回。后续主版本以 DeepSeek Harness 为主，Claude Code / Codex 作为已同步的稳定版保留。
 
@@ -138,7 +138,7 @@ clinpub/
 
 ## 📚 命令参考
 
-> 下表命令行为以 **v3.0.0** 为准，claude-code / codex 已同步；DSH 版为 3.0 主实现（进行中）。Codex 中阶段0 技能名为 `clinpub:init`。
+> 下表命令行为以 **v3.0.0-preview.1** 为准，claude-code / codex 已同步；DSH 版为 3.0 主实现（进行中）。Codex 中阶段0 技能名为 `clinpub:init`。
 
 | 命令 | 阶段 | 描述 |
 |------|------|------|

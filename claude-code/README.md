@@ -7,7 +7,7 @@
 *适配各类临床研究文章的端到端临床数据分析与发表加速器。*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.0.0--preview.1-blue.svg)](CHANGELOG.md)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Node](https://img.shields.io/badge/Node-%3E%3D22.0.0-green.svg)](package.json)
 
@@ -132,7 +132,7 @@ clinpub/
 ├── CHANGELOG.md                # 版本历史
 ├── CONTRIBUTING.md             # 贡献指南
 ├── INSTALL.md                  # 安装指南
-└── package.json                # npm 元数据 (v3.0.0)
+└── package.json                # npm 元数据 (v3.0.0-preview.1)
 ```
 
 ### 用户项目目录
@@ -422,7 +422,7 @@ clinpub/
 ├── CHANGELOG.md                # Version history
 ├── CONTRIBUTING.md             # Contribution guidelines
 ├── INSTALL.md                  # Installation guide
-└── package.json                # npm metadata (v3.0.0)
+└── package.json                # npm metadata (v3.0.0-preview.1)
 ```
 
 ### User Project Directory

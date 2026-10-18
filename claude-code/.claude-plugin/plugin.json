@@ -1,7 +1,7 @@
 {
   "name": "clinpub",
   "displayName": "ClinPub 临床研究发表管线",
-  "version": "3.0.0",
+  "version": "3.0.0-preview.1",
   "description": "面向临床研究的端到端数据分析与 SCI 发表管线：适配任意临床研究类型，读取 CSV/XLSX 患者级数据，运行 R 统计分析，产出出版级图表，检索 PubMed 文献，撰写 IMRAD 手稿，并支持投稿前改进、投稿信生成与投稿后审稿回复。",
   "author": {
     "name": "Side-Peng",
