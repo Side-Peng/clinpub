@@ -10,12 +10,16 @@ Use this context during Phase 2 statistical analysis.
 - **Effect size + 95%CI + exact p-value**: report for every analysis
 - **Assumption tests**: normality, homoscedasticity, proportional hazards — report and flag violations
 
-## Wave Dependency Order
+## Batch Structure（3.0 迭代模型）
 
-1. Wave 1: BaselineTable, GroupComparison — no dependencies
-2. Wave 2: LogisticRegression, SurvivalAnalysis — depends on Wave 1
-3. Wave 3: SubgroupAnalysis, SensitivityAnalysis — depends on Wave 2 models
-4. Wave 4: CorrelationAnalysis, ROCAnalysis, MarkerPanel, SimpleML — depends on data partitioning
+分析不再预定义"波次"。每批 1–3 个方法，依据上一批结果与决策规则库推进：
+
+1. **首批**：基线表 + 描述统计（无依赖）
+2. **后续批**：比较 / 回归 / 生存等，取决于上一批结果（见 `analysis_decision_policy.md`）
+3. **亚组 / 敏感性**：依赖主分析模型已建立
+4. **相关 / ROC / 预测**：依赖数据划分与主变量确定
+
+批次划分由饱和判据与预算决定，不写死。每批记录写入 `.clinpub/ANALYSIS_LOG.md`。
 
 ## File References
 

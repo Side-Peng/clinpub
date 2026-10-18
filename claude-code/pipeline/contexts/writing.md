@@ -17,12 +17,16 @@ Language modes:
 
 ## Chapter Writing Order
 
-按 IMRAD 顺序撰写（D-01），与 `sequential_section_writing` 和 `batch_writing` 流程一致：
+按**递进式**顺序撰写（ClinPub 3.0），见 `workflows/writing.md`：
 
-1. Introduction（漏斗结构：领域背景 → 知识缺口 → 研究目的）
-2. Methods（从 project_config.yml + 分析管线输出自动生成）
-3. Results（数据驱动：描述关键发现 + 指向图表）
-4. Discussion（叙事结构：主要发现 → 与已有文献对比 → 临床意义 → 局限性）
+0. 图表骨架 `FIGURE_SKELETON.md`（先排图表 + 一句结论）
+1. **Results**（数据驱动：描述关键发现 + 指向图表，不解释）
+2. **Methods**（从 `ANALYSIS_LOG.md` + 方法说明 + 配置自动生成，三段式）
+3. **Discussion**（叙事结构：主要发现 → 与已有文献对比 → 机制 → 临床意义 → 局限性）
+4. **Conclusion**（两句话）
+5. 叙事设计 `NARRATIVE.md`（想清楚怎么引人入胜）
+6. **Introduction**（倒金字塔：领域背景 → 知识缺口 → 研究目的与假设）
+7. Abstract + Title
 
 ## Study Type Templates
 

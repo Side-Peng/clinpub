@@ -49,7 +49,7 @@
 
 ## 1.0.1 共享配置脚本（_figure_config.R）
 
-> **强制规则**：Phase 2 生成的每个分析方法 R 脚本，必须在 library() 之后立即 source() 共享配置脚本。
+> **强制规则**：阶段2 生成的每个分析方法 R 脚本，必须在 library() 之后立即 source() 共享配置脚本。
 > 禁止在方法脚本中重复定义 theme_pub、get_palette 等函数。
 
 ### 使用方式
@@ -74,7 +74,7 @@ source("04_Outputs/_figure_config.R")
 编辑 `04_Outputs/_figure_config.R` 或修改 `project_config.yml` 的 quality 段，然后重跑受影响的方法脚本即可。
 
 > **注意**：下方 §1.1–§1.5 中的代码片段为参考实现，已全部整合到 `pipeline/templates/_figure_config.R` 模板中。
-> Phase 2 启动时会从模板生成 `04_Outputs/_figure_config.R`，方法脚本不应重复定义这些函数。
+> 阶段2 启动时会从模板生成 `04_Outputs/_figure_config.R`，方法脚本不应重复定义这些函数。
 
 ---
 
@@ -270,266 +270,83 @@ p + get_continuous_scale()
 
 ---
 
-## 1.2 出版级主题 `theme_pub()`
+## 1.2 出版级主题与风格包
 
-> 以下 `theme_pub()`、`theme_pub_light()`、`apply_theme()` 函数定义为参考实现，已整合到 `_figure_config.R`。方法脚本通过 `source("04_Outputs/_figure_config.R")` 直接使用 `apply_theme()`，不应重复定义这些函数。
+> 实现只有一份：`pipeline/templates/_figure_config.R`（生成到项目的 `04_Outputs/_figure_config.R`）。
+> 本节只写**契约**，不复制代码——复制出来的副本必然与实现漂移。
 
-所有 ggplot2 图表**必须**应用此主题。
+### 1.2.1 三条硬约束
 
-```r
-theme_pub <- function(base_size = 11, base_family = "sans") {
-  # base_size=11：保证屏幕阅读和出版均清晰（≥8pt 期刊底线由 rel() 缩放保证）
-  # base_family="sans" 在 Windows 上默认映射到 Arial
-  theme_minimal(base_size = base_size, base_family = base_family) %+replace%
-    theme(
-      # 背景
-      panel.background = element_rect(fill = "white", color = NA),
-      plot.background = element_rect(fill = "white", color = NA),
-      # 图例
-      legend.position = "right",
-      legend.title = element_text(face = "bold", size = rel(0.9)),
-      legend.text = element_text(size = rel(0.9)),
-      legend.key.size = unit(0.8, "lines"),
-      legend.spacing = unit(0.3, "cm"),
-      legend.background = element_rect(fill = "white", color = NA),
-      # 标题（左对齐，Nature 风格）
-      plot.title = element_text(hjust = 0, size = rel(1.1), face = "bold",
-                                margin = margin(b = 8)),
-      # 轴
-      axis.title = element_text(size = rel(1), face = "bold"),
-      axis.title.x = element_text(margin = margin(t = 8)),
-      axis.title.y = element_text(margin = margin(r = 8)),
-      axis.text = element_text(size = rel(0.9), color = "black"),
-      axis.line = element_line(color = "black", linewidth = 0.4),
-      axis.ticks = element_line(color = "black", linewidth = 0.3),
-      # 网格（仅保留主网格线，极淡，辅助读数）
-      panel.grid.major = element_line(color = "grey92", linewidth = 0.2),
-      panel.grid.minor = element_blank(),
-      # 边框
-      panel.border = element_rect(color = "black", fill = NA, linewidth = 0.4),
-      # 分面
-      strip.background = element_rect(fill = "grey95", color = "black",
-                                      linewidth = 0.4),
-      strip.text = element_text(face = "bold", size = rel(0.9)),
-      # 外边距（稍宽松，避免多图拼接时挤压）
-      plot.margin = margin(12, 12, 12, 12)
-    )
-}
+1. **画布优先**：先定印刷尺寸（mm），字号随之推导；不是先设字号再缩放。
+2. **字号 5–7 pt**：低于 5pt 印不清，高于 7pt 挤不进栏宽。
+3. **线宽分层**：数据线 > 轴线 > 参考线。视觉重量应与信息重要度一致。
 
-# 轻量变体：无边框，适用于流程图、示意图等不需要数据边框的图
-theme_pub_light <- function(base_size = 11, base_family = "sans") {
-  theme_pub(base_size = base_size, base_family = base_family) +
-    theme(
-      panel.border = element_blank(),
-      axis.line = element_line(color = "black", linewidth = 0.4),
-      panel.grid.major = element_blank()
-    )
-}
+### 1.2.2 风格包（`quality.style`）
+
+| 包 | 单栏 mm | 双栏 mm | 轴线 | 数据线 | 主色 / 对比色 |
+|---|---|---|---|---|---|
+| `nature`（默认） | 89 | 183 | 0.35 | 0.60 | `#0072B2` / `#D55E00`（Okabe-Ito） |
+| `lancet` | 90 | 190 | 0.50 | 0.75 | `#00468B` / `#ED0000` |
+| `jama` | 86 | 178 | 0.45 | 0.70 | `#374E55` / `#B24745` |
+| `nejm` | 86 | 173 | 0.45 | 0.70 | `#0072B5` / `#BC3C29` |
+
+> **只有 `nature`** 的栏宽、字号、配色来自 Nature 官方 figure guide
+> （89/183 mm、5–7 pt、Okabe-Ito 色盲友好色）。其余三个包的栏宽为常见值，
+> 投稿前须对照目标期刊 Guide for Authors 核对。
+
+### 1.2.3 覆盖与派生
+
+```yaml
+quality:
+  style: "nature"
+  style_overrides:            # 只写要改的项，命名向量按名字覆盖
+    line: {axis: 0.5}
+    palette: {main: "#123456"}
 ```
 
-### `theme_pub()` 字号速查（base_size = 11）
+派生项（不要在方法脚本里手写死值）：
 
-| 元素 | `rel()` | 实际 pt | 说明 |
-|------|---------|---------|------|
-| `plot.title` | 1.1 | 12.1 | 图表主标题 |
-| `axis.title` | 1.0 | 11.0 | 轴标题 |
-| `axis.text` | 0.9 | 9.9 | 轴刻度标签 |
-| `legend.title` | 0.9 | 9.9 | 图例标题 |
-| `legend.text` | 0.9 | 9.9 | 图例文本 |
-| `strip.text` | 0.9 | 9.9 | 分面标签 |
+| 变量 / 函数 | 含义 |
+|---|---|
+| `FIG_WIDTH_MM` | 当前包的栏宽命名向量（single / double） |
+| `pub_base_size(width_mm)` | 单栏 → `base_size.single`；双栏 → `.double`；配置显式给了就优先 |
+| `LW_DATA` / `LW_AXIS` / `LW_REF` | 当前包的线宽层级 |
+| `TICK_LENGTH_PT` | 刻度长度 |
+| `pal("main"\|"contrast"\|"accent"\|"neutral"\|"ink")` | 按**角色**取色 |
+| `get_palette(n)` | 按分组数取色（角色驱动的预设） |
 
-所有元素均满足 **≥ 8pt** 的期刊最低字号要求，且在屏幕上阅读舒适。
+### 1.2.4 禁止事项
 
-**应用方式：** `+ apply_theme()`（配置驱动，见下方 Config Protocol）或直接 `+ theme_pub()`（标准）/ `+ theme_pub_light()`（轻量无边框）。当 `project_config.yml` 包含 `quality.theme` 配置时，**必须**使用 `apply_theme()` 方式。
-
-- 默认显示右侧图例（`legend.position = "right"`）。如需隐藏图例（如单组柱状图），覆盖为 `theme(legend.position = "none")`。
-- 如需图例放在顶部：`theme(legend.position = "top")`。
-- 标题默认左对齐（Nature 风格）。如需居中，覆盖为 `theme(plot.title = element_text(hjust = 0.5))`。
-- 字体族 `"sans"` 在 Windows 上映射到 Arial；Linux/macOS 可能需要 `extrafont` 包（见 §1.3）。
-
-### 配置读取协议（Config Protocol）
-
-> **强制规则**：在生成任何使用 `theme_pub()` 的 R 代码之前，必须先读取 `project_config.yml` 的 `quality.theme` 段，并将用户配置值注入主题函数调用。
-
-#### 读取逻辑
-
-在 R 脚本的初始化部分（紧随 `library()` 加载之后），加入配置读取代码：
-
-```r
-# ---- Theme Configuration (from project_config.yml) ----
-# 读取配置；如果 quality.theme 段不存在，使用默认值
-cfg <- yaml::read_yaml("project_config.yml")
-theme_cfg <- cfg$quality$theme  # may be NULL if not configured
-
-# 解析参数（NULL-safe，回退到默认值）
-theme_variant      <- if (!is.null(theme_cfg$variant)) theme_cfg$variant else "theme_pub"
-theme_base_size    <- if (!is.null(theme_cfg$base_size)) theme_cfg$base_size else 11
-theme_base_family  <- if (!is.null(theme_cfg$base_family)) theme_cfg$base_family else "sans"
-theme_legend_pos   <- if (!is.null(theme_cfg$legend_position)) theme_cfg$legend_position else "right"
-theme_title_hjust  <- if (!is.null(theme_cfg$title_hjust)) theme_cfg$title_hjust else 0
-theme_panel_border <- if (!is.null(theme_cfg$panel_border)) theme_cfg$panel_border else TRUE
-```
-
-#### 应用方式
-
-使用 `apply_theme()` 包装器替代直接 `+ theme_pub()` 调用：
-
-```r
-# apply_theme() — 配置驱动的主题包装器
-apply_theme <- function() {
-  base_theme <- if (theme_variant == "theme_pub_light") {
-    theme_pub_light(base_size = theme_base_size, base_family = theme_base_family)
-  } else {
-    theme_pub(base_size = theme_base_size, base_family = theme_base_family)
-  }
-  # 叠加用户自定义覆盖
-  base_theme + theme(
-    legend.position = theme_legend_pos,
-    plot.title = element_text(hjust = theme_title_hjust),
-    panel.border = if (theme_panel_border) {
-      element_rect(color = "black", fill = NA, linewidth = 0.4)
-    } else {
-      element_blank()
-    }
-  )
-}
-```
-
-然后在所有 ggplot2 调用中使用 `+ apply_theme()` 替代 `+ theme_pub()`。
-
-#### 默认值速查
-
-| 参数 | 默认值 | config 路径 | 说明 |
-|------|--------|-------------|------|
-| `variant` | `"theme_pub"` | `quality.theme.variant` | 主题变体 |
-| `base_size` | `11` | `quality.theme.base_size` | 基础字号 |
-| `base_family` | `"sans"` | `quality.theme.base_family` | 字体族 |
-| `legend_position` | `"right"` | `quality.theme.legend_position` | 图例位置 |
-| `title_hjust` | `0` | `quality.theme.title_hjust` | 标题水平对齐 |
-| `panel_border` | `TRUE` | `quality.theme.panel_border` | 是否有边框 |
-
-**向后兼容**：如果 `project_config.yml` 中不存在 `quality.theme` 段（旧项目），上述代码全部回退到默认值，行为与硬编码 `theme_pub(base_size=11, base_family="sans")` 完全一致。
-
-### 主题强制执行规则（Theme Enforcement）
-
-> **⚠️ 强制规则**：以下规则不可跳过、不可降级。每张由 clinpub 生成的 ggplot2 图表**必须**满足所有检查项。
-
-#### 必须遵守
-
-1. **`theme_pub()` 或 `apply_theme()` 必须出现在每个 `ggplot()` 调用链的最后一层。** 任何其他 `theme()` 调用必须放在 `theme_pub()` **之前**（通过 `+ theme(...)` 在 `theme_pub()` 之前添加），否则会被 `theme_pub()` 的 `%+replace%` 覆盖。
-2. **禁止使用 ggplot2 内置主题替代 `theme_pub()`。** 以下调用一律禁止出现在 clinpub 生成的代码中：
-   - `theme_grey()` / `theme_gray()`
-   - `theme_bw()`
-   - `theme_classic()`
-   - `theme_minimal()`（直接调用，不通过 `theme_pub()`）
-   - `theme_dark()` / `theme_void()`（除 CONSORT 流程图等特殊情况）
-   - `theme_light()`
-3. **禁止在 `theme_pub()` 之后添加覆盖背景的 `theme()` 调用。** 如 `+ theme(panel.background = element_rect(fill = "grey92"))` 是严格禁止的——这会导致灰色背景，与 `theme_pub()` 的白色背景设计冲突。
-4. **x 轴标签必须使用人类可读的标签名**，不能直接暴露变量名（如 `sleep_group_label`）。必须使用 `labs(x = "Sleep Quality")` 或 `scale_x_discrete(labels = c(...))` 进行映射。
-5. **配色必须来自 Color Config Protocol**（§1.1），不能硬编码 "steelblue"、"coral"、"pink"、"lightblue" 等临时颜色。
-
-#### 常见错误与修正
-
-| 错误代码 | 症状 | 正确写法 |
-|---------|------|---------|
-| `ggplot(...) + geom_xxx() + theme_grey()` | 灰色背景 + 白色网格 | `ggplot(...) + geom_xxx() + theme_pub()` |
-| `ggplot(...) + theme_pub() + theme_bw()` | `theme_bw` 覆盖 `theme_pub`，风格不一致 | `ggplot(...) + theme_pub()` （去掉 `theme_bw`） |
-| `ggplot(...) + theme_pub() + theme(panel.background = ...)` | 背景色被意外修改 | 将 `theme()` 放在 `theme_pub()` 之前，或仅覆盖允许的少量参数 |
-| `labs(x = "variable_name")` 直接写变量名 | x 轴暴露代码变量名 | `labs(x = "Human Readable Label")` |
-| `scale_fill_manual(values = c("pink", "cyan"))` | 配色脱离语义色板 | `scale_fill_manual(values = get_palette(2))` |
-| `geom_boxplot(fill = "lightblue")` | 硬编码颜色 | 使用 `aes(fill = group)` + `scale_fill_manual(values = get_palette(n))` |
-
-#### 出图前自检清单（每次生成图表代码前必须逐项核对）
-
-在生成任何 ggplot2 图表的 R 代码时，**必须**确认以下 6 项全部通过。任何一项不通过，生成的图表将不符合 clinpub 出版标准：
-
-- [ ] ① `theme_pub()` 或 `apply_theme()` 出现在 ggplot 调用链中
-- [ ] ② 没有 `theme_grey` / `theme_bw` / `theme_classic` 等内置主题
-- [ ] ③ 背景为白色（无灰色背景）
-- [ ] ④ 配色来自 `get_palette()` / 语义色，无硬编码临时颜色
-- [ ] ⑤ x/y 轴标签为人类可读英文（非变量名）
-- [ ] ⑥ 线宽规范：结构线（`axis.line`、`panel.border`）= 0.4，`axis.ticks` = 0.3；数据线常规 0.4，主曲线/主趋势可加粗至 0.8，辅助线保持 0.4
-
-### 数据线宽度约定
-
-结构线（轴、边框、刻度）由 `theme_pub()` 统一控制，不可覆盖。数据线（`geom_line`、`geom_segment` 等）按视觉层次分三档：
-
-| 层级 | 宽度 | 适用场景 |
-|------|------|---------|
-| 常规 | 0.4 | 辅助参考线、CI 边界、个体轨迹、次要趋势 |
-| 加粗 | 0.8 | 主曲线（RCS、KM）、主趋势线、组均值线 |
-| 强调 | 1.2 | 仅限全幅单线核心图（极少使用） |
+- 在方法脚本里重定义 `theme_pub()` / `get_palette()` / `save_figure()`
+- 写死字号（如 `base_size = 11`）——必须走 `pub_base_size()`
+- 覆盖 `axis.title.y` 时不带 `angle = 90`——`element_text()` 的 angle 默认 0，
+  会把继承来的竖排标题转平
 
 ---
 
 ## 1.3 图表保存规范
 
-> 以下代码为参考实现，已整合到 `_figure_config.R` 中的 `save_figure()` 函数和 `PUBLICATION_DPI`/`FIGURE_FORMAT` 常量。方法脚本应使用 `save_figure()` 而非直接调用 `ggsave()`。
+**主图默认 `pdf + svg`（矢量）**。Nature 的 figure guide 明确不接受 tiff/png 作主图；
+tiff 仅用于 Extended Data（300 dpi，≤ 10 MB）。
 
 ```r
-# 出版级分辨率常量 — 与 journal_standards.md::FIGURE_DPI 保持一致
-PUBLICATION_DPI <- 300
-
-# SVG（首选可编辑矢量格式，适合后期 Illustrator/Inkscape 微调）
-ggsave("figure.svg", p, width = 7, height = 6)
-# 使用 svglite 可获得更好的字体嵌入效果：
-# svglite::svglite("figure.svg", width = 7, height = 6); print(p); dev.off()
-
-# TIFF（LZW 压缩，投稿提交首选位图格式）
-ggsave("figure.tiff", p, width = 7, height = 6, dpi = PUBLICATION_DPI, compression = "lzw")
-
-# PDF（矢量，排版和预览）
-ggsave("figure.pdf", p, width = 7, height = 6)
-
-# PNG（快速预览，非投稿用）
-ggsave("figure.png", p, width = 7, height = 6, dpi = PUBLICATION_DPI)
+save_figure(p, "04_Outputs/01_xxx/fig1",
+            width_mm = FIG_WIDTH_MM[["single"]], height_mm = 80)
+# → fig1.pdf + fig1.svg（格式由 STYLE$main_formats 决定）
 ```
 
-### 导出优先级
+| 场景 | formats | dpi |
+|---|---|---|
+| 正文主图 | `c("pdf", "svg")`（默认） | 不适用（矢量） |
+| 补充材料 | `c("tiff")` | 300 |
+| 预览 / 汇报 | `c("png")` | 300 |
 
-| 优先级 | 格式 | 用途 |
-|--------|------|------|
-| 1 | SVG | 可编辑矢量，期刊后期制作首选 |
-| 2 | TIFF (LZW) | 投稿提交，位图标准 |
-| 3 | PDF | 矢量，排版和预览 |
-| 4 | PNG | 快速预览，非投稿用 |
-
-**推荐同时导出**：SVG（编辑备份）+ TIFF（投稿提交）。
-
-> **SVG 中文字体注意**：ggplot2 的 SVG 输出中中文字体可能不嵌入，需在 Illustrator 中手动修复。`svglite::svglite()` 提供更好的字体嵌入支持。投稿时以 TIFF/PDF 为主，SVG 留作编辑备份。
-
-### 尺寸标准
-
-| 用途 | 宽度 | 高度 | 格式 |
-|------|------|------|------|
-| 单栏图 | 8 cm (~3.15 in) | ≤ 20 cm | TIFF/PDF |
-| 双栏图 | 17 cm (~6.7 in) | ≤ 20 cm | TIFF/PDF |
-| 森林图/长图 | 17 cm | 自适应 | PDF |
-| Nature 单栏 | 89 mm (~3.5 in) | 自适应 | TIFF/PDF |
-| Nature 双栏 | 183 mm (~7.2 in) | 自适应 | TIFF/PDF |
-
-所有输出必须 **≥300 DPI**，**Arial ≥8pt**。
-
-### 字体族说明
-
-`theme_pub(base_family = "sans")` 的字体族在不同平台上映射不同：
-
-- **Windows**：`"sans"` 默认映射到 **Arial**，无需额外配置
-- **Linux / macOS**：`"sans"` 可能映射到 DejaVu Sans 或 Helvetica，**不是 Arial**。如需严格使用 Arial：
-
-```r
-# 安装 extrafont（首次使用时）
-install.packages("extrafont")
-extrafont::font_import()   # 扫描系统字体（耗时较长，仅需一次）
-extrafont::loadfonts()     # 加载字体到 R 会话
-
-# 然后在 theme_pub() 中使用
-theme_pub(base_family = "Arial")
-```
-
-> **注意：** `font_import()` 首次运行会扫描整个系统字体目录，可能需要几分钟。后续会话只需 `loadfonts()` 即可。在 Linux 上如果系统未安装 Arial，需先通过包管理器安装（如 `apt install ttf-mscorefonts-installer`）。
+**为什么指定设备**：`svglite` 保留可编辑文字（投稿要求文字可编辑）、
+`cairo_pdf` 内嵌字体（TrueType 42）、`ragg` 保证位图质量。
+`ggsave` 的默认设备在部分平台会丢字体或把文字转曲。
 
 ---
+
 
 ## 1.4 显著性标注规则
 
@@ -739,6 +556,9 @@ ggsave("04_Outputs/01_BaselineTable/Table1.png", p, dpi = PUBLICATION_DPI)  # �
 | 子集与父集 | 总体排名柱状图 + 某亚组的同样排名 | 替换为散点图展示亚组与总体关系 |
 | 两个排名 | 两个相关指标的排名柱状图 | 其中一个改为气泡散点图 |
 | 同数据不同图 | 饼图 + 堆积柱状图 | 合并或替换为关系图 |
+| **同一统计量画两遍** | `geom_boxplot()` 已有中位线，又用 `stat_summary(geom="crossbar")` 叠一条 | 删掉叠加那层；需要更醒目就用 `geom_boxplot(fatten = 2)` |
+| **图内与坐标轴重复** | 两组比较图里再加一个 `group` 图例，而 x 轴已写组名 | `theme(legend.position = "none")` |
+| **图内与图注重复** | 图里写长句结论，图注再写一遍 | 图内只留必要标注，结论归图注 |
 
 ---
 
@@ -803,15 +623,30 @@ y_limits <- c(y_range[1] - y_pad, y_range[2] + y_pad)
 ### 模式
 ```r
 ggplot(data, aes(x = group, y = value)) +
-  geom_jitter(aes(color = group), alpha = 0.6,
-              width = 0.2, size = 2) +
-  geom_boxplot(aes(fill = group), alpha = 0.3, color = "black",
-               outlier.shape = NA, width = 0.5, linewidth = 0.4) +
-  scale_color_manual(values = get_palette(length(unique(data$group)))) +
-  scale_fill_manual(values = get_palette(length(unique(data$group)))) +
-  labs(x = "Group", y = "Value") +
-  theme_pub()
+  geom_jitter(aes(colour = group), alpha = 0.55,
+              width = 0.14, size = 1.05) +   # 点要够大：加粗字 + 粗框下，小点会被吃掉
+  # 线宽取 LW_DATA，不要把 0.4 / 0.5 之类的绝对数写死——
+  # 6.5pt 画布上 0.4 的框会太细；字体加粗后更显得"头重脚轻"
+  geom_boxplot(aes(colour = group), fill = NA, width = 0.30,
+               outlier.shape = NA, linewidth = LW_DATA * 1.15,
+               fatten = 2.2) +          # 中位线加粗用 fatten，不要再叠 crossbar
+  scale_colour_manual(values = get_palette(length(unique(data$group)))) +
+  labs(x = NULL, y = "Value") +
+  theme_pub(width_mm = FIG_WIDTH_MM[["single"]])
 ```
+
+### 线宽阶梯（与字重匹配）
+
+字体全 bold 之后，细线会"撑不住"文字。参考比例：
+
+| 元素 | 线宽 |
+|---|---|
+| 箱体 / 箱须 | `LW_DATA × 0.65` |
+| 中位线 | `fatten = 2.2`（相对箱体，自动跟随） |
+| 坐标轴 / 刻度 | `LW_AXIS` |
+| 参考线（0 线、阈值） | `LW_REF`，虚线 |
+
+> 关键是**相对关系**：数据 > 轴 > 参考。绝对值随风格包变。
 
 ### 适用条件
 - 组间比较，且样本量 < 200
@@ -977,13 +812,17 @@ ggplot(cm_df, aes(x = Actual, y = Predicted)) +
 ```r
 ggplot(df, aes(x = estimate, y = reorder(label, estimate))) +
   geom_point(size = 4, color = get_hero_color()) +
-  geom_errorbarh(aes(xmin = lower, xmax = upper),
-                 height = 0.2, color = get_hero_color()) +
+  # ggplot2 >= 4.0 已弃用 geom_errorbarh()，改用 geom_errorbar() + orientation
+  geom_errorbar(aes(xmin = lower, xmax = upper),
+                orientation = "y", width = 0.2, color = get_hero_color()) +
   geom_vline(xintercept = reference, linetype = "dashed",
              color = get_baseline_color(), linewidth = 0.4) +
   labs(x = "AUC (95% CI)", y = "") +
   theme_pub()
 ```
+
+> **兼容提示**：`geom_errorbarh()` 在 ggplot2 4.0.0 起被弃用（运行时会告警，未来版本将移除）。
+> 需要同时兼容 3.x 与 4.x 时，可用 `if (packageVersion("ggplot2") >= "4.0.0")` 分支。
 
 ### 适用条件
 - 多标志物 AUC 汇总

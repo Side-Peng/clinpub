@@ -33,13 +33,13 @@ export UNPAYWALL_EMAIL="your@email.com" # Unpaywall PDF 全文获取
 claude plugin install clinpub
 ```
 
-安装完成后重启 Claude Code，即可在任意项目使用 `/clinpub:overview` 命令。
+安装完成后重启 Claude Code，即可在任意项目使用 `/clinpub help` 命令。
 
 验证安装：
 
 ```bash
-# 重启 Claude Code 后，输入 /clinpub:overview 应看到命令参考
-/clinpub:overview
+# 重启 Claude Code 后，输入 /clinpub help 应看到命令参考
+/clinpub help
 ```
 
 ---
@@ -57,12 +57,12 @@ claude plugin install clinpub
 ### 3.3 启动管线
 
 ```bash
-/clinpub:overview
+/clinpub help
 ```
 
 ---
 
-## 4. Phase 0 — 项目初始化
+## 4. 阶段0 — 项目初始化
 
 **命令**：`/clinpub:initialize`
 
@@ -91,7 +91,7 @@ Project_Root/
 
 ---
 
-## 5. Phase 1 — 数据准备
+## 5. 阶段1 — 数据准备
 
 **命令**：`/clinpub:data-prep`
 
@@ -115,7 +115,7 @@ Analyst Agent 执行：
 
 ---
 
-## 6. Phase 2 — 统计分析
+## 6. 阶段2 — 统计分析
 
 **命令**：`/clinpub:analysis`
 
@@ -144,7 +144,7 @@ Analyst Agent 执行：
 
 ---
 
-## 7. Phase 3 — 论文撰写
+## 7. 阶段3 — 论文撰写
 
 **命令**：`/clinpub:writing`
 
@@ -179,7 +179,7 @@ Reference/
 
 ---
 
-## 8. Phase 4 — 审稿修稿
+## 8. 阶段4 — 审稿修稿
 
 **命令**：`/clinpub:review`
 
@@ -196,14 +196,14 @@ Writer Agent 模拟同行评审：
 
 | 命令                            | 用途                       |
 | ------------------------------- | -------------------------- |
-| `/clinpub:overview`             | 主入口，查看命令参考       |
+| `/clinpub help`             | 主入口，查看命令参考       |
 | `/clinpub:data2idea data.csv` | 不做分析，先从数据挖掘选题 |
 | `/clinpub:initialize`       | 初始化项目目录和配置       |
-| `/clinpub:data-prep`          | 仅跑 Phase 1 数据清洗      |
-| `/clinpub:analysis`           | 仅跑 Phase 2 统计分析      |
-| `/clinpub:writing`            | 仅跑 Phase 3 论文撰写      |
-| `/clinpub:review`             | 仅跑 Phase 4 审稿修稿      |
-| `/clinpub:milestone N`        | 查看 Phase N 关卡状态      |
+| `/clinpub:data-prep`          | 仅跑阶段1 数据清洗      |
+| `/clinpub:analysis`           | 仅跑阶段2 统计分析      |
+| `/clinpub:writing`            | 仅跑阶段3 论文撰写      |
+| `/clinpub:review`             | 仅跑阶段4 审稿修稿      |
+| `/clinpub next N`        | 查看 Phase N 关卡状态      |
 
 ---
 
@@ -266,4 +266,4 @@ font_add("SimHei", "simhei.ttf")
 - 阅读 `pipeline/references/journal_standards.md` — 了解期刊格式要求
 - 探索 `agents/` 目录了解各 Agent 详细能力
 
-有问题？检查 `.clinpub/STATE.md` 了解当前进度，或重新运行 `/clinpub:do` 继续。
+有问题？检查 `.clinpub/STATE.md` 了解当前进度，或重新运行 `/clinpub` 继续。

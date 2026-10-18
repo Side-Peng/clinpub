@@ -1,4 +1,4 @@
-﻿# ClinPub Installation Guide
+# ClinPub Installation Guide
 
 ## 🚀 Installation
 
@@ -195,8 +195,8 @@ After installation:
 
 1. **Read the documentation**: [README.md](README.md)
 2. **Start with Phase 0**: `clinpub:init`
-3. **Check current status**: `clinpub:do`
-4. **View command reference**: `clinpub:overview`
+3. **Check current status**: `clinpub`
+4. **View command reference**: `clinpub help`
 
 ## 🆘 Getting Help
 

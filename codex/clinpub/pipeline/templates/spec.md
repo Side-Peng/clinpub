@@ -47,28 +47,32 @@
 
 ## Analysis Methods
 
-### Wave 1 (No Dependencies)
+> ClinPub 3.0：方法按**批次**推进，不预先划分波次。下表是能力清单与典型依赖关系；
+> 实际执行哪一批、按什么顺序，由 `analysis_decision_policy.md` 的规则与
+> 上一批结果决定，逐批记录在 `.clinpub/ANALYSIS_LOG.md`。
+
+### 无依赖（通常首批）
 
 | # | Method | Purpose | Input Variables | Output Artifacts |
 |---|--------|---------|-----------------|------------------|
 | 01 | Baseline Table | Describe cohort characteristics | All variables | Table 1 (docx) |
 | 02 | Group Comparison | Compare groups on key variables | Group var + continuous/categorical vars | Comparison table + box/violin plots |
 
-### Wave 2 (Depends on Wave 1)
+### 依赖首批结果
 
 | # | Method | Purpose | Input Variables | Output Artifacts |
 |---|--------|---------|-----------------|------------------|
 | 03 | Logistic Regression | Identify independent predictors | Outcome + exposure + covariates | Regression table + forest plot |
 | 04 | Survival Analysis | Time-to-event analysis | Time + event + covariates | KM curves + Cox table + forest plot |
 
-### Wave 3 (Depends on Wave 2)
+### 依赖主分析模型
 
 | # | Method | Purpose | Input Variables | Output Artifacts |
 |---|--------|---------|-----------------|------------------|
 | 05 | Subgroup Analysis | Treatment effect by subgroups | Exposure + subgroup var | Subgroup forest plot |
 | 06 | Sensitivity Analysis | Robustness of findings | Per sensitivity scenario | Comparison table |
 
-### Wave 4 (Depends on Data Partitioning)
+### 依赖数据划分
 
 | # | Method | Purpose | Input Variables | Output Artifacts |
 |---|--------|---------|-----------------|------------------|
@@ -109,7 +113,7 @@
 
 ## Success Criteria
 
-- [ ] All 10 analysis methods executed per wave order
+- [ ] 所确认的方法按批次执行，每批记录在 `ANALYSIS_LOG.md`（含否决项）
 - [ ] Each method produces figure + table + 方法说明
 - [ ] All figures ≥300 DPI (FIGURE_DPI), English labels, color-blind friendly
 - [ ] All statistical reports include effect size + 95% CI + exact p-value

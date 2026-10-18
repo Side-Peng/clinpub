@@ -7,7 +7,7 @@
 *适配各类临床研究文章的端到端临床数据分析与发表加速器。*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](CHANGELOG.md)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-orange.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Node](https://img.shields.io/badge/Node-%3E%3D22.0.0-green.svg)](package.json)
 
@@ -37,8 +37,8 @@
 
 - **4 阶段核心管线**: 初始化 → 数据准备 → 统计分析 → 论文撰写，阶段间设有里程碑关卡；写作完成即核心里程碑
 - **投稿后期工具**: `improving`（自审改进）、`coverletter`（按目标期刊生成投稿信）、`review`（投稿后处理真实审稿意见）——均为随时可调用的独立工具
-- **8 个专业 AI 智能体**: 选题挖掘、数据清洗、统计分析、文献检索、论文撰写、验证、规划、修改
-- **自适应分析**: 根据数据特征（分组、时间点、结局类型）动态推荐统计方法
+- **6 个专业 AI 智能体**: 选题挖掘、数据清洗、统计分析、文献检索、论文撰写、验证、修改
+- **迭代式分析**: 每批 1–3 个方法，依据结果与决策规则库决定下一批，直到饱和
 - **出版级输出**: ≥300 DPI 图表，可自定义 `theme_pub()` 主题与配色方案，Vancouver 引用格式含 DOI
 - **工作流保护**: 3 个 PreToolUse 钩子守护阶段顺序、里程碑前置条件和提示注入防护
 - **多研究类型支持**: RCT (CONSORT)、队列/病例对照/横断面 (STROBE)、描述性研究
@@ -81,16 +81,16 @@ claude --plugin-dir ./claude-code
 ## 快速开始
 
 ```bash
-/clinpub:overview               # 查看命令参考
+/clinpub help               # 查看命令参考
 /clinpub:data2idea data.csv     # 从数据中挖掘选题
-/clinpub:initialize                   # 阶段 0：项目初始化
-/clinpub:data-prep              # 阶段 1：数据准备
-/clinpub:analysis               # 阶段 2：统计分析
-/clinpub:writing                # 阶段 3：论文撰写（核心管线终点）
+/clinpub:initialize                   # Phase 0：项目初始化
+/clinpub:data-prep              # Phase 1：数据准备
+/clinpub:analysis               # Phase 2：统计分析
+/clinpub:writing                # Phase 3：论文撰写（核心管线终点）
 /clinpub:improving              # 工具：自审 + 直接改进稿件与分析（可反复）
 /clinpub:coverletter            # 工具：按目标期刊生成投稿信
 /clinpub:review                 # 工具：投稿后，处理真实审稿意见
-/clinpub:milestone <N>          # 阶段关卡评审
+/clinpub next <N>          # 阶段关卡评审
 ```
 
 每个阶段遵循四步模式：**讨论 → 计划 → 执行 → 验证**。
@@ -104,9 +104,9 @@ claude --plugin-dir ./claude-code
 ### 三层架构
 
 ```
-用户 → 命令 (commands/*.md — 13 个入口)
+用户 → 命令 (commands/*.md — 10 个入口)
        → 工作流 (pipeline/workflows/*.md — 12 个编排文件)
-         → 智能体 (agents/*.md — 8 个专业智能体，每次独立上下文)
+         → 智能体 (agents/*.md — 6 个专业智能体，每次独立上下文)
            → 脚本 (scripts/*.py — 数据画像 + 内置 NCBI/PubMed 检索 + R/Python 工具)
            → 钩子 (hooks/ — 3 个 PreToolUse 守卫)
 ```
@@ -116,8 +116,8 @@ claude --plugin-dir ./claude-code
 ```
 clinpub/
 ├── .claude-plugin/             # 插件清单 (plugin.json)
-├── commands/                   # 13 个命令入口
-├── agents/                     # 8 个 AI 智能体
+├── commands/                   # 10 个命令入口
+├── agents/                     # 6 个 AI 智能体
 ├── pipeline/
 │   ├── workflows/              # 12 个阶段/工具编排文件
 │   ├── references/             # 15 个参考文档
@@ -132,20 +132,20 @@ clinpub/
 ├── CHANGELOG.md                # 版本历史
 ├── CONTRIBUTING.md             # 贡献指南
 ├── INSTALL.md                  # 安装指南
-└── package.json                # npm 元数据 (v2.3.0)
+└── package.json                # npm 元数据 (v3.0.0)
 ```
 
 ### 用户项目目录
 
 ```
 Project_Root/
-├── .clinpub/                   # 阶段 0 — PROJECT.md / ROADMAP.md / STATE.md
-├── 01_RawData/                 # 阶段 1 — 原始数据（只读）
-├── 02_PreprocessedData/        # 阶段 1 — cleaned.csv + 质量报告
-├── 03_AnalysisMethods/         # 阶段 2 — 方法代码 + 方法说明
-├── 04_Outputs/                 # 阶段 2 — 图表输出
-├── Reference/                  # 阶段 3 — 文献
-├── 05_Manuscript/              # 阶段 3 — IMRAD 论文各章节；投稿工具产出投稿信/审稿回复/final
+├── .clinpub/                   # Phase 0 — PROJECT.md / ROADMAP.md / STATE.md
+├── 01_RawData/                 # Phase 1 — 原始数据（只读）
+├── 02_PreprocessedData/        # Phase 1 — cleaned.csv + 质量报告
+├── 03_AnalysisMethods/         # Phase 2 — 方法代码 + 方法说明
+├── 04_Outputs/                 # Phase 2 — 图表输出
+├── Reference/                  # Phase 3 — 文献
+├── 05_Manuscript/              # Phase 3 — IMRAD 论文各章节；投稿工具产出投稿信/审稿回复/final
 └── project_config.yml          # 项目配置
 ```
 
@@ -158,9 +158,7 @@ Project_Root/
 | **Topic Miner Agent** | Python | 选题挖掘：数据画像、文献扫描、候选选题生成 |
 | **Analyst Agent** | R / Python | 数据清洗、统计分析、图表生成 |
 | **Reference Agent** | Python | 文献检索（PubMed）、PDF 阅读、引用管理 |
-| **Writer Agent** | — | IMRAD 论文撰写、图表整合、改进修订与审稿回复 |
-| **Clinpub Planner** | — | 研究分析规划与波浪依赖图 |
-| **Clinpub Executor** | R / Python | 计划执行与原子提交 |
+| **Writer Agent** | — | 递进式论文撰写（R→M→D→C→I→Abstract）、图表整合、改进修订与审稿回复 |
 | **Clinpub Verifier** | — | 跨阶段验证（15 种模式） |
 | **Modify Agent** | R | 分析产出修改：图表风格、方法、变量、新增方法 |
 
@@ -168,21 +166,21 @@ Project_Root/
 
 ## 命令参考
 
-| 命令 | 阶段 | 用途 |
+| 命令 | Phase | 用途 |
 |---|---|---|
-| `/clinpub:overview` | — | 命令参考总览 |
-| `/clinpub:data2idea <file>` | — | 从数据中挖掘选题 |
+| `/clinpub` | — | **枢纽**：无参看状态 / `help` 看参考 / `next` 核验并推进 / 其余文本按意图路由 |
 | `/clinpub:initialize` | 0 | 项目初始化或导入已有项目 |
 | `/clinpub:data-prep` | 1 | 数据清洗 → cleaned.csv |
-| `/clinpub:analysis` | 2 | 自适应统计分析 |
-| `/clinpub:writing` | 3 | IMRAD 论文撰写（核心管线终点） |
-| `/clinpub:improving` | 工具 | 自审 + 直接改进稿件与分析（可反复） |
-| `/clinpub:coverletter` | 工具 | 按目标期刊生成投稿信 |
-| `/clinpub:review` | 工具 | 投稿后：处理真实审稿意见 → 回复信 → 调用 improving 修稿 |
-| `/clinpub:milestone <N>` | 关卡 | 阶段关卡评审与用户签核 |
+| `/clinpub:analysis` | 2 | **迭代分析**：每批 1–3 个方法，结果驱动下一批 |
+| `/clinpub:writing` | 3 | **递进写作**：骨架 → R→M→D→C→I → Abstract |
 | `/clinpub:modify` | 工具 | 修改分析产出或新增分析方法 |
-| `/clinpub:do` | — | 智能路由：自动检测状态并分发 |
-| `/clinpub:next-step` | — | 自动推进到下一步 |
+| `/clinpub:improving` | 工具 | 自审 + 直接改进稿件与分析（可反复） |
+| `/clinpub:review` | 工具 | 投稿后：处理真实审稿意见 → 回复信 → 调用 improving 修稿 |
+| `/clinpub:coverletter` | 工具 | 按目标期刊生成投稿信 |
+| `/clinpub:data2idea <file>` | 工具 | 从数据中挖掘选题 |
+
+> 3.0 起原 `overview` / `do` / `next-step` / `milestone` 四命令已合并进 `/clinpub` 枢纽，
+> 状态判据只维护一份，且"推进"与"关卡核验"成为原子动作（未签字不推进）。
 
 ---
 
@@ -192,9 +190,9 @@ Project_Root/
 
 | 门控 | 位置 | 核心检查 |
 |---|---|---|
-| 伦理审查 | 阶段 0 → 1 | IRB 审批、去标识化、知情同意 |
-| 数据质量 | 阶段 1 → 2 | cleaned.csv 完整性、缺失率、样本量 |
-| 分析有效性 | 阶段 2 → 3 | 方法执行完整性、效应量报告 |
+| 伦理审查 | Phase 0 → 1 | IRB 审批、去标识化、知情同意 |
+| 数据质量 | Phase 1 → 2 | cleaned.csv 完整性、缺失率、样本量 |
+| 分析有效性 | Phase 2 → 3 | 方法执行完整性、效应量报告 |
 | 投稿就绪 | 投稿前 | IMRAD 完整、图表 ≥300 DPI、引用含 DOI、投稿信就绪 |
 
 ---
@@ -329,8 +327,8 @@ pandas >= 2.0, numpy >= 1.24, requests >= 2.31, openpyxl >= 3.1
 
 - **4-phase core pipeline**: Init → Data Prep → Analysis → Writing, with milestone gates between phases (writing completes the core pipeline)
 - **Post-writing tools**: `improving` (self-review + revise), `coverletter` (target-journal cover letter), `review` (post-submission reviewer response) — standalone, invocable anytime a manuscript exists
-- **8 specialized AI agents**: Topic mining, data cleaning, statistical analysis, literature search, manuscript writing, verification, planning, and modification
-- **Adaptive analysis**: Dynamically proposes statistical methods based on data characteristics (groups, timepoints, outcome types)
+- **6 specialized AI agents**: Topic mining, data cleaning, statistical analysis, literature search, manuscript writing, verification, and modification
+- **Iterative analysis**: 1–3 methods per batch, next batch decided from results via a decision-rule library until saturation
 - **Publication-grade output**: ≥300 DPI figures, customizable `theme_pub()` theme and color palette, Vancouver citations with DOIs
 - **Workflow enforcement**: 3 PreToolUse hooks guard phase ordering, milestone prerequisites, and prompt injection
 - **Multi-study-type support**: RCT (CONSORT), Cohort/Case-Control/Cross-Sectional (STROBE), Descriptive
@@ -373,7 +371,7 @@ See [INSTALL.md](INSTALL.md) for detailed instructions.
 ## Quick Start
 
 ```bash
-/clinpub:overview               # View command reference
+/clinpub help               # View command reference
 /clinpub:data2idea data.csv     # Mine topics from data
 /clinpub:initialize                   # Phase 0: Initialize project
 /clinpub:data-prep              # Phase 1: Data cleaning
@@ -382,7 +380,7 @@ See [INSTALL.md](INSTALL.md) for detailed instructions.
 /clinpub:improving              # Tool: self-review + directly revise manuscript & analysis
 /clinpub:coverletter            # Tool: cover letter for the target journal
 /clinpub:review                 # Tool: post-submission — handle real reviewer comments
-/clinpub:milestone <N>          # Phase gate review
+/clinpub next <N>          # Phase gate review
 ```
 
 Each phase follows a 4-step pattern: **DISCUSS → PLAN → EXECUTE → VERIFY**.
@@ -398,7 +396,7 @@ Full tutorial, example data, and FAQ → `docs/getting-started.md`
 ```
 USER → COMMANDS (commands/*.md — 13 entry points)
          → WORKFLOWS (pipeline/workflows/*.md — 12 orchestration files)
-           → AGENTS (agents/*.md — 8 specialized agents, each with fresh context)
+           → AGENTS (agents/*.md — 6 specialized agents, each with fresh context)
              → SCRIPTS (scripts/*.py — data profiler + native NCBI/PubMed search + R/Python tools)
              → HOOKS (hooks/ — 3 PreToolUse guards)
 ```
@@ -409,7 +407,7 @@ USER → COMMANDS (commands/*.md — 13 entry points)
 clinpub/
 ├── .claude-plugin/             # Plugin manifest (plugin.json)
 ├── commands/                   # 13 slash command entry points
-├── agents/                     # 8 specialized AI agents
+├── agents/                     # 6 specialized AI agents
 ├── pipeline/
 │   ├── workflows/              # 12 phase/tool orchestration files
 │   ├── references/             # 15 reference documents
@@ -424,7 +422,7 @@ clinpub/
 ├── CHANGELOG.md                # Version history
 ├── CONTRIBUTING.md             # Contribution guidelines
 ├── INSTALL.md                  # Installation guide
-└── package.json                # npm metadata (v2.3.0)
+└── package.json                # npm metadata (v3.0.0)
 ```
 
 ### User Project Directory
@@ -450,9 +448,7 @@ Project_Root/
 | **Topic Miner Agent** | Python | Topic mining: data profiling, literature scan, candidate topic generation |
 | **Analyst Agent** | R / Python | Data cleaning, statistical analysis, figure & table generation |
 | **Reference Agent** | Python | Literature search (PubMed), PDF reading, citation management |
-| **Writer Agent** | — | IMRAD manuscript drafting, figure integration, improvement & review response |
-| **Clinpub Planner** | — | Research analysis planning with wave dependency graphs |
-| **Clinpub Executor** | R / Python | Plan execution with atomic commits |
+| **Writer Agent** | — | Progressive drafting (R→M→D→C→I→Abstract), figure integration, improvement & review response |
 | **Clinpub Verifier** | — | Cross-phase verification (15 modes) |
 | **Modify Agent** | R | Post-analysis modification: figure style, methods, variables, new method addition |
 
@@ -462,19 +458,20 @@ Project_Root/
 
 | Command | Phase | Description |
 |---|---|---|
-| `/clinpub:overview` | — | Command reference overview |
-| `/clinpub:data2idea <file>` | — | Topic mining from data |
+| `/clinpub` | — | **Hub**: no args = status; `help` = reference; `next` = verify & advance; other text = intent routing |
 | `/clinpub:initialize` | 0 | Project setup or import existing |
 | `/clinpub:data-prep` | 1 | Data cleaning → cleaned.csv |
-| `/clinpub:analysis` | 2 | Adaptive statistical analysis |
-| `/clinpub:writing` | 3 | IMRAD manuscript drafting (core pipeline终点) |
-| `/clinpub:improving` | tool | Self-review + directly revise manuscript & analysis (repeatable) |
-| `/clinpub:coverletter` | tool | Gather target-journal submission requirements → cover letter |
-| `/clinpub:review` | tool | Post-submission: real reviewer comments → response letter → delegate revision to improving |
-| `/clinpub:milestone <N>` | gate | Phase gate verification with user sign-off |
+| `/clinpub:analysis` | 2 | **Iterative** analysis: 1–3 methods per batch, next batch driven by results |
+| `/clinpub:writing` | 3 | **Progressive** drafting: skeleton → R→M→D→C→I → Abstract |
 | `/clinpub:modify` | tool | Modify analysis outputs or add new analysis methods |
-| `/clinpub:do` | — | Smart router: auto-detect state and route |
-| `/clinpub:next-step` | — | Auto-advance to next step |
+| `/clinpub:improving` | tool | Self-review + directly revise manuscript & analysis (repeatable) |
+| `/clinpub:review` | tool | Post-submission: real reviewer comments → response letter → delegate revision to improving |
+| `/clinpub:coverletter` | tool | Gather target-journal submission requirements → cover letter |
+| `/clinpub:data2idea <file>` | tool | Topic mining from data |
+
+> Since 3.0, the former `overview` / `do` / `next-step` / `milestone` commands are merged into the
+> `/clinpub` hub: one shared set of state criteria, and "advance" is now atomic with "gate verification"
+> (no advance without sign-off).
 
 ---
 

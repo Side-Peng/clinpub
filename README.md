@@ -1,4 +1,4 @@
-﻿# ClinPub — 临床研究发表管线
+# ClinPub — 临床研究发表管线
 
 端到端临床数据分析与 SCI 发表管线，覆盖从原始数据到论文投稿的完整流程。
 
@@ -18,17 +18,21 @@
 
 | 平台 | 目录 | 状态 | 安装方式 |
 |------|------|------|----------|
-| [Claude Code](claude-code/) | `claude-code/` | ✅ v2.3.0 稳定版 | `claude plugin install clinpub`（Marketplace）或 `claude --plugin-dir ./claude-code`（本地） |
-| [OpenAI Codex](codex/) | `codex/clinpub/` | ✅ v2.3.0 稳定版 | `codex plugin install ./codex/clinpub`（本地）或 Marketplace |
-| [Qoder](qoder/) | `qoder/` | ✅ v2.3.0 稳定版 | 应用内导入插件，或复制 `qoder/` 到插件目录 |
+| **[DeepSeek Harness](docs/MIGRATION-TO-DSH.md)** | `.dsh/skills/` + `dsh/` | 🚧 **主版本（进行中）** | 仓库内自动发现；跨项目需链接到 `~/.agents/skills` |
+| [Claude Code](claude-code/) | `claude-code/` | ✅ v3.0.0 | `claude plugin install clinpub`（Marketplace）或 `claude --plugin-dir ./claude-code`（本地） |
+| [OpenAI Codex](codex/) | `codex/clinpub/` | ✅ v3.0.0 | `codex plugin install ./codex/clinpub`（本地）或 Marketplace |
+
+> **Qoder 平台已于 3.0 移除**（2026-10-18）。历史版本可从 git 记录中取回。后续主版本以 DeepSeek Harness 为主，Claude Code / Codex 作为已同步的稳定版保留。
 
 ## 📋 管线概览
 
 ```
-Phase 0          Phase 1         Phase 2           Phase 3
-项目初始化  →  数据清洗  →  统计分析  →  论文写作（核心管线终点）
-                ↓             ↓              ↓
-              cleaned.csv    图表+表格     manuscript.md
+阶段0          阶段1         阶段2             阶段3
+项目初始化  →  数据清洗  →  迭代分析  →  递进写作（核心管线终点）
+                ↓             ↓                ↓
+              cleaned.csv    图表+表格      sections/ → manuscript.md
+
+阶段2 迭代：每批 1–3 个方法 → 看结果 → 据决策规则定下一批 → 饱和后冻结阶段3 递进：图表骨架 → Results → Methods → Discussion → Conclusion → 叙事设计 → Introduction → Abstract
 
 独立工具（不占 Phase）：improving（改进）· coverletter（投稿信）· review（投稿后审稿回复）· modify（分析修改）· data2idea（选题挖掘）
 ```
@@ -37,7 +41,8 @@ Phase 0          Phase 1         Phase 2           Phase 3
 
 - **12+ 统计方法**：基线表、组间比较、回归、生存分析、ROC、LASSO、PSM、RCS、MICE、中介/调节、聚类等
 - **5 种研究类型**：RCT、队列、病例对照、横断面、描述性
-- **双模式写作**：一键成稿 / 逐步写作，内置反 AI 写作规则
+- **迭代分析**：方法不是一次定完的，而是每批根据上一批结果与决策规则库推进
+- **递进写作**：从结果往回写（Results 先于 Introduction），每节读前节实际内容，改一节自动标脏下游
 - **PubMed 内置检索**：文献搜索、引用管理、Vancouver 格式输出
 - **出版级输出**：≥300 DPI 图表、可配置主题/配色、CONSORT/STROBE/PRISMA 规范
 
@@ -59,7 +64,7 @@ claude plugin marketplace add Side-Peng/clinpub   # 添加 GitHub 插件源（�
 claude plugin install clinpub                     # 安装插件
 ```
 
-安装后**重启 Claude Code**，输入 `/clinpub:overview` 验证插件已加载。
+安装后**重启 Claude Code**，输入 `/clinpub help` 验证插件已加载。
 
 **方式二：本地目录（开发调试，免发布）**
 
@@ -86,37 +91,23 @@ codex plugin install clinpub
 
 详见 [codex/INSTALL.md](codex/INSTALL.md)
 
-### Qoder
+### DeepSeek Harness（主版本）
 
-**方式一：应用内导入（推荐）**
+> 自 3.0 起，**DSH 是主实现**，技能与工作流在此演进，再同步回 claude-code / codex。
+> 迁移方案见 [docs/MIGRATION-TO-DSH.md](docs/MIGRATION-TO-DSH.md)（进行中）。
 
-在 Qoder 的插件设置中选择**从本地文件夹导入插件**，选择本仓库的 `qoder/` 目录即可。
+**在仓库内使用（零安装）**：DSH 会自动发现 `.dsh/skills/`，打开本仓库即可看到 14 个 `clinpub-*` 技能。
 
-**方式二：手动复制到插件目录**
-
-Qoder 复用 Claude 插件缓存目录结构（`~/.claude/plugins/cache/clinpub/clinpub/<版本号>/`）：
-
-Windows PowerShell（在仓库根目录执行）：
-
-```powershell
-Copy-Item -Recurse .\qoder\ "$env:USERPROFILE\.claude\plugins\cache\clinpub\clinpub\2.3.0\"
-```
-
-macOS / Linux：
-
-```bash
-cp -r qoder/ ~/.claude/plugins/cache/clinpub/clinpub/2.3.0/
-```
-
-安装后在对话中 `@编排器` 启动项目，或 `@项目初始化` 开始新项目。
+**跨项目使用**：把技能目录链接到用户技能根（`~/.agents/skills` 或 `~/.dsh/skills`）。
 
 ## 📦 项目结构
 
 ```
 clinpub/
+├── .dsh/skills/    # DeepSeek Harness 技能（主版本，仓库内自动生效）
+├── dsh/            # DSH 共享核心（pipeline / agents / scripts）
 ├── claude-code/    # Claude Code 插件（.claude-plugin 格式）
 ├── codex/          # Codex 插件（.codex-plugin 格式）
-├── qoder/          # QoderWork 插件（.qoder-plugin 格式）
 ├── docs/           # 通用开发文档
 ├── CHANGELOG.md    # 版本历史
 └── README.md       # 本文件
@@ -127,29 +118,27 @@ clinpub/
 ### 三层架构
 
 ```
-用户 → 命令 (commands/*.md - 11 个入口)
+用户 → 命令 (commands/*.md - 10 个入口)
        → 工作流 (pipeline/workflows/*.md - 10 个编排文件)
-         → 智能体 (agents/*.md - 8 个专业智能体，每次独立上下文)
+         → 智能体 (agents/*.md - 6 个专业智能体，每次独立上下文)
            → 脚本 (scripts/*.py - 数据画像 + 内置 NCBI/PubMed 检索 + R/Python 工具)
            → 钩子 (hooks/ - 3 个 PreToolUse 守卫)
 ```
 
-### 8 个专业智能体
+### 6 个专业智能体
 
 | 智能体 | 语言 | 职责 |
 |--------|------|------|
 | Topic Miner Agent | Python | 数据画像、文献扫描、候选课题生成 |
-| Analyst Agent | R / Python | 数据清洗、统计分析、图表生成 |
+| Analyst Agent | R / Python | 数据清洗、迭代统计分析、图表生成 |
 | Reference Agent | Python | 文献搜索（PubMed）、PDF 阅读、引用管理 |
-| Writer Agent | — | IMRAD 论文撰写、图表整合、改进与投稿后修订 |
-| Clinpub Planner | — | 研究分析规划（波次依赖图） |
-| Clinpub Executor | R / Python | 计划执行（原子提交） |
+| Writer Agent | — | 递进式撰写（R→M→D→C→I→Abstract）、图表整合、改进与投稿后修订 |
 | Clinpub Verifier | — | 跨阶段验证（15 种模式） |
 | Modify Agent | R | 分析后修改：图表样式、方法、变量、新增方法 |
 
 ## 📚 命令参考
 
-> 下表命令行为以 **v2.3.0** 为准，三平台（claude-code / codex / qoder）均已同步；Codex 中 Phase 0 技能名为 `clinpub:init`。
+> 下表命令行为以 **v3.0.0** 为准，claude-code / codex 已同步；DSH 版为 3.0 主实现（进行中）。Codex 中阶段0 技能名为 `clinpub:init`。
 
 | 命令 | 阶段 | 描述 |
 |------|------|------|
@@ -173,10 +162,10 @@ clinpub/
 
 | 门控 | 位置 | 核心检查 |
 |------|------|----------|
-| IRB / 伦理 | Phase 0 → 1 | IRB 批准、去标识化、知情同意 |
-| 数据质量 | Phase 1 → 2 | cleaned.csv 完整性、缺失率、样本量 |
-| 分析有效性 | Phase 2 → 3 | 所有方法已执行、效应量已报告 |
-| 投稿准备 | Phase 3 → 提交 | IMRAD 完整、图表 ≥300 DPI、所有引用有 DOI |
+| IRB / 伦理 | 阶段0 → 1 | IRB 批准、去标识化、知情同意 |
+| 数据质量 | 阶段1 → 2 | cleaned.csv 完整性、缺失率、样本量 |
+| 分析有效性 | 阶段2 → 3 | 所有方法已执行、效应量已报告 |
+| 投稿准备 | 阶段3 → 提交 | IMRAD 完整、图表 ≥300 DPI、所有引用有 DOI |
 
 ## 📊 支持的研究类型
 
@@ -233,7 +222,7 @@ pip install pandas numpy requests openpyxl
 |------|------|
 | [Claude Code 文档](claude-code/CLAUDE.md) | Claude Code 插件详细文档 |
 | [Codex 安装指南](codex/INSTALL.md) | Codex 插件安装说明 |
-| [Qoder 文档](qoder/README.md) | QoderWork 插件文档 |
+| [DSH 迁移方案](docs/MIGRATION-TO-DSH.md) | DeepSeek Harness 主版本的迁移设计 |
 | [CHANGELOG.md](CHANGELOG.md) | 版本历史 |
 
 ## 🤝 贡献
@@ -241,7 +230,7 @@ pip install pandas numpy requests openpyxl
 各平台版本的贡献指南见对应目录：
 
 - [Claude Code 贡献指南](claude-code/CONTRIBUTING.md)
-- Codex / Qoder 版本遵循相同的代码独立原则
+- Codex 版本遵循相同的代码独立原则
 
 ## 📄 License
 

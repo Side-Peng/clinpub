@@ -1,6 +1,6 @@
 ---
 name: review
-description: "Post-submission: handle the journal's real reviewer comments. Intake the reviewers' comments provided by the user, draft a point-by-point response letter and improvement directions, confirm with the user, then delegate the actual revision to /clinpub:improving. Loops per revision round. Triggers: reviewer comments, revise-and-resubmit, response to reviewers, rebuttal."
+description: "投稿后：处理期刊的真实审稿意见。录入用户提供的审稿意见 → 起草逐条回复信与改进方向 → 用户确认 → 交 improving 执行修稿。按轮次循环。不模拟审稿人。触发：收到审稿意见、返修、回复审稿人、rebuttal。"
 argument-hint: "[paste reviewer comments or a file path, optional]"
 allowed-tools:
   - Read
@@ -31,7 +31,7 @@ For self-improving a draft without reviewers, use `/clinpub:improving`.
 <process>
 Execute the review workflow from pipeline/workflows/review.md end-to-end.
 
-Prerequisite: a submitted manuscript exists (`05_Manuscript/manuscript.md`) AND the user provides the journal's reviewer comments (pasted or as a file path). If no comments are provided, stop and explain that this command handles real post-submission feedback.
+Prerequisite: 已投稿的手稿存在（`05_Manuscript/manuscript.md` 且 `05_Manuscript/sections/` 可用），**并且**用户提供了真实的审稿意见（粘贴或文件路径）。未提供审稿意见则停止，并说明本命令处理的是**投稿后**的真实反馈；若只想自审改进，用 `/clinpub:improving`。
 </process>
 
 <success_criteria>

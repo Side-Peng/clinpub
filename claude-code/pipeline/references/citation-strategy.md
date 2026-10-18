@@ -64,7 +64,7 @@ description: "引用策略标准化规则：总量约束、段分配比、年限
 
 **讨论结果写入**：`project_config.yml` 的 `citation_strategy` 段。
 
-后续 `reference_pre_search` 和 `sequential_section_writing` 步骤读取此配置决定搜索参数和引用量。
+后续 `write_discussion` 与 `write_introduction` 步骤读取此配置决定搜索参数和引用量。
 
 ## 第七章：与已有规范的层级关系
 
@@ -72,8 +72,8 @@ description: "引用策略标准化规则：总量约束、段分配比、年限
 - `reference-library.md` 定义**"质"**的层面（JSON 格式、编号、去重规则、Vancouver 格式规范）
 - 两者互补，共同构成完整的引用管理体系
 - `discuss_citation_strategy` 步骤确定数量/年限/IF 参数
-- `reference_pre_search` 步骤使用这些参数执行实际搜索和筛选
-- `sequential_section_writing` 步骤在撰写时按配比控制各段引用量
+- `write_discussion` / `write_introduction` 步骤使用这些参数执行实际搜索和筛选
+- 撰写时按配比控制各段引用量
 
 ## 附录：常见场景速查
 

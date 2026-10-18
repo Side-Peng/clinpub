@@ -15,7 +15,7 @@
 
 ```xml
 <checkpoint type="decision" gate="blocking">
-  <context>Phase 1 — 缺失值处理策略</context>
+  <context>阶段1 — 缺失值处理策略</context>
   <question>变量 XXX 缺失率 25%，如何处理？</question>
   <options>
     - A: 删除该变量（推荐，因缺失率过高）
@@ -33,7 +33,7 @@
 
 ```xml
 <checkpoint type="verify" gate="blocking">
-  <context>Phase 1 — 数据清洗完成</context>
+  <context>阶段1 — 数据清洗完成</context>
   <summary>
     - 原始数据: 500 行 × 30 列
     - 清洗后: 485 行 × 32 列
@@ -70,7 +70,7 @@ Phase 完成时，正式验证所有成功标准并记录。
     | 缺失值策略 | MICE 插补 (m=5) | 5-20% 缺失率 |
     | 异常值处理 | Winsorize 1%/99% | 保留样本量 |
   </decisions>
-  <signoff>用户确认 → 进入 Phase 2</signoff>
+  <signoff>用户确认 → 进入阶段2</signoff>
 </milestone>
 ```
 

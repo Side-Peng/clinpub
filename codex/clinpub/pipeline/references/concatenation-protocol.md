@@ -1,17 +1,24 @@
 # 终稿拼接协议 (Concatenation Protocol)
 
-> Phase 3: 各段撰写完成后，执行本协议将 manuscript.md 处理为完整终稿。
+> 阶段3: 各节撰写完成并通过拼装校验后，执行本协议把 `manuscript.md` 处理为完整终稿。
 > 原则：拼接而非重写（WRITE-02），引用统一整理，占位符替换。
 > 前置规范：参见 `pipeline/references/reference-library.md` 获取引用库 JSON schema、占位符正则模式和 Vancouver 格式规范。
+>
+> **ClinPub 3.0 变更**：正文先写入 `05_Manuscript/sections/{key}.md`（六节：results / methods /
+> discussion / conclusion / introduction / abstract），由 `scripts/assemble_manuscript.py`
+> 按 IMRAD 顺序拼成 `manuscript.md`。本协议从此**只处理已拼装的文件**，不再负责"把段落接起来"。
 
 ## 输入输出
 
-### 输入（由分段撰写流程 `sequential_section_writing` / `batch_writing` 产生）
+### 输入
 
 | 文件 | 来源 |
 |------|------|
-| `05_Manuscript/manuscript.md` | 各段按 IMRAD 顺序直接追加写入（带 `## {Section}` 标题），不生成 sections/ 文件 |
-| `Reference/reference_library.json` | reference-agent 逐段更新 |
+| `05_Manuscript/manuscript.md` | 由 `python scripts/assemble_manuscript.py` 生成（已按 IMRAD 顺序，含 Abstract / Introduction / Methods / Results / Discussion / Conclusion） |
+| `Reference/reference_library.json` | reference-agent 逐节更新 |
+| `05_Manuscript/sections/*.md` | 各节草稿（只读，用于定位占位符来源） |
+
+> 拼装脚本会在存在 `draft` / `stale` 章节时拒绝生成，因此本协议不需要再做完整性判断。
 
 ### 输出
 
@@ -86,7 +93,8 @@ supp_figure_counter = 1
 默认规则: {{Method:CamelCaseName}} → "the {Name in lowercase} analysis"
 ```
 
-从 `project_config.yml` 的 `analysis_plan.waves[*].methods[*].id` 读取分析方法名列表，建立映射。
+方法名映射来源（3.0）：扫描 `03_AnalysisMethods/*/` 的目录名与各 `方法说明.md` 的标题，建立映射。
+（不再从 `project_config.yml` 的 `analysis_plan.waves` 读取——该字段已废弃。）
 
 #### 2d. Section 交叉引用替换
 

@@ -4,16 +4,26 @@
 # ============================================================
 
 project:
-  name: "项目名称"
+  name: "项目名称"                      # 工作名（用于文档与里程碑）
+  title: ""                            # 正式标题——Phase 3 的 write_abstract_title 写入，
+                                       # 先写完全文再定标题；拼装脚本读取此字段作 manuscript.md 的一级标题
   description: "项目描述"
   design: "队列研究"                    # RCT / 队列研究 / 病例对照 / 横断面 / 描述性
   sample_size: 0
   target_journal: ""                   # 目标投稿期刊——初始化时由用户指定，不预设（适配任意临床研究文章）
   reporting_standard: "STROBE"         # CONSORT / STROBE / PRISMA
 
+# ============================================================
+# analysis_mode: 分析模式（3.0 新增）
+#   confirmatory —— 主要结局在研究开始前已确定（默认）
+#   exploratory  —— 尚未确定主要结局，由 Phase 2 第一批数据画像/描述分析来发现
+# 探索性模式下 variables.outcome 允许留空，Phase 0 关卡据此放行。
+# ============================================================
+analysis_mode: "confirmatory"          # confirmatory / exploratory
+
 variables:
-  outcome: ""                          # 结局变量名
-  outcome_type: "binary"               # binary / continuous / survival
+  outcome: ""                          # 结局变量名（exploratory 模式可留空，待第一批分析确定）
+  outcome_type: ""                     # binary / continuous / survival（exploratory 模式可留空）
   exposure: []                         # 暴露/预测变量
   covariates: []                       # 协变量
   time_variable: ""                    # 生存分析用（随访时间）
@@ -32,30 +42,14 @@ paths:
   global: "00_Global"
 
 # ============================================================
-# analysis_plan: 由 Phase 2 动态生成，非手动填写。
-# Claude 在 diagnose → propose → confirm 流程后，
-# 将用户确认的分析方案写入此处。
-# 波次数量不固定（可能 1 波、3 波、6 波），
-# 完全取决于项目需求。
+# analysis_budget: Phase 2 迭代分析的预算（3.0 新增）
+# 迭代细节不写在这里——完整的每批记录在 .clinpub/ANALYSIS_LOG.md。
+# 此处只放"何时必须停"的硬约束。
 # ============================================================
-analysis_plan:
-  # 示例（由 Claude 在 Phase 2 讨论后自动填充）：
-  # waves:
-  #   1:
-  #     label: "基线描述"
-  #     methods:
-  #       - id: "01_BaselineTable"
-  #         type: baseline
-  #         data: "cleaned.csv"
-  #         timepoint: "baseline"
-  #   2:
-  #     label: "组间比较"
-  #     methods:
-  #       - id: "02_TwoGroupComparison"
-  #         type: comparison
-  #         method: "wilcox.test"
-  #         grouping: "Treatment"
-  waves: {}
+analysis_budget:
+  max_batches: 6        # 最多分析几批（0 = 不限）
+  max_methods: 12       # 最多执行几个方法（0 = 不限）
+  ask_on_branch: true   # 出现分叉（见 analysis_decision_policy.md §5）时是否停下询问用户
 
 journal:
   name: ""                        # 期刊名——初始化时询问用户后填入（不预设，未定可留空）
@@ -74,19 +68,27 @@ language:
 
 quality:
   journal_level: "Q1"                  # Q1 / Q2
-  figure_dpi: 300
-  figure_format: "png"                 # png / pdf / tiff
+  # 风格包：一次选定整套（栏宽/字号/线宽/配色/导出格式）
+  style: "nature"                      # nature / lancet / jama / nejm
+  style_overrides: {}                  # 只覆盖个别项，如 {line: {axis: 0.5}}
+  # --- 画布优先：先定印刷尺寸，再让字号跟着尺寸走 -------------------
+  # 期刊栏宽固定，图必须按最终尺寸作画；放大到 A4 再缩回会让字号比例全错。
+  figure_width_mm: 183                 # 89=单栏 / 120=1.5 栏 / 183=双栏
+  figure_dpi: 600                      # 仅对位图（补材 TIFF/PNG）生效；主图走矢量，此值不影响
+  figure_format: "pdf"                 # 主图矢量优先；tiff 仅用于补材
   figure_font: "Arial"
-  figure_font_size: 10
+  # 留空 = 由 figure_width_mm 推导（≤95mm→7pt，否则 6.5pt），符合 5–7pt 印刷区间
+  figure_font_size: null
   # --- theme_pub 自定义参数（Phase 2 discuss_and_confirm 阶段填写）---
   # 未配置的字段使用 r_patterns.md §1.2 的默认值
   theme:
     variant: "theme_pub"               # theme_pub / theme_pub_light
-    base_size: 11                      # 基础字号
-    base_family: "sans"                # 字体族（Windows 映射到 Arial）
+    base_size: null                    # null = 按画布推导；显式数值会覆盖推导
+    base_family: "Arial"               # 期刊要求 Arial/Helvetica；不要用 "sans"
     legend_position: "right"           # right / bottom / top / none
     title_hjust: 0                     # 标题对齐：0=左对齐(Nature), 0.5=居中
-    panel_border: true                 # true=有边框, false=无边框
+    panel_border: false                # 默认无外框（数据墨迹优先）
+    grid: false                        # 默认无网格；复杂多面板图可临时开
   # --- 配色自定义参数（Phase 2 discuss_and_confirm 阶段填写）---
   # 未配置的字段使用 r_patterns.md §1.1 的默认值
   color_palette:
@@ -101,6 +103,17 @@ analysis:
   missing_threshold_high: 0.20         # 缺失率 > 20% 讨论是否保留
   significance_level: 0.05
   multiple_comparison: "fdr"           # fdr / bonferroni / none
+
+# ============================================================
+# writing: Phase 3 递进式写作配置（3.0 新增）
+# 写作顺序固定为 Results → Methods → Discussion → Conclusion
+#            → 叙事设计 → Introduction → Abstract
+# 此处只控制"在哪几节之后暂停等用户审阅"。
+# ============================================================
+writing:
+  pause_after: [results, discussion]   # 这些章节写完后暂停；其余自动推进。置空 [] = 全程不暂停
+  min_words: 5000                      # 全文正文字数下限
+  abstract_words: [250, 300]           # 摘要词数区间
 
 # ============================================================
 # citation_strategy: 由 Phase 3 writing workflow 的

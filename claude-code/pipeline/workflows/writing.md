@@ -1,39 +1,68 @@
-﻿---
+---
 name: writing
-description: "Phase 3 orchestration: IMRAD manuscript pipeline with two modes. Sequential mode: each section → reference-agent pre-search → writer-agent draft → user review pause. Batch mode (一键成稿): bulk reference search for all sections → bulk writing without pause → single final review. Shared reference library (JSON) for cross-section deduplication. Placeholders for cross-references. Sections are appended directly into a single manuscript.md (no sections/ files); final processing produces the complete manuscript.md."
+description: "阶段3 编排：递进式写作。图表骨架 → Results → Methods → Discussion → Conclusion → 叙事设计 → Introduction → Abstract → 一致性复核 → 拼装。每节读取前节的实际内容，产物写入 05_Manuscript/sections/*.md，最后由脚本按 IMRAD 顺序拼成 manuscript.md。"
 ---
 
 <purpose>
-Draft a complete IMRAD manuscript in Chinese (English figures/tables) tailored to the target journal set at initialization (adapts to any clinical research article type). Two-agent workflow: Reference Agent conducts literature search, Writer Agent writes following the appropriate study type template.
+用**递进**方式产出 IMRAD 手稿。
+
+与 2.x 的关键差异：
+1. **顺序**：不再 Introduction → Methods → Results → Discussion，而是从结果往回写
+2. **依赖**：每一节必须读取前面各节的实际内容，不是各写各的最后拼接
+3. **载体**：单节写入 `05_Manuscript/sections/{key}.md`，`manuscript.md` 由脚本生成
+
+写作标准一律以 `pipeline/references/writing_standards.md` 为准。
 </purpose>
 
 <required_reading>
+<!-- 人读清单。实际注入由 commands/writing.md 的 !`cat` 完成 -->
+@./pipeline/workflows/writing.md
+@./pipeline/references/writing_standards.md
 @./pipeline/references/journal_standards.md
-@./pipeline/references/checkpoints.md
+@./pipeline/references/citation-strategy.md
 @./pipeline/references/reference-library.md
+@./pipeline/references/concatenation-protocol.md
+@./pipeline/references/checkpoints.md
 @./agents/reference-agent.md
 @./agents/writer-agent.md
-@./pipeline/references/citation-strategy.md
 </required_reading>
-
-<context_files>
-@./pipeline/contexts/writing.md
-</context_files>
 
 <process>
 
-<step name="discuss_citation_strategy" priority="first">
-引用策略讨论（per D-19, D-20, D-21）
+<step name="setup_writing_session" priority="first">
+### 1. 前置检查阶段2 必须已冻结。确认以下存在，缺一即停：
 
-在撰写手稿前与用户确认引用策略。策略默认值参见 `@./pipeline/references/citation-strategy.md`。
+| 必需 | 路径 |
+|---|---|
+| 分析摘要 | `.clinpub/phases/02-analysis/ANALYSIS_SUMMARY.md` |
+| 分析日志 | `.clinpub/ANALYSIS_LOG.md` |
+| 输出清单 | `04_Outputs/MANIFEST.yaml` |
+| 共享图表配置 | `04_Outputs/_figure_config.R` |
 
-讨论内容：
+缺失则提示用户先执行 `/clinpub-analysis` 或 `/clinpub next`。
 
-1. **各段引用数量（D-18）**：默认配比 Intro 10-15, Methods 3-5, Results 0-3, Discussion 15-25（弹性 ±20%），总量 30-55 为硬约束（D-17）。与用户确认是否需要调整
-2. **时间范围（D-21）**：默认近 5 年文献。是否有经典文献/landmark 研究需要作为年限例外？
-3. **IF 偏好（D-21）**：目标期刊影响因子下限偏好。无严格默认值，与用户讨论后确定
+### 2. 读取写作配置
 
-讨论结果写入 `project_config.yml`（per D-22）中的 `citation_strategy` 段：
+从 `project_config.yml`：
+
+```yaml
+writing:
+  pause_after: [results, discussion]   # 在这些章节后暂停审阅
+  min_words: 5000
+  abstract_words: [250, 300]
+```
+
+缺失则用默认值并写回。
+
+### 3. 引用策略讨论（per D-17~D-22）
+
+与用户确认（默认值见 `citation-strategy.md`）：
+
+1. **各段引用量**：Intro 10–15、Methods 3–5、Results 0–3、Discussion 15–25；总量 30–55 为硬约束
+2. **时间范围**：默认近 5 年；是否有需要例外的 landmark 研究
+3. **IF 偏好**：目标期刊影响因子下限
+
+写入 `project_config.yml` 的 `citation_strategy`：
 
 ```yaml
 citation_strategy:
@@ -51,370 +80,322 @@ citation_strategy:
     note: ""
 ```
 
-后续 `reference_pre_search` 和 `sequential_section_writing` 步骤读取此配置决定搜索参数和引用量。
+### 4. 建目录
 
-参见 `@./pipeline/references/citation-strategy.md` 获取完整引用策略规范。
-</step>
-
-<step name="discuss_writing_plan" priority="first">
-Discuss with user before drafting:
-
-1. **Core argument**: main finding and novelty angle
-2. **Target journal**: read `journal.name` and `journal.tier` from `project_config.yml`; apply corresponding tier standards from `journal_standards.md`
-3. **Manuscript structure**: any journal-specific section requirements (from `journal.specific_requirements`)
-4. **Reference Agent pre-search**: confirm search terms and strategy
-5. **Figures/tables**: which outputs to include, order, and integration
-</step>
-
-<step name="choose_writing_mode" priority="high">
-在引用策略和写作计划确认后，询问用户选择写作模式：
-
-**向用户呈现选择**：
-
+```bash
+mkdir -p 05_Manuscript/sections
 ```
-## 写作模式选择
-
-写作大纲已确认。请选择写作模式：
-
-### 1. 一键成稿（batch）
-- 自动批量完成全部 4 段文献搜索
-- 自动批量撰写全部 4 段（无中间审阅）
-- 最终统一呈现完整终稿供审阅
-- 适合：对写作框架有信心，希望快速出稿
-
-### 2. 逐步写作（sequential）
-- 每段独立执行：文献搜索 → 撰写 → 用户审阅
-- 每段确认后再进入下一段
-- 适合：需要逐段把控质量，随时调整方向
-```
-
-根据用户选择：
-- 选择 `一键成稿` → 跳过 `reference_pre_search` 和 `sequential_section_writing`，执行 `batch_writing`
-- 选择 `逐步写作` → 执行现有 `reference_pre_search` + `sequential_section_writing` 流程
 </step>
 
-<step name="reference_pre_search" priority="high">
-Reference Agent performs comprehensive literature search:
+<step name="build_figure_skeleton" priority="high">
+**在写任何正文之前**，先把图表排定。这是全文的定海神针。
 
-1. Check search tool availability (see reference-agent.md §check_skill_availability 三级降级)
-2. If in fallback mode (Mode B), inform user and confirm before proceeding
-3. Search PubMed (or Tavily/WebSearch fallback) for: disease domain + exposure/biomarker + outcome + population
-4. Build citation_map.md with PMID, DOI, location, citation reason, supported argument (mark `source: fallback` if in Mode B)
-5. Build references.bib in Vancouver format with DOIs
-6. Retrieve full text for key references via Unpaywall/pdf-reader
-7. Write all outputs to `Reference/` directory
-8. Write MANIFEST.yaml in `Reference/` listing writer-agent as consumer
+1. 读取 `04_Outputs/MANIFEST.yaml` 与各方法目录的 `方法说明.md`
+2. 按**研究类型 + 报告规范**确定图表清单（不套固定三件套）：
 
-See `@./agents/reference-agent.md` for detailed search protocol.
+   | 研究类型 | 图表清单 |
+   |---|---|
+   | RCT | CONSORT 流程图 + 主要终点表 + 安全性表 |
+   | 队列 / 病例对照 / 横断面 | STROBE 参与者流程图 + 基线表 + 主要分析表 + 敏感性分析 |
+   | 描述性 | 基线表 + 分布/趋势图 |
+
+3. 排序：**顺序 = Results 叙述顺序 = 读者理解顺序**（不是分析执行顺序）
+4. 为每张图写**一句大白话结论**（不含统计量）
+5. 按 `pipeline/templates/figure-skeleton.md` 写入 `05_Manuscript/FIGURE_SKELETON.md`
+
+**自检**：把「一句话结论」按顺序连读，若不能构成完整故事，说明排序或选图有问题，先调整再往下走。
+
+**暂停**：把骨架呈现给用户确认。骨架一旦定稿，Results 就有了唯一依据，后续不再随意增删图表。
 </step>
 
-<step name="sequential_section_writing" priority="high">
-以 IMRAD 顺序（Introduction → Methods → Results → Discussion）逐段撰写。每段分三阶段：reference-agent 文献预搜索 → writer-agent 撰写 → 用户审阅。
+<step name="write_results" priority="high">
+### 输入（必须真实读取）
 
-**顺序**: Introduction → Methods → Results → Discussion（D-01）
+- `05_Manuscript/FIGURE_SKELETON.md`
+- `04_Outputs/*/`（图、表、`方法说明.md` 的「输出结果」小节）
+- `.clinpub/ANALYSIS_LOG.md`（了解实际做了什么分析）
 
-**核心约束**:
-- 同一 writer-agent 分 4 轮对话（D-02），每轮仅给该段上下文
-- 不扩展 writer-agent.md 的角色定义（D-02）
-- 全文 >5000 字，自然成段论述，不用 bullet point（D-04）
-- Results 段落风格：描述关键发现 + 指向图表，不使用 "As shown in Table X" 作为段落开头（D-13）
+### 写法（见 writing_standards.md §3）
 
+- **一段对应一张图表**，顺序与骨架完全一致
+- 三段式：指路 → 核心趋势 → 必要细节（样本量、缺失、亚组）
+- 统计量格式：效应量 + 95%CI + 精确 p（禁 `p = 0.000`）
+- **禁止任何解释**——因果、机制、意义全部留给 Discussion
+- 禁段落开头写 "As shown in Table X"
+
+### 输出
+
+`05_Manuscript/sections/results.md`，frontmatter：
+
+```yaml
 ---
+section: results
+status: final
+inputs:
+  - 05_Manuscript/FIGURE_SKELETON.md
+  - 04_Outputs/
+  - .clinpub/ANALYSIS_LOG.md
+depends_on: []
+---
+```
 
-### 逐段循环
+### 暂停
 
-对每段（section in [introduction, methods, results, discussion]）执行以下三步：
+若 `results` ∈ `writing.pause_after` → 停下让用户审阅；否则继续。
+</step>
 
-#### Step A: Reference-Agent 文献预搜索（D-06）
+<step name="write_methods" priority="high">
+### 输入
 
-调用 reference-agent 搜索该段的 PubMed 文献。搜索策略（参考 `agents/reference-agent.md`）:
+- `.clinpub/ANALYSIS_LOG.md`（**实际执行了什么**）
+- `03_AnalysisMethods/*/方法说明.md`
+- `project_config.yml`（study_type、variables）
+- `pipeline/templates/study_types/{type}.md`
+- `05_Manuscript/sections/results.md`（确保方法覆盖面与结果对得上）
 
-| 段落 | 搜索关键词 | 引用量 |
-|------|-----------|--------|
-| Introduction | disease + exposure + outcome + population | 10-15 篇 |
-| Methods | methodology, standard guidelines, published protocols | 3-5 篇 |
-| Results | （非必要，仅对比时搜索） | 0-3 篇 |
-| Discussion | 对比同类研究 + 机制解释 + 临床意义相关文献 | 15-25 篇 |
+### 写法（见 writing_standards.md §4）
+
+**标准三段式**：
+
+1. **Participants / Study design** — 设计类型、入组/排除、时间地点、伦理批号与知情同意
+2. **Measures / Variables** — 评估工具（版本、信效度）、终点定义
+3. **Statistical Analysis** — 软件版本、正态性检验、比较方法、协变量、缺失处理、多重比较、敏感性分析
+
+**"如实"的判定标准（双向一致）**：
+
+- `ANALYSIS_LOG` 里做了的，这里必须写
+- 这里写了的，日志里必须真做过
+- **计划但被否决的方法不写进 Methods**（写进 Discussion 局限性）
+- 事后追加的分析标注 `post hoc / exploratory`
+
+### 输出
+
+`05_Manuscript/sections/methods.md`，frontmatter `depends_on: []`。
+
+### 暂停
+
+不在默认 `pause_after` 中 → 自动继续。
+</step>
+
+<step name="write_discussion" priority="high">
+### 文献搜索
+
+调用 reference-agent 搜索：对比同类研究 + 机制解释 + 临床意义。
 
 搜索后更新 `Reference/reference_library.json`：
-1. 读取已有库
-2. 新引用逐条去重（检查 `citation_key`）
-3. 获取摘要：对新引用调用 `pubmed_fetch.py`（有 PMID 时）或通过 DOI 解析获取完整摘要文本，写入 `abstract` 字段
-4. 分配新 ID（max_id + 1）
-5. 写入库（每条记录必须包含 `abstract` 字段，无法获取时标记为 `"pending"`）
-6. 更新 `Reference/MANIFEST.yaml`
 
-#### Step B: Writer-Agent 撰写（D-02, D-03）
+1. 读已有库 → 按 `citation_key` 去重
+2. 新引用取摘要（有 PMID 用 `pubmed_fetch.py`，否则 DOI 解析），写入 `abstract`；取不到标 `"pending"`
+3. 分配新 ID（max_id + 1）→ 写回 → 更新 `Reference/MANIFEST.yaml`
 
-调用 writer-agent（同一 agent，不扩展 role 定义），仅传入该段所需的上下文：
+### 输入
 
-| 段落 | 上下文来源（D-03 自动读取） |
-|------|---------------------------|
-| Introduction | Reference/reference_library.json（已有引用）、Reference/citation_map.md、Reference/literature_notes/ |
-| Methods | project_config.yml（study_type, variables）、pipeline/templates/study_types/{type}.md、03_AnalysisMethods/*/方法说明.md |
-| Results | 04_Outputs/*/（所有 figure + table + 方法说明，其中 方法说明 必须有「输出结果」subsection）|
-| Discussion | Reference/reference_library.json、Reference/citation_map.md、project_config.yml（target_journal, scope）|
+- `sections/results.md`
+- `sections/methods.md`
+- `.clinpub/ANALYSIS_LOG.md`（**分析过程**：为什么这样做、敏感性分析、被否决的备选）
+- `Reference/reference_library.json`、`Reference/citation_map.md`
 
-撰写规则：
-- Methods 从 spec + analysis pipeline outputs 自动生成初稿（D-05）
-- 使用 shared reference library (`Reference/reference_library.json`) 查询已有引用
-- 使用占位符进行交叉引用：`{{Table:N}}` `{{Figure:N}}` `{{Method:name}}` `{{Section:name}}`（D-11）
-- 自然成段论述，不使用 bullet point（D-04）
-- 每段撰写完成后直接追加写入 `05_Manuscript/manuscript.md`（文件不存在则创建），段首带 `## {段名}` 标题（`## Introduction` / `## Methods` / `## Results` / `## Discussion`），按 IMRAD 顺序累积成完整手稿
-- 不再生成 `05_Manuscript/sections/` 独立段文件（D-15）：手稿只输出 `05_Manuscript/manuscript.md` 一份文件
+### 写法（见 writing_standards.md §5）
 
-#### Step C: 用户审阅暂停（checkpoint）（D-01）
+四段式：
 
-段撰写完成后，pause 等待用户审阅：
+| 段 | 内容 |
+|---|---|
+| 1 | 核心发现（3–4 句，不复述统计量） |
+| 2 | 逐条解释：重申 → 与既往比较 → 机制 → 临床意义（每个核心发现一段） |
+| 3 | 局限性（独立段；按研究类型选，不抄空话） |
+| 4 | 结论（2 句，不再报数字） |
 
-```markdown
-## {段名} 初稿完成 — 请审阅
+**必须是"从分析过程展开"**：引用敏感性分析结果、被否决的备选方案及其原因——这些只有 `ANALYSIS_LOG.md` 有，是局限性段最好的素材。
 
-已追加至 `05_Manuscript/manuscript.md`（`## {段名}` 部分）。
+### 输出
 
-### 审阅要点
-- [ ] {段名}的结构和内容是否符合预期
-- [ ] 引用是否准确，引用量是否合适（{引用量建议}）
-- [ ] 占位符是否需要调整或补充
-- [ ] 语言风格是否自然（Humanizer 检查通过）
-- [ ] 需要修改或补充的内容
+`sections/discussion.md`，`depends_on: [results, methods]`。
 
-### 下一步
-- 输入 `通过` / `继续` → 进入下一段撰写
-- 提出修改意见 → 调整当前段后重新审阅
-```
+### 暂停
 
-当用户确认后（`通过` 或 `继续`），进入下一段循环。
+若 `discussion` ∈ `pause_after` → 停下审阅。
 </step>
 
-<step name="batch_writing" priority="high">
-一键成稿模式：批量文献搜索 + 批量撰写，无中间用户审阅暂停。
+<step name="write_conclusion" priority="high">
+### 输入
 
-**前置条件**: 用户在 `choose_writing_mode` 中选择了"一键成稿"。
+- `sections/discussion.md`
 
-**流程路由**:
-- 如果用户选择了"逐步写作"，跳过此步骤，执行 `reference_pre_search` + `sequential_section_writing`
-- 如果用户选择了"一键成稿"，跳过 `reference_pre_search` 和 `sequential_section_writing`，执行本步骤
+### 写法
 
----
+2 句：第一句重申核心发现（不带数字），第二句给临床或研究启示。
+**不要**与 Discussion 第 1 段重复措辞。
 
-### Phase A: 批量文献搜索
+### 输出
 
-按顺序为 4 段执行 reference-agent 文献搜索（共享 reference_library.json 自动去重）：
-
-1. **Introduction 文献搜索**: disease + exposure + outcome + population, 目标 10-15 篇
-2. **Methods 文献搜索**: methodology + standard guidelines + published protocols, 目标 3-5 篇
-3. **Results 文献搜索**: 仅在有对比需求时搜索, 目标 0-3 篇
-4. **Discussion 文献搜索**: 对比同类研究 + 机制解释 + 临床意义, 目标 15-25 篇
-
-每次搜索后更新 `Reference/reference_library.json`（读取→去重→获取摘要→分配ID→写入，每条记录必须包含 `abstract` 字段）。
-
-搜索全部完成后输出进度：
-```
-✅ 文献搜索全部完成
-- Introduction: {n1} 篇新引用
-- Methods: {n2} 篇新引用  
-- Results: {n3} 篇新引用
-- Discussion: {n4} 篇新引用
-- 引用库总计: {total} 篇（已去重）
-
-正在进入批量撰写...
-```
-
----
-
-### Phase B: 批量撰写
-
-按 IMRAD 顺序连续撰写 4 段，不暂停：
-
-1. **Introduction**: 读取 Reference/reference_library.json + citation_map.md
-2. **Methods**: 读取 project_config.yml + study_type template + 03_AnalysisMethods/*/方法说明.md
-3. **Results**: 读取 04_Outputs/* (figures + tables + 方法说明)
-4. **Discussion**: 读取 Reference/reference_library.json + citation_map.md + project_config.yml
-
-撰写规则与 `sequential_section_writing` Step B 完全一致（D-02~D-13 约束均适用）。
-
-每段撰写完成后直接追加写入 `05_Manuscript/manuscript.md`（带 `## {段名}` 标题，按 IMRAD 顺序累积，不生成 sections/ 文件）。
-
----
-
-### Phase C: 批量完成通知 + 统一审阅
-
-全部 4 段撰写完成后，执行拼接（同 `concatenate_manuscript` 步骤逻辑），然后统一呈现：
-
-```
-## 一键成稿完成 — 请审阅
-
-已生成完整 IMRAD 手稿：
-- 05_Manuscript/manuscript.md — 完整终稿（{word_count} 字, {reference_count} 篇引用）
-
-### 各段概要
-| 段落 | 字数 | 引用数 |
-|------|------|--------|
-| Introduction | {n} | {n} |
-| Methods | {n} | {n} |
-| Results | {n} | {n} |
-| Discussion | {n} | {n} |
-
-### 审阅要点
-- [ ] 各段结构和内容是否符合预期
-- [ ] 引用是否准确，引用量是否合适
-- [ ] 占位符替换是否正确
-- [ ] 语言风格是否自然
-- [ ] 段落间逻辑衔接是否流畅
-
-### 下一步
-- 提出修改意见 → 针对性调整（可指定具体段落）
-- 输入 `通过` → 进入 verify + milestone
-```
-
-当用户确认通过后，流程进入 `verify_manuscript` → `checkpoint_confirm` → `milestone`。
+`sections/conclusion.md`，`depends_on: [discussion]`。自动继续。
 </step>
 
-<step name="humanizer_review" priority="medium">
-Humanizer 自检在每个段落撰写时由 writer-agent 内嵌执行（见 writer-agent.md humanizer_rules 节），不再单独执行全篇 humanizer。
+<step name="narrative_design" priority="high">
+**Introduction 动笔之前的半步。** 先想清楚怎么引人入胜。
 
-在 sequential_section_writing 步骤的 Step B（writer-agent 撰写）中，writer-agent 在每段写入前执行 Humanizer checklist：
+### 输入
 
-| Check | AI Pattern | Fix |
-|-------|-----------|-----|
-| Paragraph openings | Sequential markers | Content-driven progression |
-| Transition words | Repeated formulaic | Specific logical connectors |
-| Sentence structure | Uniform patterns | Varied sentence types |
-| Conclusions | Hollow or generic | Specific future direction |
-| Citations | Impersonal | Author-contextualized |
-| Explanations | Over-explaining methods | Just state, don't justify |
+- `sections/results.md`、`sections/methods.md`、`sections/discussion.md`
 
-如果用户审阅时指出语言问题，writer-agent 直接在该段内修正，不重写全篇。
+### 产出
+
+按 `pipeline/templates/narrative.md` 写入 `05_Manuscript/NARRATIVE.md`：
+
+1. **一句话卖点** — 不是"我们研究了 X"，而是"我们发现了 Y，它改变了 Z 的理解"
+2. **Gap 的精确表述** — 必须能被**实际做过的分析**填上
+3. **叙事弧** — 临床痛点 → 已知 → 未知 → 本研究
+4. **目标读者与期刊调性**
+
+**自检**：Gap 若指向一个没做过的分析，改 Gap，不要改结论。
+
+### 暂停
+
+把 `NARRATIVE.md` 呈现给用户确认。这是 Introduction 的唯一依据。
 </step>
 
-<step name="verify_manuscript" priority="high">
-Final verification:
+<step name="write_introduction" priority="high">
+### 文献搜索
 
-1. IMRAD structure complete (all 5 sections present)
-2. All citations have DOIs
-3. All referenced figures/tables exist in 04_Outputs/
-4. STROBE/CONSORT checklist covered
-5. Language consistent: per `language.manuscript` config (default: Chinese body, English figures/tables)
-6. No AI-template patterns detected
-7. Word count within target journal limits
-8. References de-duplicated
-9. MANIFEST.yaml exists in `05_Manuscript/` listing clinpub-verifier as consumer
-10. 手稿完整性：05_Manuscript/manuscript.md 中 4 个 IMRAD 段落（`## Introduction` / `## Methods` / `## Results` / `## Discussion`）全部存在
-11. 各段落非空，不含 AI-template 模式
+同 Discussion 的搜索与入库流程，目标引用量取 `citation_strategy.section_targets.introduction`。
 
-If manifest is missing, write it here.
+### 输入
+
+- `05_Manuscript/NARRATIVE.md`（**主依据**）
+- `sections/results.md`、`sections/methods.md`、`sections/discussion.md`
+- `Reference/reference_library.json`
+
+### 写法（见 writing_standards.md §7）
+
+倒金字塔 3–4 段：
+
+| 段 | 内容 |
+|---|---|
+| 1 | 临床背景：疾病负担、异质性 → 具体临床痛点 |
+| 2 | 已知与 Gap：前人做到哪 → **还缺什么** |
+| 3 | 本研究：纳入了谁、做了什么、**先验假设** |
+
+**禁止**：文献综述式逐篇罗列；第一段就报本研究结果；Gap 与实际分析不对应。
+
+### 输出
+
+`sections/introduction.md`，`depends_on: [results, methods, discussion]`。
+
+### 暂停
+
+把 Introduction 与 NARRATIVE 的对照呈现给用户（Gap 是否被填上、卖点是否立住）。
 </step>
 
-<step name="concatenate_manuscript" priority="high">
-执行终稿处理协议（Concatenation Protocol）将 manuscript.md 处理为完整终稿。
+<step name="write_abstract_title" priority="high">
+### 输入
 
-按 `@./pipeline/references/concatenation-protocol.md` 执行以下步骤：
+全部已完成的章节。
 
-1. **正文准备**: 各段已在撰写阶段按 IMRAD 顺序直接追加写入 `05_Manuscript/manuscript.md`（带 `## {Section}` 标题），无需文件合并；直接以 manuscript.md 为处理对象
-2. **占位符替换**:
-   - `{{Table:N}}` → 按 IMRAD 顺序全局编号（Table 1, Table 2...）
-   - `{{Figure:N}}` → 按 IMRAD 顺序全局编号（Figure 1, Figure 2...）
-   - `{{SupplementaryTable:N}}` → 独立编号
-   - `{{SupplementaryFigure:N}}` → 独立编号
-   - `{{Method:name}}` → 替换为 "the {name} analysis"
-   - `{{Section:name}}` → 替换为段落名
-3. **引用统一编号**:
-   - 读取 `Reference/reference_library.json`
-   - 扫描全文中所有 `[id]` 引用
-   - 按正文出现顺序重新分配连续编号 [1] 开始
-   - 同一引用在多段使用自动复用编号（自然去重）
-   - 在文末生成统一的 References 区（Vancouver 格式）
-4. **YAML frontmatter 生成**:
-   - `title`: 留空（由用户在最终审阅填写）或从 project_config.yml project.title 读取
-   - `target_journal`: 从 project_config.yml 读取
-   - `word_count`: 自动计算正文（中文 + 英文单词数）
-   - `reference_count`: 引用条目总数
-5. **写入 manuscript.md**:
-   ```markdown
-   ---
-   title: "{title}"
-   target_journal: "{journal}"
-   word_count: {count}
-   reference_count: {count}
-   ---
-   
-   # {Title}
-   
-   ## Introduction
-   ...
-   
-   ## Methods
-   ...
-   
-   ## Results
-   ...
-   
-   ## Discussion
-   ...
-   
-   ## References
-   [1] ...
-   [2] ...
-   ```
-6. **更新 MANIFEST.yaml**: 写入 `05_Manuscript/MANIFEST.yaml`（声明 manuscript.md，consumer 为 clinpub-verifier）
-7. **更新引用库**: 追加 `concatenated: true` 标记，更新时间戳
+### 写法
 
-验证（执行后检查）：
-- 扫描全文确认无 `{{Table:\d+}}` 或 `{{Figure:\d+}}` 残留
-- word_count > 5000
-- reference_count >= 20
+**Abstract**（结构式四段，取句来源）：
+
+| 段 | 取自 |
+|---|---|
+| Background | Introduction 第 2 段的 Gap |
+| Methods | Methods 的 Statistical Analysis + Participants |
+| Results | Results 的主要统计量（**必须带数字**） |
+| Conclusions | Conclusion |
+
+词数取 `writing.abstract_words`（默认 250–300）。
+
+**Title**：优先"发现型"标题（点出结论方向），含研究设计或人群关键词。
+
+### 输出
+
+- `sections/abstract.md`，`depends_on: [introduction, methods, results, discussion, conclusion]`
+- 标题写入 `project_config.yml` 的 `project.title`（供拼装读取）
+</step>
+
+<step name="consistency_review" priority="high">
+拼装**之前**的一致性检查（`writing_standards.md §10` 的 10 项）：
+
+1. 每个 Results 段落对得上骨架里的一张图表
+2. Methods 的 Statistical Analysis 与 `ANALYSIS_LOG` **双向**一致
+3. Introduction 的每个假设能在 Results 找到对应分析
+4. Discussion 不引入新结果
+5. 变量名/方法名全文一致（以 `project_config.yml` 为真源）
+6. 图表编号连续、正文引用与图注一一对应
+7. 所有统计量都有效应量 + 95%CI + 精确 p
+8. 报告规范清单无缺项（或缺项已在局限性说明）
+9. 摘要数字与正文一致
+10. 引用全有 DOI，正文引用与文献表一一对应
+
+**发现问题时**：定位到具体章节 → 修改该节 → 按 stale 规则把下游改回 `draft` → 重写下游。
+
+**若发现的是分析缺口**（如 Discussion 无法解释机制，因为少做了一个中介分析）：
+
+```
+写作暴露分析缺口 → 记录到 ANALYSIS_LOG → 提示用户执行 /clinpub-modify
+                → 补完分析后把 results 置 draft → 下游全部 stale → 重写
+```
+
+这是**正常质量控制**，不是异常路径。
+</step>
+
+<step name="assemble" priority="high">
+### 1. 校验并拼装
+
+```bash
+python scripts/assemble_manuscript.py --check   # 先只校验
+python scripts/assemble_manuscript.py           # 通过后生成
+```
+
+脚本会拒绝三类情况：
+
+- 章节缺失
+- 任何章节不是 `final`
+- 某节 `final` 但其上游是 `stale`
+
+### 2. 终稿处理（`concatenation-protocol.md`）
+
+1. **占位符替换 —— 由脚本完成，不要手改**
+   - `assemble_manuscript.py` 在拼装时已把 `{{Table:N}}` → `Table N`、
+     `{{Figure:N}}` → `Figure N`、`{{SupplementaryTable:N}}` → `Supplementary Table S{N}`、
+     `{{Method:name}}` → `the {name} analysis`、`{{Section:name}}` → 段落名
+   - 若仍有残留，脚本会在 stderr 给出 `[WARN] … 存在未解析占位符`
+   - **不要手工编辑 `manuscript.md`**：它是生成物，下次拼装会覆盖
+2. **引用编号与 References —— 同样由脚本完成**
+   - 章节里写 `{{cite:CitationKey}}` 或 `{{cite:Key1,Key2}}`（键来自 `reference_library.json` 的 `citation_key`）
+   - `assemble_manuscript.py` 按**正文首次出现顺序**统一编号（跨章节连续），替换为 `[n]` / `[n,m]`
+   - 文末据此生成 Vancouver 格式 References，每条带 `doi:`
+   - 键不在库中时脚本给 `[WARN] 引用键不在文献库中`；不要手写编号，改了章节顺序后编号会错乱
+3. **补充 frontmatter**：`assemble_manuscript.py` 已写入 `generated_by` / `generated_at` / `word_count` / `title`（读取 `project_config.yml` 的 `project.title`）。此步只**追加** `target_journal` 与 `reference_count`，不要重写已有字段
+4. **写回 `05_Manuscript/manuscript.md`**（脚本已生成骨架，此步补充引用区与缺失的 frontmatter 字段）
+5. **更新 `05_Manuscript/MANIFEST.yaml`**（consumer: clinpub-verifier）
+
+### 3. 拼装后验证
+
+- 无 `{{Table:\d+}}` / `{{Figure:\d+}}` 残留
+- `word_count ≥ writing.min_words`
+- `reference_count` 在 `citation_strategy.total_range` 内
 - 所有引用有 DOI
-- IMRAD 结构完整
-
-参见 `@./pipeline/references/concatenation-protocol.md` 获取各步骤的详细伪代码和规则。
-</step>
-
-<step name="concatenation_output" priority="medium">
-拼接完成后输出：
-
-```
-✅ 终稿处理完成
-
-文件:
-- 05_Manuscript/manuscript.md — 完整终稿（{word_count} 字, {reference_count} 篇引用）
-
-下一步:
-- 检查 manuscript.md 确认终稿质量
-- 如需要调整 → 直接编辑 manuscript.md（非重写原则下，手动修正局部问题）
-- 如确认无误 → 进入最终 checkpoint_confirm
-```
-</step>
-
-<step name="checkpoint_confirm" priority="medium">
-Present a `checkpoint:verify` to user confirming the manuscript is ready for review:
-
-- [ ] IMRAD structure complete
-- [ ] All citations verified with DOIs
-- [ ] Humanizer review passed
-- [ ] STROBE/CONSORT compliance checked
-
-If user requests changes, address them. If approved, proceed to milestone.
+- IMRAD 六节齐全
 </step>
 
 <step name="milestone" priority="high">
-Execute the milestone workflow to formally close Phase 3 — the final numbered phase (core pipeline complete):
+执行 milestone workflow 正式关闭阶段3（核心管线终点）：
 
 ```bash
-# The milestone workflow will:
-# 1. Verify success criteria for Phase 3
-# 2. Collect writing decisions (study type template, target journal)
-# 3. Generate .clinpub/phases/03-writing/MILESTONE.md
-# 4. Update ROADMAP.md: Phase 3 → ✅ Complete (core pipeline complete)
-# 5. Update STATE.md: mark Phase 3 complete
-# 6. Request user sign-off
+# 1. 验证阶段3 成功标准
+# 2. 收集写作决策（研究类型模板、目标期刊、引用策略）
+# 3. 生成 .clinpub/phases/03-writing/MILESTONE.md
+# 4. 更新 ROADMAP.md：阶段3 → ✅（核心管线完成）
+# 5. 更新 STATE.md
+# 6. 请求用户签字
 ```
 
-See @./pipeline/workflows/milestone.md for full protocol.
+见 `pipeline/workflows/milestone.md`。
 
 <output name="signoff_prompt" format="user_facing">
 ────────────────────────────────
-✅ Phase 3 核验完成 — 核心管线完成（Phase 0-3）
+✅ 阶段3 核验完成 — 核心管线完成（阶段0–3）
 
 请确认：输入 "approved" 收尾。手稿完成后可按需使用独立工具：
 - /clinpub:improving   → 自审并直接改进稿件（可反复）
@@ -426,24 +407,52 @@ See @./pipeline/workflows/milestone.md for full protocol.
 
 </process>
 
+<stale_propagation>
+**任何章节被修改后，必须执行：**
+
+```
+RESULTS   被改 → DISCUSSION / CONCLUSION / INTRODUCTION / ABSTRACT 全部置 stale
+METHODS   被改 → DISCUSSION / INTRODUCTION / ABSTRACT 置 stale
+DISCUSSION 被改 → CONCLUSION / INTRODUCTION / ABSTRACT 置 stale
+CONCLUSION 被改 → ABSTRACT 置 stale
+INTRODUCTION 被改 → ABSTRACT 置 stale
+ABSTRACT  被改 → 无下游
+```
+
+改完并重写完下游后，把它们的 `status` 改回 `final`。
+**只要存在 stale 或 draft，拼装脚本就会拒绝生成 `manuscript.md`。**
+</stale_propagation>
+
+<feedback_to_analysis>
+写作阶段允许退回阶段2，条件是发现了**真实的分析缺口**：
+
+| 触发 | 例 |
+|---|---|
+| Discussion 无法解释机制 | 缺中介/调节分析 |
+| Results 撑不起核心论点 | 缺关键比较或敏感性分析 |
+| Methods 与 Results 对不上 | 实际做过的分析没记录 |
+
+处理：
+
+1. 把缺口写入 `.clinpub/ANALYSIS_LOG.md`（作为新批次的「依据」）
+2. 提示用户执行 `/clinpub-modify` 补分析
+3. 补完后把 `results` 置 `draft`，按 stale 规则向下游传播
+4. 重写受影响章节
+
+**限制**：同一缺口不得退回两次；退回计入 `analysis_budget`。
+</feedback_to_analysis>
+
 <success_criteria>
-- Complete IMRAD manuscript in 05_Manuscript/manuscript.md (single file, no sections/)
-- citation_map.md and references.bib in Reference/
-- All citations have DOIs
-- All figures/tables referenced in text
-- STROBE/CONSORT compliance
-- Humanizer review passed
-- User has reviewed and approved draft
-- 各段（Introduction/Methods/Results/Discussion）独立完成引用和撰写
-- 每段按 IMRAD 顺序追加写入 05_Manuscript/manuscript.md（不生成 sections/ 独立文件）
-- 每段撰写前 reference-agent 完成文献搜索
-- 每段撰写后用户完成审阅
-- 引用库引用不重复
-- 各段使用占位符进行交叉引用
-- 全文各段合计 >5000 字
-- 05_Manuscript/manuscript.md 存在，包含 YAML frontmatter 和完整 IMRAD 结构
-- 全文中无残留占位符
-- 引用从 [1] 开始连续编号，文末 References 区完整
-- word_count > 5000, reference_count >= 20
-- MANIFEST.yaml 存在且声明所有输出
+- `05_Manuscript/FIGURE_SKELETON.md` 存在，每张图有一句不含统计量的结论
+- `05_Manuscript/NARRATIVE.md` 存在，含一句话卖点与可被实际分析填上的 Gap
+- `05_Manuscript/sections/` 下六节齐全，每节 frontmatter 的 `status` 均为 `final`
+- 每节 `inputs` 真实读取过上游内容（Results 早于 Introduction 产出）
+- Methods 的 Statistical Analysis 与 `ANALYSIS_LOG.md` 双向一致
+- Results 无任何解释性语句
+- Discussion 引用了敏感性分析或被否决备选
+- `python scripts/assemble_manuscript.py` 通过并生成 `manuscript.md`
+- 无占位符残留；引用从 [1] 连续编号，全部含 DOI
+- `word_count ≥ writing.min_words`；`reference_count` 在 `total_range` 内
+- `05_Manuscript/MANIFEST.yaml` 存在且声明 clinpub-verifier 为消费者
+- 用户已完成审阅并签字
 </success_criteria>

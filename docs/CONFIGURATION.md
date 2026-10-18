@@ -222,7 +222,7 @@ claude plugin install clinpub
 
 ```bash
 # 重启 Claude Code 后
-/clinpub:overview  # 应显示命令参考表
+/clinpub help  # 应显示命令参考表
 ```
 
 ## Hooks 配置
@@ -264,12 +264,12 @@ Project_Root/
 │   ├── STATE.md                # 当前状态
 │   └── phases/                 # 阶段详情
 ├── 01_RawData/                 # 原始数据（只读）
-├── 02_PreprocessedData/        # Phase 1 产出
+├── 02_PreprocessedData/        # 阶段1 产出
 │   ├── data/
 │   │   └── cleaned.csv
 │   └── reports/
 │       └── data_quality.html
-├── 03_AnalysisMethods/         # Phase 2 方法目录
+├── 03_AnalysisMethods/         # 阶段2 方法目录
 ├── 04_Outputs/                 # 图表输出
 ├── Reference/                  # 文献
 ├── 05_Manuscript/             # 论文各章节

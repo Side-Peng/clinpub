@@ -1,6 +1,6 @@
 # Reference Library 规范和交叉引用约定
 
-> Phase 3 spec: 分段撰写时管理文献引用和段间交叉引用的统一规范。
+> 阶段3 规范：分段撰写时管理文献引用和段间交叉引用的统一规范。
 > Writer Agent 和 Reference Agent 共同遵守。
 
 ## 文件位置
@@ -214,4 +214,4 @@ writer-agent 写引用时注意段落量级约束。
 ---
 
 *Created: 2026-05-07*
-*Part of Phase 3: 手稿拼接, Plan 02: 引用管理与交叉引用规范*
+*Part of 阶段3: 手稿拼接, Plan 02: 引用管理与交叉引用规范*

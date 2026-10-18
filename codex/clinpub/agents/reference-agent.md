@@ -1,4 +1,4 @@
-﻿---
+---
 name: reference-agent
 description: "Literature search and reference management specialist. Uses built-in `scripts/ncbi_search.py` (PubMed E-Utilities) for all literature searches. Outputs citation_map.md and references.bib in Vancouver format with DOIs."
 tools: Read, Write, Bash, Glob, Grep
@@ -16,13 +16,13 @@ You handle all literature-related tasks: search, retrieval, management, and cita
 <step name="check_env" priority="first">
 Before any search, confirm the runtime environment:
 
-1. The built-in search script is at `${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py` (always available in clinpub ≥ v2.1).
+1. The built-in search script is at `${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py` (vendored from ncbi-search **v3.0.0**).
 2. Optional: check `NCBI_API_KEY` env var — when set, PubMed rate limit improves from 3 req/s to 10 req/s. If unset, inform the user once but proceed (the script works without it).
 
 Invocation pattern used by every search step below:
 
 ```bash
-# Main entry (auto-detect intent, PubMed returns abstracts via EFetch)
+# Main entry (auto-detect intent across 10 databases)
 python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<query>" [options]
 
 # PubMed with filters + tiered abstract display
@@ -36,12 +36,36 @@ python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_search.py" "<query>" [options]
 python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_fetch.py" <PMID1> <PMID2> ... --abstract full --format json
 
 # PMC Open Access full text (JATS XML → sectioned prose)
-python "${CLAUDE_PLUGIN_ROOT}/scripts/pmc_fetch.py" <PMCID|PMID> [--pmid] [--outline] [--max-chars N]
+python "${CLAUDE_PLUGIN_ROOT}/scripts/pmc_fetch.py" <PMCID|PMID> [--pmid] [--outline] [--max-chars N] [--sections <list>]
 ```
 
-**摘要获取**: `ncbi_search.py` 使用 EFetch API，支持三级摘要显示：`--abstract none`（仅标题）、`preview`（前 1000 字符，默认）、`full`（完整摘要）。写入 `reference_library.json` 前，对搜索结果中有 PMID 的文献调用 `pubmed_fetch.py --abstract full` 获取完整摘要。
+**摘要获取（v3 变更）**: `--abstract` 三级的默认值与语义已改：
 
-**全文获取**: 需要文献正文全文时，使用 `pmc_fetch.py`（仅限 PMC 开放获取子集）。先用 `--outline` 查看章节结构，再决定是否取全文。非 OA 文献标注 `Open Access Full Text: No`。
+| 级别 | 输出 | 何时用 |
+|---|---|---|
+| `none`（**v3 默认**） | 仅标题 + 作者 + 期刊 + 年份 | 广泛初筛，最省 token（~40 token/条） |
+| `preview` | 追加按句截断的 ~400 字符摘要（结论优先） | 二次筛选（~150 token/条） |
+| `full` | 完整摘要 + DOI + MeSH | 最终选定（~450 token/条） |
+
+> v2 的语义是"默认 preview、截断 1000 字符"。**v3 起默认不返回摘要**，
+> 因此只调 `ncbi_search.py` 而不显式指定 `--abstract` 时，拿到的是无摘要的标题列表。
+> 写入 `reference_library.json` 前仍须对选定文献调用 `pubmed_fetch.py --abstract full`。
+
+**v3 新增能力（按需使用）**：
+
+```bash
+--count-only                 # 只返回命中数，不抓记录（估算检索式是否过宽/过窄）
+--offset N                   # 翻页
+--min-year / --max-year      # 精确年份区间（优先于 --years 滚动窗口）
+--mesh "Term"                # 在线校验 MeSH 主题词
+--sections conclusion,results  # pmc_fetch 只取指定章节
+```
+
+中文查询会自动映射到英文术语（覆盖约 80 个高频词），但**建议直接用英文检索式**。
+
+**全文获取**: 需要文献正文全文时，使用 `pmc_fetch.py`（仅限 PMC 开放获取子集）。先用 `--outline` 查看章节结构，再决定是否取全文；用 `--sections` 只取需要的章节（如 `conclusion`），用 `--max-chars` 控制截断。非 OA 文献标注 `Open Access Full Text: No`。
+
+完整参数表见 `pipeline/references/parameters.md`，结果字段解析见 `pipeline/references/result_format.md`。
 
 Never call `skill("ncbi-search")` — the capability is native to clinpub.
 </step>
@@ -72,19 +96,19 @@ python "${CLAUDE_PLUGIN_ROOT}/scripts/ncbi_search.py" "<query>" \
 
 Search strategies by trigger phase:
 
-**Phase 0 (research gap confirmation):**
+**阶段0 (research gap confirmation):**
 - Extract disease keywords from user discussion and variable names
 - PubMed search for existing literature in the target domain
 - Mark research gaps: 🟢 novel (recommended), 🔶 partial coverage (caution), ✅ saturated (avoid)
 
-**Phase 3 (full pre-search before writing):**
+**阶段3 (full pre-search before writing):**
 - Comprehensive PubMed search on: disease, exposure/biomarker, outcome, population
 - Read abstracts → retain: directly relevant, SCI-indexed, within year range from citation_strategy config (with landmark exceptions)
 - Exclude: case reports, editorials, errata
 - Get DOI for every retained reference
 - **Fetch abstracts**: 对保留的文献调用 `pubmed_fetch.py` 批量获取完整摘要（`python "${CLAUDE_PLUGIN_ROOT}/scripts/pubmed_fetch.py" <PMID1> <PMID2> ... --format json`），将摘要文本写入 `reference_library.json` 的 `abstract` 字段。无 PMID 的文献通过 DOI 解析获取摘要，无法获取时标记为 `"pending"`
 
-**During Phase 3 chapter writing:**
+**阶段3 分章写作时：**
 - Supplementary search per chapter topic via built-in `ncbi_search.py`
 - Full-text retrieval via DOI → Unpaywall → pdf-reader
 

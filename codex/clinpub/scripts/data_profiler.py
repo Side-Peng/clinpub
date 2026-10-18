@@ -13,6 +13,7 @@ import sys
 import json
 import argparse
 import os
+import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -48,6 +49,32 @@ COVARIATE_PATTERNS = [
     "race", "ethnicity", "种族",
 ]
 
+# pandas 默认把 "None" / "NA" / "NULL" 等都当缺失值。
+# 临床数据里 "None"（无共病）是**合法分类**，默认行为会把整类静默变成缺失——
+# 于是"无共病"被当成"数据缺失"，缺失率虚高，后续插补策略全错。
+# 对策：只把空串与明确的 NA 记号当缺失；"None"/"none" 保留为取值，并在检测到时告警。
+NA_VALUES = ["", "NA", "N/A", "n/a", "NaN", "nan", "NULL", "null", "-", ".", "缺失", "不详"]
+
+# 这些字符值**看起来**像缺失，但被保留为分类了，需要提示用户确认
+AMBIGUOUS_NA_TOKENS = {"none", "na", "n/a", "null", "nan", "unknown", "missing", "不详"}
+
+
+def _scan_ambiguous_na(df: pd.DataFrame) -> List[Dict[str, Any]]:
+    """列出被当作合法分类、但看起来像缺失的取值。"""
+    hits: List[Dict[str, Any]] = []
+    for col in df.columns:
+        series = df[col]
+        if series.dtype == object or str(series.dtype) == "str":
+            seen = {
+                str(v).strip().lower()
+                for v in series.dropna().unique()
+                if str(v).strip().lower() in AMBIGUOUS_NA_TOKENS
+            }
+            if seen:
+                hits.append({"column": col, "tokens": sorted(seen)})
+    return hits
+
+
 BIOMARKER_PATTERNS = [
     "biomarker", "标志物", "标记", "protein", "蛋白", "gene", "基因",
     "level", "浓度", "serum", "血浆", "plasma", "csf", "脑脊液",
@@ -55,21 +82,44 @@ BIOMARKER_PATTERNS = [
 ]
 
 MATCH_PATTERNS = [
-    "match", "matching", "匹配", "pair", "配对", "id", "patient_id",
-    "subject_id",
+    "match", "matching", "匹配", "pair", "pairing", "配对",
+    # 注意：这里不要放裸 "id"——ID 判定在前，且子串匹配会把 comorbidity 误判
 ]
 
-ID_PATTERNS = [
-    "id", "patient_id", "subject_id", "participant_id", "序号",
-]
+# ID 判定必须按**整词**匹配。原先用裸 "id" 做子串匹配，
+# 导致 "comorbidity"（含 "bid"→"id"）被判为 ID 变量，进而在 role_summary 里
+# 与 patient_id 并列，下游会把它当行标识符排除出分析。
+_ID_EXACT = {
+    "id", "pid", "uid", "序号", "编号", "病例号", "受试者编号", "患者编号",
+    "recordid", "rowid",
+}
+_ID_PREFIXES = {
+    "patient", "subject", "participant", "record", "case", "person",
+    "user", "row", "sample", "study", "obs", "visit", "stay",
+    "admission", "encounter", "specimen",
+}
+
+
+def _is_id_variable(name: str) -> bool:
+    """按 token 判定是否为 ID 变量（避免子串误伤）。"""
+    # 先把 camelCase 拆成 snake_case，再按分隔符切词
+    spaced = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", name)
+    tokens = [t for t in re.split(r"[_\-\s/]+", spaced.lower()) if t]
+    for token in tokens:
+        if token in _ID_EXACT:
+            return True
+        # patientid / subjectid 这类连写
+        if token.endswith("id") and token[:-2] in _ID_PREFIXES:
+            return True
+    return False
 
 
 def detect_variable_role(name: str) -> str:
     """根据变量名推断角色"""
     name_lower = name.lower().replace("_", "").replace("-", "")
 
-    # ID 变量
-    if any(p in name_lower for p in ID_PATTERNS):
+    # ID 变量 —— 按整词判定，不做子串匹配
+    if _is_id_variable(name):
         return "id"
 
     # 结局变量优先匹配
@@ -203,10 +253,19 @@ def profile_data(filepath: str, sheet: Optional[str] = None) -> Dict[str, Any]:
     ext = Path(filepath).suffix.lower()
 
     # 读取数据
+    # keep_default_na=False + 自定义 NA_VALUES：避免 pandas 把 "None"（无共病）
+    # 之类**合法分类**吞成缺失值。
     if ext == ".csv":
-        df = pd.read_csv(filepath, low_memory=False)
+        df = pd.read_csv(
+            filepath, low_memory=False, keep_default_na=False, na_values=NA_VALUES
+        )
     elif ext in (".xlsx", ".xls"):
-        df = pd.read_excel(filepath, sheet_name=sheet if sheet is not None else 0)
+        df = pd.read_excel(
+            filepath,
+            sheet_name=sheet if sheet is not None else 0,
+            keep_default_na=False,
+            na_values=NA_VALUES,
+        )
     else:
         return {"error": f"Unsupported format: {ext}"}
 
@@ -218,6 +277,8 @@ def profile_data(filepath: str, sheet: Optional[str] = None) -> Dict[str, Any]:
         "variables": [],
         "missing_summary": {},
         "correlation_warning": False,
+        # 被保留为合法分类、但看起来像缺失的取值——需要用户确认
+        "ambiguous_na_tokens": _scan_ambiguous_na(df),
     }
 
     # 逐变量分析

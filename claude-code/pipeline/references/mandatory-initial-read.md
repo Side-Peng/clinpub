@@ -21,7 +21,7 @@ Read the full project config to understand:
 - **Study type**: RCT / cohort / case-control / cross-sectional / descriptive
 - **Variables**: outcome, exposure, covariates, subgroup, time
 - **Target journal**: journal name, impact factor tier, reporting standard
-- **Analysis methods**: user-confirmed method list with wave assignments
+- **Analysis methods**: 已确认的方法清单与本批（Batch）归属（记录在 `.clinpub/ANALYSIS_LOG.md`）
 - **Data path**: location of raw and cleaned data files
 - **Output settings**: language, figure format, table style
 
@@ -69,8 +69,6 @@ Based on loaded context, determine which agent(s) are needed:
 | Literature search, citation management | `reference-agent` |
 | Manuscript drafting, improvement & review response | `writer-agent` |
 | Topic mining from data | `topic-miner-agent` |
-| Research planning | `clinpub-planner` |
-| Analysis execution with commits | `clinpub-executor` |
 | Statistical verification | `clinpub-verifier` |
 | Analysis output modification | `modify-agent` |
 

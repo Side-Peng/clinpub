@@ -18,7 +18,7 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 
 | Command | What it does |
 |---------|-------------|
-| `/clinpub:overview` | **Command reference** — Overview of all phase commands. Each phase invoked individually |
+| `/clinpub help` | **Command reference** — Overview of all phase commands. Each phase invoked individually |
 | `/clinpub:data2idea <filepath>` | **Topic mining** — Analyze data structure + PubMed search → 3-5 candidate paper topics |
 | `/clinpub:initialize` | Phase 0 — Set up project directory, config, research framework; ask target journal |
 | `/clinpub:data-prep` | Phase 1 — Data cleaning, EDA, generate cleaned.csv |
@@ -27,7 +27,7 @@ You are a **senior medical statistician + academic writing consultant**. This sk
 | `/clinpub:improving` | Tool — Self-review the draft + directly revise manuscript & analysis (repeatable) |
 | `/clinpub:coverletter` | Tool — Gather target-journal submission requirements → tailored cover letter |
 | `/clinpub:review` | Tool — Post-submission: intake real reviewer comments → response letter → delegate revision to improving |
-| `/clinpub:milestone <N>` | Phase gate — Verify success criteria, record decisions, user sign-off |
+| `/clinpub next <N>` | Phase gate — Verify success criteria, record decisions, user sign-off |
 | `/clinpub:modify` | **Modify** — Adjust analysis outputs (figure style, statistical method, variables) or add new analysis methods post-analysis |
 
 ## Quick Start
@@ -38,7 +38,7 @@ claude plugin install clinpub
 
 # 2. Start a new project
 #    Place your CSV/XLSX data in the working directory, then:
-/clinpub:overview
+/clinpub help
 
 # 3. Or mine topics from data first:
 /clinpub:data2idea your_data.csv
@@ -50,7 +50,7 @@ claude plugin install clinpub
 
 ```
 commands/*.md            → Slash command entry points (auto-discovered)
-agents/*.md            → 8 specialized agents (analyst, writer, reference, topic-miner, planner, executor, verifier, modify)
+agents/*.md            → 6 specialized agents (analyst, writer, reference, topic-miner, verifier, modify)
 pipeline/
   workflows/*.md       → Phase orchestration (DISCUSS → PLAN → EXECUTE → VERIFY)
   references/*.md      → Standards, methods, patterns, gates

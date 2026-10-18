@@ -139,7 +139,7 @@ clinpub/
 示例：
 ```
 feat(r_patterns): 添加森林图模板
-fix(workflow-guard): 修复 Phase 2 目录判定逻辑
+fix(workflow-guard): 修复阶段2 目录判定逻辑
 docs(agents): 更新 analyst-agent 的方法选择说明
 ```
 

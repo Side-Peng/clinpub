@@ -13,7 +13,7 @@ claude plugin marketplace add Side-Peng/clinpub
 claude plugin install clinpub
 ```
 
-安装后重启 Claude Code，输入 `/clinpub:overview` 验证插件已加载。
+安装后重启 Claude Code，输入 `/clinpub help` 验证插件已加载。
 
 ### From Local Source (Development)
 
@@ -43,7 +43,7 @@ claude plugin validate . --strict
 After installation, restart Claude Code, then:
 
 ```bash
-/clinpub:overview                  # Command reference overview
+/clinpub help                  # Command reference overview
 /clinpub:data2idea data.csv       # Topic mining from data
 /clinpub:initialize                     # Phase 0: Project initialization
 /clinpub:data-prep                # Phase 1: Data preparation
@@ -52,10 +52,10 @@ After installation, restart Claude Code, then:
 /clinpub:improving                # Tool: self-review + directly revise manuscript & analysis
 /clinpub:coverletter              # Tool: cover letter for the target journal
 /clinpub:review                   # Tool: post-submission — handle real reviewer comments
-/clinpub:milestone <N>            # Phase gate verification
+/clinpub next <N>            # Phase gate verification
 /clinpub:modify                   # Modify analysis outputs or add new analysis methods
-/clinpub:do                       # Breakpoint resume (work-in-progress)
-/clinpub:next-step                # Advance to next step
+/clinpub                       # Breakpoint resume (work-in-progress)
+/clinpub next                # Advance to next step
 ```
 
 ## Prerequisites
@@ -117,7 +117,7 @@ claude plugin uninstall clinpub
 | Problem | Solution |
 |---------|----------|
 | Commands not found after install | Restart Claude Code to reload plugins |
-| `/clinpub:overview` not appearing | Run `claude --plugin-dir ./claude-code` (from repo root) again, then restart |
+| `/clinpub help` not appearing | Run `claude --plugin-dir ./claude-code` (from repo root) again, then restart |
 | R package errors | Run the `install.packages()` command above |
 | Python import errors | Run `pip install -r requirements.txt` |
 | PubMed search fails | Set `NCBI_API_KEY` env var |

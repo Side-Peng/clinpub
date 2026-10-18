@@ -1,6 +1,6 @@
 ---
 name: writing
-description: "Phase 3: IMRAD manuscript writing. Supports two modes: (1) batch mode (一键成稿) - bulk reference search then bulk writing with single final review; (2) sequential mode - per-section search, write, and user review. Shared reference library for deduplication. Placeholder-based cross-references. Final concatenation produces manuscript.md with YAML frontmatter."
+description: "阶段3：递进式 IMRAD 写作。图表骨架 → Results → Methods → Discussion → Conclusion → 叙事设计 → Introduction → Abstract → 一致性复核 → 拼装。每节读前节的实际内容，产物落 05_Manuscript/sections/*.md，由脚本按 IMRAD 顺序生成 manuscript.md。"
 argument-hint: ""
 allowed-tools:
   - Read
@@ -12,64 +12,60 @@ allowed-tools:
   - AskUserQuestion
 ---
 <objective>
-Phase 3: IMRAD manuscript writing with dual-mode support.
+阶段3：**递进式** IMRAD 写作。
 
-## 流程概述
+与 2.x 的三点差异：
 
-四段（Introduction → Methods → Results → Discussion）撰写引用后拼接为终稿。支持两种写作模式：
+1. **顺序**：Results → Methods → Discussion → Conclusion → 叙事设计 → Introduction → Abstract（不再从 Introduction 开始）
+2. **依赖**：每一节必须读前面各节的实际内容；写作标准见 `writing_standards.md`
+3. **载体**：单节写 `05_Manuscript/sections/{key}.md`，`manuscript.md` 是**生成物**
 
-### 一键成稿（batch）
-确认写作大纲后自动执行：批量文献搜索（4段） → 批量撰写（4段） → 统一呈现终稿审阅。适合对写作框架有信心、希望快速出稿的场景。
-
-### 逐步写作（sequential）
-每段三段式：Reference Agent 文献预搜索 → Writer Agent 撰写 → 用户审阅 pause，确认后再进入下一段。适合需要逐段把控质量的场景。
-
-## 核心约束（两种模式共用）
-
-- **D-01 顺序**: IMRAD 顺序（Intro → Methods → Results → Discussion）
-- **D-02 Agent 模式**: 同一个 writer-agent，4 轮对话分别写 4 段，不扩展 agent role 定义
-- **D-03 上下文**: 自动读取项目数据（spec → Methods, analysis outputs → Results, 文献 → Intro/Discussion）
-- **D-04 篇幅**: 全文 >5000 字，自然成段论述（非 bullet point）
-- **D-05 Methods**: 从 spec + analysis pipeline outputs 自动生成初稿
-- **D-06 文献搜索**: reference-agent 搜索文献，更新共享引用库
-- **D-09 引用库**: 全局统一编号，共享引用库（Reference/reference_library.json），写各段时查询已有引用
-- **D-11 占位符**: 使用 {{Table:N}} {{Figure:N}} {{Method:name}} {{Section:name}} 进行交叉引用
-- **D-15 输出**: 05_Manuscript/manuscript.md 唯一终稿（各段按 IMRAD 顺序直接追加写入，不生成 sections/ 目录）
+为什么从结果往回写：先写 Results 定死"发现了什么"，Introduction 的 Gap 与假设就必须服务于已有发现。反过来最容易出的事故是"引言承诺的分析没做"，只能在 Discussion 里打补丁。
 </objective>
 
 <execution_context>
 !`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/workflows/writing.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/writing_standards.md"`
 !`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/journal_standards.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/citation-strategy.md"`
 !`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/reference-library.md"`
-!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/contexts/writing.md"`
+!`cat "${CLAUDE_PLUGIN_ROOT}/pipeline/references/concatenation-protocol.md"`
 </execution_context>
 
 <process>
 Execute the writing workflow from pipeline/workflows/writing.md end-to-end.
 
-关键决策步骤（必须依次执行，不可跳过）：
+写作顺序（不可打乱）：
 
-1. **引用策略确认** (`discuss_citation_strategy`): 与用户确认各段引用数量、时间范围、IF 偏好，写入 project_config.yml
-2. **写作计划讨论** (`discuss_writing_plan`): 确认核心论点、目标期刊、手稿结构、图表安排
-3. **写作模式选择** (`choose_writing_mode`): 使用 AskUserQuestion 向用户呈现两种模式——
-   - 一键成稿（batch）→ 跳过逐步流程，直接执行 `batch_writing`（批量文献搜索 → 批量撰写 → 统一审阅）
-   - 逐步写作（sequential）→ 执行 `reference_pre_search` + `sequential_section_writing`（逐段：文献搜索 → 撰写 → 用户审阅）
-4. 按用户选择的模式执行撰写（IMRAD 顺序：Introduction → Methods → Results → Discussion）
-5. 终稿拼接 (`concatenate_manuscript`): 占位符替换 + 引用重编号 + YAML frontmatter
-6. 验证 (`verify_manuscript`): 结构/引用/字数/STROBE 合规检查
-7. 用户确认 (`checkpoint_confirm`) → milestone 关闭 Phase 3
+```
+0. 图表骨架 FIGURE_SKELETON      ← 定海神针，先排图表 + 一句结论
+1. Results                       ← 骨架 + 04_Outputs + ANALYSIS_LOG（只陈述，不解释）
+2. Methods                       ← ANALYSIS_LOG + 方法说明 + 配置（三段式，如实）
+3. Discussion                    ← Results + Methods + ANALYSIS_LOG + 文献
+4. Conclusion                    ← Discussion
+5. 叙事设计 NARRATIVE            ← R + M + D（想清楚怎么引人入胜）
+6. Introduction                  ← 叙事设计 + R/M/D + 文献
+7. Abstract + Title
+8. 一致性复核（10 项）
+9. 拼装 manuscript.md（脚本生成，禁止手改）
+```
+
+三个不可省略的规则：
+
+1. **暂停点**由 `project_config.yml` 的 `writing.pause_after` 控制（默认 `[results, discussion]`），其余章节自动推进
+2. **任何章节被改** → 按 stale 规则把下游置 `stale`；有 stale/draft 时拼装脚本会**拒绝**生成
+3. **写作可反哺分析**：若发现分析缺口（如 Discussion 缺机制解释所需的中介分析），走 `feedback_to_analysis` 退回阶段2 补分析
 </process>
 
 <success_criteria>
-- 四个 IMRAD 段按顺序完成撰写（Intro → Methods → Results → Discussion）
-- 每段撰写前 reference-agent 完成文献搜索，引用库不重复
-- 逐步模式：每段撰写后用户审阅确认才进入下一段
-- 一键成稿模式：全部段落完成后统一呈现审阅
-- 各段按 IMRAD 顺序追加写入 05_Manuscript/manuscript.md（不生成 sections/ 独立文件）
-- 各段使用占位符进行交叉引用（{{Table:N}} {{Figure:N}} {{Method:name}}）
-- 各段引用通过共享引用库管理，不重复
-- 所有引用有 DOI
-- 全文 >5000 字，自然成段论述
-- 无 AI-template 模式（Humanizer 自检通过）
-- 05_Manuscript/manuscript.md 存在且包含完整 IMRAD 结构
+- `FIGURE_SKELETON.md` 存在，每张图有一句不含统计量的结论
+- `NARRATIVE.md` 存在，Gap 能被实际做过的分析填上
+- `sections/` 六节齐全，`status` 全为 `final`，且 `inputs` 真实读取过上游
+- Results 早于 Introduction 产出（递进而非并行）
+- Methods 的 Statistical Analysis 与 `ANALYSIS_LOG.md` 双向一致
+- Results 无解释性语句；Discussion 引用了敏感性分析或被否决备选
+- `python scripts/assemble_manuscript.py` 通过，`manuscript.md` 按 IMRAD 顺序生成
+- 无占位符残留；引用从 [1] 连续编号且全部含 DOI
+- 字数 ≥ `writing.min_words`；引用数在 `citation_strategy.total_range` 内
+- 一致性复核 10 项全部通过
 </success_criteria>

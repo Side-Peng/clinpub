@@ -1,6 +1,6 @@
 ---
 name: data2idea
-description: "Topic mining from clinical data tables (CSV/XLSX). Analyze variable structure, distribution patterns, missing data, and correlations; combine with PubMed literature search to identify research gaps; generate 3-5 structured candidate paper topics with feasibility scores. No statistical analysis or manuscript writing involved."
+description: "从临床数据表（CSV/XLSX）挖掘选题。分析变量结构、分布特征、缺失情况与相关性，结合 PubMed 文献检索定位研究空白，产出 3–5 个带可行性评分的结构化候选课题。不做统计分析，不写手稿。"
 argument-hint: "<filepath>"
 allowed-tools:
   - Read

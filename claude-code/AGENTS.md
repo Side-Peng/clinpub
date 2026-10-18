@@ -38,7 +38,7 @@ Commands (commands/*.md)           → Slash command entry points (frontmatter +
   ↓
 Workflows (pipeline/workflows/*.md) → Phase orchestration (DISCUSS→PLAN→EXECUTE→VERIFY)
   ↓
-Agents (agents/*.md)               → 8 specialized AI role cards (fresh context each)
+Agents (agents/*.md)               → 6 specialized AI role cards (fresh context each)
   ↓
 Scripts (scripts/*.py)             → R/Python analysis tools
 Hooks (*.js/*.sh)                 → Workflow enforcement (phase guard, prompt injection)
@@ -50,8 +50,8 @@ Hooks (*.js/*.sh)                 → Workflow enforcement (phase guard, prompt 
 
 ```
 .claude-plugin/plugin.json  → Plugin manifest (identity + metadata)
-commands/*.md               → 13 flat command files (auto-discovered by plugin system)
-agents/*.md                 → 8 specialized agents (auto-discovered)
+commands/*.md               → 10 flat command files (auto-discovered by plugin system)
+agents/*.md                 → 6 specialized agents (auto-discovered)
 hooks/*.js/*.sh             → Hook implementation scripts (declared inline in plugin.json)
 pipeline/                   → Workflows, references, templates (loaded via @./ references)
 ```
@@ -138,11 +138,11 @@ Project_Root/
 └── project_config.yml         # Phase 0 — Central config (study type, variables, journal)
 ```
 
-## Commands (13 plugin commands)
+## Commands (10 plugin commands)
 
 | Command | Phase | What It Does |
 |---------|-------|-------------|
-| `/clinpub:overview` | — | Command reference overview |
+| `/clinpub help` | — | Command reference overview |
 | `/clinpub:data2idea` | — | Topic mining from data |
 | `/clinpub:initialize` | 0 | Project setup or import existing project (auto-detects artifacts); asks target journal |
 | `/clinpub:data-prep` | 1 | Data cleaning → cleaned.csv |
@@ -151,10 +151,12 @@ Project_Root/
 | `/clinpub:improving` | tool | Self-review + directly revise manuscript & analysis (repeatable) |
 | `/clinpub:coverletter` | tool | Gather target-journal submission requirements → cover letter |
 | `/clinpub:review` | tool | Post-submission: real reviewer comments → response letter → delegate revision to improving |
-| `/clinpub:milestone` | gate | Phase gate verification with user sign-off |
+| `/clinpub next` | gate | Phase gate verification with user sign-off |
 | `/clinpub:modify` | tool | Modify analysis outputs or add new analysis methods (figure style, method, variables) |
 
-`commands/do.md` and `commands/next-step.md` are routing/advancement helpers (breakpoint resume and step advancement), not in the main command table.
+> `/clinpub` 是**单一导航入口**，四种模式：无参看状态 / `help` 看参考 / `next` 核验并推进 / 其余文本按意图路由。
+> 3.0 起已合并原 `overview`、`do`、`next-step`、`milestone` 四个命令——状态判据只维护一份，
+> 且"推进"与"关卡核验"成为原子动作（未签字不推进）。
 
 ## Agent Routing
 
@@ -165,8 +167,6 @@ Project_Root/
 | 文献检索 + 引用 | `reference-agent` | 3 | Python | 内置 `scripts/ncbi_search.py` |
 | 论文撰写 | `writer-agent` | 3 | — | |
 | 选题挖掘 | `topic-miner-agent` | — | Python | |
-| 分析规划 | `clinpub-planner` | 2 | — | 可选高级模式 |
-| 计划执行 | `clinpub-executor` | 2 | R/Python | 可选高级模式 |
 | 统计验证 | `clinpub-verifier` | 1-3 | — | |
 | 分析修改 | `modify-agent` | post-2 | R primary | |
 

@@ -1,5 +1,9 @@
 # clinpub 架构文档
 
+> ⚠️ **本文件描述 2.x 架构，尚未同步到 3.0。**
+> 3.0 的关键变更（迭代分析、递进写作、智能体 8→6、sections 结构）见
+> [CHANGELOG.md](../CHANGELOG.md) 的 `[3.0.0]` 与 [CLINPUB-3.0-DESIGN.md](CLINPUB-3.0-DESIGN.md)。
+
 ## 系统概述
 
 clinpub 是一个基于 Claude Code 的临床数据分析与发表管线，采用三层架构设计：Commands → Workflows → Agents。
@@ -10,24 +14,22 @@ clinpub 是一个基于 Claude Code 的临床数据分析与发表管线，采�
 clinpub/
 ├── .claude-plugin/            # 插件清单（plugin.json）
 ├── commands/                  # 扁平命令入口（11 个，自动发现）
-│   ├── overview.md            # 主入口（/clinpub:overview）
+│   ├── overview.md            # 主入口（/clinpub help）
 │   ├── data2idea.md           # 选题挖掘（/clinpub:data2idea）
 │   ├── data-prep.md           # 数据准备（/clinpub:data-prep）
 │   ├── analysis.md            # 统计分析（/clinpub:analysis）
 │   ├── writing.md             # 论文撰写（/clinpub:writing）
 │   ├── review.md              # 审稿修稿（/clinpub:review）
-│   ├── milestone.md           # 关卡评审（/clinpub:milestone）
+│   ├── milestone.md           # 关卡评审（/clinpub next）
 │   ├── initialize.md                # 项目初始化（/clinpub:initialize）
 │   ├── modify.md              # 分析修改（/clinpub:modify）
-│   ├── do.md                  # 断点续做（/clinpub:do）
-│   └── next-step.md           # 步骤推进（/clinpub:next-step）
-├── agents/                    # 专业化 AI Agent（8 个）
+│   ├── do.md                  # 断点续做（/clinpub）
+│   └── next-step.md           # 步骤推进（/clinpub next）
+├── agents/                    # 专业化 AI Agent（3.0：6 个；2.x 为 8 个）
 │   ├── topic-miner-agent.md   # 选题挖掘 Agent
-│   ├── analyst-agent.md       # 统计分析 Agent
+│   ├── analyst-agent.md       # 迭代分析 Agent
 │   ├── reference-agent.md     # 文献检索 Agent
-│   ├── writer-agent.md        # 论文撰写 Agent
-│   ├── clinpub-planner.md     # 研究规划 Agent
-│   ├── clinpub-executor.md    # 分析执行 Agent
+│   ├── writer-agent.md        # 递进写作 Agent
 │   ├── clinpub-verifier.md    # 统计验证 Agent
 │   └── modify-agent.md        # 分析修改 Agent
 ├── pipeline/                  # 管线配置
@@ -55,7 +57,7 @@ clinpub/
 
 用户通过 Claude Code 的 Plugin 系统调用命令（`/clinpub:xxx`）。每个命令文件定义了触发条件、参数和执行流程。
 
-**入口点**：`commands/overview.md` 是主入口（`/clinpub:overview`），展示命令参考表。
+**入口点**：`commands/overview.md` 是主入口（`/clinpub help`），展示命令参考表。
 
 ### 2. Workflows 层（编排逻辑）
 
@@ -63,11 +65,11 @@ clinpub/
 
 | 工作流 | 文件 | 职责 |
 |--------|------|------|
-| init-project | `pipeline/workflows/init-project.md` | Phase 0：项目初始化 |
-| data-prep | `pipeline/workflows/data-prep.md` | Phase 1：数据准备 |
-| analysis | `pipeline/workflows/analysis.md` | Phase 2：统计分析 |
-| writing | `pipeline/workflows/writing.md` | Phase 3：论文撰写 |
-| review | `pipeline/workflows/review.md` | Phase 4：审稿修稿 |
+| init-project | `pipeline/workflows/init-project.md` | 阶段0：项目初始化 |
+| data-prep | `pipeline/workflows/data-prep.md` | 阶段1：数据准备 |
+| analysis | `pipeline/workflows/analysis.md` | 阶段2：统计分析 |
+| writing | `pipeline/workflows/writing.md` | 阶段3：论文撰写 |
+| review | `pipeline/workflows/review.md` | 阶段4：审稿修稿 |
 | milestone | `pipeline/workflows/milestone.md` | 阶段关卡评审 |
 | data2idea | `pipeline/workflows/data2idea.md` | 选题挖掘 |
 | import-project | `pipeline/workflows/import-project.md` | 已有项目导入 |
@@ -92,24 +94,22 @@ clinpub/
 - **Clinpub Verifier**：跨阶段验证 → 15 种验证模式
 - **Modify Agent**：分析产出修改 → 图表样式/统计方法/变量调整
 
-### 方法说明模板
-
-Phase 2 的每个分析方法产出三件套：figure + table + 方法说明。方法说明使用中文模板 `pipeline/templates/method-readme.md`，包含：目的、方法、输入数据、输出结果、参数设置、注意事项、软件版本。
+### 方法说明模板阶段2 的每个分析方法产出三件套：figure + table + 方法说明。方法说明使用中文模板 `pipeline/templates/method-readme.md`，包含：目的、方法、输入数据、输出结果、参数设置、注意事项、软件版本。
 
 ## 数据流
 
 ```
 用户数据 (CSV/XLSX)
     ↓
-Phase 0: init-project
+阶段0: init-project
     ↓
-Phase 1: data-prep → cleaned.csv
+阶段1: data-prep → cleaned.csv
     ↓
-Phase 2: analysis → figures + tables + stats
+阶段2: analysis → figures + tables + stats
     ↓
-Phase 3: writing → IMRAD manuscript
+阶段3: writing → IMRAD manuscript
     ↓
-Phase 4: review → final manuscript
+阶段4: review → final manuscript
     ↓
 投稿就绪
 ```
@@ -118,22 +118,22 @@ Phase 4: review → final manuscript
 
 4 道门控确保阶段间质量：
 
-1. **IRB / Ethics Gate**（Phase 0 → 1）
+1. **IRB / Ethics Gate**（阶段0 → 1）
    - IRB 批准文件
    - 数据去标识化
    - 知情同意
 
-2. **Data Quality Gate**（Phase 1 → 2）
+2. **Data Quality Gate**（阶段1 → 2）
    - cleaned.csv 完整性
    - 缺失率受控
    - 样本量充足
 
-3. **Analysis Validity Gate**（Phase 2 → 3）
+3. **Analysis Validity Gate**（阶段2 → 3）
    - 所有方法已执行
    - 效应量报告
    - 假设检验完整
 
-4. **Submission Gate**（Phase 4 → Submit）
+4. **Submission Gate**（阶段4 → Submit）
    - IMRAD 完整
    - 图表 ≥300 DPI
    - 引用全有 DOI

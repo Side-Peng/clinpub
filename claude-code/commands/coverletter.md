@@ -1,6 +1,6 @@
 ---
 name: coverletter
-description: "Generate a submission cover letter tailored to the target journal. Reads the target journal defined at initialization, gathers the journal's official submission requirements (author guidelines) via web search, then drafts a tailored cover letter. Falls back to journal-tier best practices if the web is unavailable. Standalone tool — invocable anytime a manuscript exists. Triggers: write cover letter, prepare submission letter."
+description: "按目标期刊生成投稿信。读取初始化时设定的目标期刊，联网搜集该刊官方投稿要求（作者指南），据此起草量身定制的投稿信；联网不可用时回退到该期刊层级的最佳实践。手稿存在即可调用。触发：写投稿信、准备投稿材料。"
 argument-hint: ""
 allowed-tools:
   - Read

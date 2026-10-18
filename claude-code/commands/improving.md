@@ -1,6 +1,6 @@
 ---
 name: improving
-description: "Continuously improve a manuscript draft. Self-review the draft, produce a concrete revision plan, confirm with user, then directly revise the manuscript (full text + analysis code re-run + numeric cascade). No response letter, no simulated reviewers. Standalone tool — invocable anytime a manuscript exists; repeatable. Triggers: improve/polish/refine the paper, self-review before submission."
+description: "持续改进手稿。自审稿件 → 产出具体修改计划 → 用户确认 → 直接改章节文件（必要时重跑分析并级联数值）→ 按依赖把下游标为 stale → 重拼手稿。不写回复信、不模拟审稿人，可反复调用。触发：改进、润色、精修论文，投稿前自审。"
 argument-hint: "[focus area or brief description, leave empty for full self-review]"
 allowed-tools:
   - Read
@@ -31,7 +31,7 @@ Does NOT write a response letter and does NOT simulate reviewers. For post-submi
 <process>
 Execute the improving workflow from pipeline/workflows/improving.md end-to-end.
 
-Prerequisite: a manuscript draft exists (`05_Manuscript/manuscript.md`). If not, tell the user to run `/clinpub:writing` first.
+Prerequisite: 章节文件存在（`05_Manuscript/sections/*.md`）。若只有 `manuscript.md` 而无 sections，说明是 3.0 之前的手稿，需先迁移到 sections 结构。缺失时提示用户先运行 `/clinpub:writing`。
 </process>
 
 <success_criteria>

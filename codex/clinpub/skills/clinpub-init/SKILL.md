@@ -1,11 +1,11 @@
 ---
 name: clinpub-init
-description: "Phase 0: Initialize or import a clinical research project. Detect existing artifacts and import into clinpub structure, or start fresh. Discuss study design, variables, analysis methods with user, and explicitly ask for the target submission journal (no journal is preset — adapts to any clinical research article); generate project_config.yml, directory structure, and .clinpub/ artifacts."
+description: "阶段0：初始化或导入临床研究项目。检测已有研究材料并导入 clinpub 结构，或从零开始。与用户讨论研究设计、变量与分析方法，并明确询问目标投稿期刊（不预设，适配任意临床研究类型）；生成 project_config.yml、目录结构与 .clinpub/ 状态文件。"
 ---
 
 # ClinPub Init
 
-Phase 0: Initialize a new clinical research project or import an existing one. If research artifacts are detected (data files, analysis outputs, manuscript drafts), enter import mode to scan, infer roles, confirm mapping, and adapt to clinpub structure. Otherwise, discuss the study framework with the user, create the project directory structure, generate project_config.yml, and set up .clinpub/ planning artifacts.
+阶段0: Initialize a new clinical research project or import an existing one. If research artifacts are detected (data files, analysis outputs, manuscript drafts), enter import mode to scan, infer roles, confirm mapping, and adapt to clinpub structure. Otherwise, discuss the study framework with the user, create the project directory structure, generate project_config.yml, and set up .clinpub/ planning artifacts.
 
 ## Execution Context
 

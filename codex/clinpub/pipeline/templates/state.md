@@ -3,7 +3,7 @@
 ## 当前位置
 - 阶段：Phase {{phase_number}} - {{phase_name}}
 - 步骤：{{current_step}}
-- 波次：Wave {{wave_number}}
+- 分析批次：Batch {{batch_number}} / {{max_batches}}
 
 ## 导入信息（仅导入模式）
 - import_mode: false
@@ -14,8 +14,9 @@
 - 未验证 Gate 项：{{unverified_count}} 个
 
 ## 关键指标
-- 已完成分析：{{completed_methods}}
-- 待完成分析：{{pending_methods}}
+- 已完成分析：{{completed_methods}} 个方法 / {{completed_batches}} 批
+- 分析预算：{{max_methods}} 个方法 / {{max_batches}} 批
+- 本轮饱和判据：{{saturation_criterion}}
 - 文献数量：{{ref_count}} 篇已筛选
 - 论文进度：{{writing_progress}}
 

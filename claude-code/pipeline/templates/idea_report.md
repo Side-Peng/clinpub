@@ -114,4 +114,4 @@
 
 ## 下一步
 
-选定一个选题后，自动进入 **Phase 0 项目初始化**，生成 PROJECT.md 和 ROADMAP.md。
+选定一个选题后，自动进入 **阶段0 项目初始化**，生成 PROJECT.md 和 ROADMAP.md。

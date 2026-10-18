@@ -1,6 +1,6 @@
 # 组间对比方法决策树
 
-> 本文件定义组间对比的标准化方法选择流程，供 clinpub-planner 和 analyst-agent 在分析规划/执行时查阅。
+> 本文件定义组间对比的标准化方法选择流程，供分析批次规划与 analyst-agent 在分析执行时查阅。
 > 配合 `analysis_methods.md` §3.2 使用，提供更细粒度的分支规则。
 
 ---
@@ -211,7 +211,7 @@ summary(m)  # pooled OR + 95% CI + I²
 
 ---
 
-## 六、执行步骤（供 clinpub-executor 使用）
+## 六、执行步骤（供 analyst-agent 执行组间对比方法时使用）
 
 1. **读数据**：从 cleaned.csv 读取结局变量和分组变量
 2. **检测组数**：unique(group) 的长度 → 2组 或 3+组

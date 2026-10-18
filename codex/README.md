@@ -1,4 +1,4 @@
-﻿# ClinPub - Clinical Publication Pipeline
+# ClinPub - Clinical Publication Pipeline
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -53,40 +53,37 @@ claude plugin install clinpub
 | 2 | `analysis` | Statistical analysis | `04_Outputs/` |
 | 3 | `writing` | IMRAD manuscript writing (core pipeline end) | `manuscript.md` |
 
-### Additional Commands
+### Additional Skills
 
-| Command | Purpose |
+| Skill | Purpose |
 |---------|---------|
-| `improving` | Continuously improve a draft (self-review → plan → direct revision) |
-| `coverletter` | Tailored submission cover letter for the target journal |
-| `review` | Post-submission: real reviewer comments → response letter + revision |
-| `data2idea` | Topic mining from data |
-| `milestone` | Phase gate review |
-| `next-step` | Auto-advance to next phase |
-| `do` | Workspace state router |
-| `modify` | Modify analysis outputs or add new analysis methods |
-| `overview` | Command reference |
+| `clinpub` | **Hub**: status / `help` / `next` (verify & advance) / intent routing |
+| `clinpub-modify` | Modify analysis outputs or add new analysis methods |
+| `clinpub-improving` | Continuously improve a draft (self-review → plan → direct revision) |
+| `clinpub-review` | Post-submission: real reviewer comments → response letter + revision |
+| `clinpub-coverletter` | Tailored submission cover letter for the target journal |
+| `clinpub-data2idea` | Topic mining from data |
+
+> Former `overview` / `do` / `next-step` / `milestone` are merged into `clinpub` since 3.0:
+> one shared set of state criteria, and "advance" is atomic with gate verification.
 
 ## 🏗️ Architecture
 
 ```
 clinpub/
 ├── .codex-plugin/plugin.json    # Plugin manifest
-├── skills/                      # 13 skills
-│   ├── clinpub-overview/
-│   ├── clinpub-coverletter/
-│   ├── clinpub-improving/
-│   ├── clinpub-data2idea/
+├── skills/                      # 10 skills
+│   ├── clinpub/                 # hub: status / help / next / routing
 │   ├── clinpub-init/
 │   ├── clinpub-data-prep/
+│   ├── clinpub-data2idea/
 │   ├── clinpub-analysis/
 │   ├── clinpub-writing/
-│   ├── clinpub-review/
-│   ├── clinpub-milestone/
 │   ├── clinpub-modify/
-│   ├── clinpub-do/
-│   └── clinpub-next-step/
-├── agents/                      # 8 specialized agents
+│   ├── clinpub-improving/
+│   ├── clinpub-review/
+│   └── clinpub-coverletter/
+├── agents/                      # 6 specialized agents
 ├── pipeline/                    # Workflows, references, templates
 ├── scripts/                     # Python scripts
 ├── hooks/                       # Hook implementations
@@ -101,8 +98,6 @@ clinpub/
 | Literature search, citation management | `reference-agent` | 3 |
 | Manuscript drafting, improvement, revision | `writer-agent` | 3, post-writing |
 | Topic mining from data | `topic-miner-agent` | - |
-| Research analysis planning | `clinpub-planner` | 2 |
-| Analysis execution with atomic commits | `clinpub-executor` | 2 |
 | Statistical verification | `clinpub-verifier` | 1-3 |
 | Analysis output modification / method addition | `modify-agent` | post-2 |
 
@@ -146,23 +141,23 @@ clinpub:improving     # self-review and directly revise the draft
 clinpub:coverletter   # prepare the submission cover letter
 clinpub:review        # after submission, handle real reviewer comments
 
-# Or check current status
-clinpub:do
+# Check current status
+clinpub
 
-# Auto-advance to next step
-clinpub:next-step
+# Verify the gate and advance to the next phase
+clinpub next
 ```
 
 ## 🔍 Key Features
 
 - **Phase 0-3 Pipeline + Standalone Tools**: Structured workflow from data to manuscript, with post-writing tools
 - **Publication-Grade Output**: ≥300 DPI figures, formatted tables
-- **Adaptive Analysis**: Automatically diagnoses data structure and proposes methods
-- **IMRAD Writing**: Full manuscript with proper academic structure
+- **Iterative Analysis**: 1–3 methods per batch; the next batch is decided from results via a decision-rule library
+- **Progressive Writing**: Skeleton → Results → Methods → Discussion → Conclusion → Introduction → Abstract
 - **Post-Submission Review Response**: Handle real reviewer comments with point-by-point responses
 - **Topic Mining**: Generate research ideas from raw data
-- **Multi-Agent Architecture**: Specialized agents for each task
-- **Quality Gates**: Phase transitions require user sign-off
+- **Multi-Agent Architecture**: 6 specialized agents
+- **Quality Gates**: Phase transitions require gate verification + user sign-off
 
 ## 📄 Documentation
 

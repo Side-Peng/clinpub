@@ -27,7 +27,7 @@ Each agent contract defines:
 | **Outputs** | `02_PreprocessedData/data/cleaned.csv`, `02_PreprocessedData/reports/data_quality.html`, `04_Outputs/_figure_config.R` (shared figure config), `04_Outputs/XX_MethodName/` (figures + tables), `03_AnalysisMethods/XX_MethodName/方法说明.md` |
 | **Communication** | Writes to filesystem only. No direct agent-to-agent messaging. Writes MANIFEST.yaml in output directories after completion. |
 | **Output naming conventions** | Figures: `figure_N.png` (N from 1, sequential per method). Tables: `table_N.docx`. 方法说明: must contain `输出结果` subsection, use template at `pipeline/templates/method-readme.md`. Data quality report: `data_quality.html`. All outputs in `04_Outputs/XX_MethodName/`. MANIFEST.yaml written to method directory root. |
-| **Pre-conditions** | `project_config.yml` exists with confirmed variable mappings and method list. For Phase 2: `02_PreprocessedData/data/cleaned.csv` exists and is validated. `方法说明` is the Chinese method documentation (replaces `README.md` for WAVE directories). |
+| **Pre-conditions** | `project_config.yml` exists with confirmed variable mappings and method list. For Phase 2: `02_PreprocessedData/data/cleaned.csv` exists and is validated. `方法说明` is the Chinese method documentation (replaces `README.md` in method directories). |
 | **Completion markers** | `cleaned.csv` exists, `_figure_config.R` exists and is sourced by all method R scripts, each method directory has figure + table + 方法说明, all figures ≥300 DPI (FIGURE_DPI) |
 
 ---
@@ -85,43 +85,13 @@ Each agent contract defines:
 
 ---
 
-## Clinpub Planner
-
-| Field | Definition |
-|-------|------------|
-| **Role** | Research analysis planning agent (analogous to gsd-planner) |
-| **Scope** | Creates executable phase plans for analysis workflows. NOT responsible for executing analysis. |
-| **Inputs** | `project_config.yml`, `.clinpub/STATE.md`, `.clinpub/ROADMAP.md`, phase-specific context |
-| **Outputs** | `.clinpub/phases/XX-name/XX-01-PLAN.md` (executable plans with tasks) |
-| **Communication** | Plans consumed by clinpub-executor. Writes MANIFEST.yaml alongside PLAN.md. |
-| **Output naming conventions** | Plan file: `{phase-number}-{plan-number}-PLAN.md` (e.g., `02-01-PLAN.md`) in `.clinpub/phases/XX-name/`. Follows frontmatter format: phase, plan, type, wave, depends_on. |
-| **Pre-conditions** | `project_config.yml` exists with confirmed methods. `.clinpub/STATE.md` and `.clinpub/ROADMAP.md` exist. User-confirmed method list available. |
-| **Completion markers** | PLAN.md exists with frontmatter, tasks, verification criteria, and success criteria |
-
----
-
-## Clinpub Executor
-
-| Field | Definition |
-|-------|------------|
-| **Role** | Analysis execution agent with atomic commits (analogous to gsd-executor) |
-| **Scope** | Executes PLAN.md files, creates per-task commits, handles checkpoints. NOT responsible for planning or verification. |
-| **Inputs** | PLAN.md from clinpub-planner, `project_config.yml`, `.clinpub/STATE.md` |
-| **Outputs** | Analysis files per plan tasks, SUMMARY.md per plan, updated STATE.md |
-| **Communication** | Writes analysis outputs, creates git commits. Writes MANIFEST.yaml per output directory. Results verified by clinpub-verifier. |
-| **Output naming conventions** | SUMMARY: `{phase-number}-{plan-number}-SUMMARY.md` in `.clinpub/phases/XX-name/`. Git commits: `analysis({phase}-{plan}): {task description}`. |
-| **Pre-conditions** | PLAN.md exists and is parsed. `02_PreprocessedData/data/cleaned.csv` exists. Git repo initialized. |
-| **Completion markers** | All plan tasks committed, SUMMARY.md created with deviation record, STATE.md updated |
-
----
-
 ## Clinpub Verifier
 
 | Field | Definition |
 |-------|------------|
 | **Role** | Cross-phase verification agent with adversarial mindset (analogous to gsd-verifier). Covers Phase 1 (data quality), Phase 2 (statistical), Phase 3 (manuscript) verification. |
 | **Scope** | Goal-backward verification of data quality (Phase 1), analysis results (Phase 2), and manuscript integrity (Phase 3). NOT responsible for executing analysis or writing. |
-| **Inputs** | SUMMARY.md from clinpub-executor, `pipeline/references/verification-patterns.md`, `pipeline/references/gates.md`, analysis output files, cleaned.csv, manuscript files |
+| **Inputs** | `.clinpub/ANALYSIS_LOG.md`、`.clinpub/phases/02-analysis/ANALYSIS_SUMMARY.md`、`pipeline/references/verification-patterns.md`, `pipeline/references/gates.md`, analysis output files, cleaned.csv, manuscript files |
 | **Outputs** | `VERIFICATION.md` with pass/fail verdicts per verification pattern |
 | **Communication** | Reads outputs from executor, validates MANIFEST.yaml against actual files, writes VERIFICATION.md. Orchestrator handles routing. |
 | **Output naming conventions** | Report: `{phase-number}-VERIFICATION.md` in `.clinpub/phases/XX-name/`. Status: passed / gaps_found / human_needed. |
@@ -166,8 +136,6 @@ Shows which agent reads (R) and writes (W) to each directory. Agents only read f
 | **reference-agent** | - | - | - | - | - | W | - | - |
 | **writer-agent** | - | - | R | R | W | R | - | - |
 | **topic-miner-agent** | R | - | - | - | - | - | - | W |
-| **clinpub-planner** | - | - | - | - | - | - | W | - |
-| **clinpub-executor** | - | R | R | W | - | - | W | - |
 | **clinpub-verifier** | - | R | R | R | R | R | R | - |
 | **modify-agent** | - | R | W | W | R/W (patch only) | - | R | - |
 

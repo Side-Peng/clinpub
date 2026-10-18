@@ -1,4 +1,4 @@
-﻿---
+---
 name: review
 description: "Post-submission peer-review response workflow. Intake the reviewers' real comments provided by the user, draft a point-by-point response letter and improvement directions, confirm with the user, then delegate the actual revision to the improving workflow. Loops per revision round until the user is satisfied."
 ---
@@ -22,11 +22,13 @@ Verify a submitted manuscript exists to revise:
 ```bash
 PROJECT_DIR=$(pwd)
 MANUSCRIPT="$PROJECT_DIR/05_Manuscript/manuscript.md"
+SECTIONS="$PROJECT_DIR/05_Manuscript/sections"
 ```
 
 Checks:
 1. `05_Manuscript/manuscript.md` exists (the submitted draft) — if not, error: "No manuscript found. This command is for handling reviewer comments after submission. Run /clinpub:writing first."
-2. `project_config.yml` exists (journal name/tier, language) — if not, warn and continue.
+2. `05_Manuscript/sections/` 存在（3.0 的修订单位是章节文件，不是生成物 `manuscript.md`）——若只有 `manuscript.md`，提示这是 3.0 之前的手稿，需先迁移到 sections 结构
+3. `project_config.yml` exists (journal name/tier, language) — if not, warn and continue.
 </step>
 
 <step name="collect_reviewer_comments" priority="first">
@@ -49,7 +51,7 @@ For each comment record:
 - Verbatim comment text (quoted)
 - Category: Major / Minor
 - Required action type: text edit / additional analysis / new literature / clarification / rebuttal (disagree with justification)
-- Affected manuscript location(s) if identifiable
+- **Affected section key(s)**：用 3.0 的章节键定位（`results` / `methods` / `discussion` / `conclusion` / `introduction` / `abstract`），不要用"第 3 页第 2 段"这类不稳定定位——修订是按节整体重写的
 
 Present a concise summary table (reviewer x comment count, Major/Minor split) to the user.
 </step>
@@ -99,7 +101,7 @@ This keeps a single implementation of the revision logic (no duplication).
 <step name="finalize" priority="high">
 Assemble the revision package and loop if needed:
 
-1. Write the revised manuscript to `05_Manuscript/final/manuscript.md` (keep the pre-revision version for comparison).
+1. **改在 sections 上，不是改 final 稿**：所有修订落在 `05_Manuscript/sections/*.md`；improving 完成后运行 `python scripts/assemble_manuscript.py` 重拼，再把**重拼后的** `manuscript.md` 复制到 `05_Manuscript/final/manuscript.md`（保留修订前版本用于对比）。
 2. Finalize `05_Manuscript/final/response_letter.md` with the actual change locations filled in from the improving pass.
 3. Update `Reference/references.bib` if new citations were added.
 4. Present to the user:

@@ -1,4 +1,4 @@
-﻿# ClinPub - Clinical Publication Pipeline
+# ClinPub - Clinical Publication Pipeline
 
 End-to-end clinical data analysis and publication pipeline. Adapts to any clinical research article type.
 
@@ -21,12 +21,12 @@ Invocable anytime the prerequisite exists (do not occupy a phase number):
 
 | Tool | Purpose | Key Output |
 |------|---------|------------|
-| `clinpub:improving` | Self-review draft → revision plan → direct revision (text + analysis re-run) | updated `manuscript.md` |
+| `clinpub` | **Hub**: status / `help` / `next` (gate verify + advance) / intent routing | — |
+| `clinpub:improving` | Self-review draft → revision plan → direct revision (text + analysis re-run) | updated `sections/*.md` + reassembled `manuscript.md` |
 | `clinpub:coverletter` | Tailored submission cover letter from target-journal requirements | `cover_letter.md` |
 | `clinpub:review` | Post-submission: real reviewer comments → response letter + revision | `final/` |
-| `clinpub:modify` | Modify completed analyses or add new analysis methods | updated `04_Outputs/` |
+| `clinpub:modify` | Modify completed analyses or add new analysis methods | updated `04_Outputs/` + `ANALYSIS_LOG` |
 | `clinpub:data2idea` | Topic mining from data | idea report |
-| `clinpub:milestone` | Phase gate verification | `MILESTONE.md` |
 
 ## Installation
 
@@ -72,14 +72,15 @@ clinpub:review
 # Topic mining from data
 clinpub:data2idea <file>
 
-# Check phase status
-clinpub:milestone <N>
+# Check status / view reference
+clinpub
+clinpub help
 
-# Auto-advance to next step
-clinpub:next-step
+# Verify the gate and advance to the next phase
+clinpub next
 
 # Route to appropriate command
-clinpub:do [intent]
+clinpub [intent]
 
 # Modify analysis outputs or add new analysis methods
 clinpub:modify [method ID]
@@ -88,7 +89,7 @@ clinpub:modify [method ID]
 ## Architecture
 
 ```
-skills/*/SKILL.md          → Skill definitions (13 skills)
+skills/*/SKILL.md          → Skill definitions (10 skills)
 agents/*.md                → Specialized AI agent role cards (8 agents)
 pipeline/
   workflows/*.md           → Phase orchestration logic
@@ -106,10 +107,8 @@ hooks/*.js/*.sh            → Hook implementation scripts
 |------|-------|
 | Data cleaning, statistical analysis, figures | `analyst-agent` |
 | Literature search, citation management | `reference-agent` |
-| Manuscript drafting, improvement, revision | `writer-agent` |
+| Progressive manuscript drafting (R→M→D→C→I→Abstract), improvement, revision | `writer-agent` |
 | Topic mining from data | `topic-miner-agent` |
-| Research analysis planning | `clinpub-planner` |
-| Analysis execution with atomic commits | `clinpub-executor` |
 | Statistical verification | `clinpub-verifier` |
 | Analysis output modification / method addition | `modify-agent` |
 
