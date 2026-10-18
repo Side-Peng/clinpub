@@ -1,0 +1,12 @@
+"model","term","estimate","ci_low","ci_high","p"
+"Unadjusted","(Intercept)",46.65,41.98,51.31,1.81e-36
+"Unadjusted","groupTreatment",-9.11,-15.52,-2.7,0.00578
+"Adjusted","(Intercept)",55.74,27.13,84.35,2e-04
+"Adjusted","groupTreatment",-9.01,-15.47,-2.55,0.00678
+"Adjusted","age",0.12,-0.19,0.42,0.44
+"Adjusted","sexMale",1.76,-4.89,8.41,0.601
+"Adjusted","bmi",-0.69,-1.62,0.23,0.141
+"Adjusted (std. beta)","groupTreatment",-0.269,NA,NA,NA
+"Adjusted (std. beta)","age",0.075,NA,NA,NA
+"Adjusted (std. beta)","sexMale",0.052,NA,NA,NA
+"Adjusted (std. beta)","bmi",-0.148,NA,NA,NA

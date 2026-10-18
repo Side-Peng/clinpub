@@ -1,0 +1,115 @@
+# MANIFEST — Phase 2 输出清单
+# 消费者：writer-agent（Phase 3）、clinpub-verifier
+
+agent: analyst-agent
+phase: 2
+type: iterative-statistical-analysis
+
+outputs:
+  - directory: 04_Outputs/01_BaselineTable
+    files:
+      - name: table1.csv
+        format: csv
+        statistics: [mean_sd, n_percent, smd, p_value]
+      - name: 方法说明.md
+        format: md
+
+  - directory: 04_Outputs/02_OutcomeScreening
+    files:
+      - name: outcome_screening.csv
+        format: csv
+        statistics: [mean_difference, ci_95, cohens_d, p_value, cramers_v, shapiro_p]
+      - name: fig1_candidates_by_group.png
+        format: png
+        dpi: 300
+      - name: fig1_candidates_by_group.svg
+        format: svg
+      - name: fig1_candidates_by_group.tiff
+        format: tiff
+        dpi: 300
+      - name: 方法说明.md
+        format: md
+
+  - directory: 04_Outputs/03_AdjustedModel
+    files:
+      - name: model_table.csv
+        format: csv
+        statistics: [beta, ci_95, p_value, std_beta]
+      - name: diag.txt
+        format: txt
+        statistics: [shapiro_p, vif, cooks_d]
+      - name: fig2_adjusted_effects.png
+        format: png
+        dpi: 300
+      - name: fig2_adjusted_effects.svg
+        format: svg
+      - name: fig2_adjusted_effects.tiff
+        format: tiff
+        dpi: 300
+      - name: 方法说明.md
+        format: md
+
+  - directory: 04_Outputs/04_SensitivityAnalysis
+    files:
+      - name: sensitivity.csv
+        format: csv
+        statistics: [estimate, ci_95, p_value, n]
+      - name: fig3_sensitivity_forest.png
+        format: png
+        dpi: 300
+      - name: fig3_sensitivity_forest.svg
+        format: svg
+      - name: fig3_sensitivity_forest.tiff
+        format: tiff
+        dpi: 300
+      - name: 方法说明.md
+        format: md
+
+  - directory: 04_Outputs
+    files:
+      - name: _figure_config.R
+        format: R
+      - name: MANIFEST.yaml
+        format: yaml
+
+handoffs:
+  - consumer: writer-agent
+    required_files:
+      - 04_Outputs/01_BaselineTable/table1.csv
+      - 04_Outputs/02_OutcomeScreening/outcome_screening.csv
+      - 04_Outputs/03_AdjustedModel/model_table.csv
+      - 04_Outputs/04_SensitivityAnalysis/sensitivity.csv
+      - .clinpub/ANALYSIS_LOG.md
+      - .clinpub/phases/02-analysis/ANALYSIS_SUMMARY.md
+    required_quality:
+      - "每个方法都有 图 + 表 + 方法说明"
+      - "统计报告含效应量 + 95%CI + 精确 p 值"
+      - "图 >= 300 DPI 且英文标注"
+
+  - consumer: clinpub-verifier
+    required_files:
+      - 04_Outputs/03_AdjustedModel/diag.txt
+      - 03_AnalysisMethods/03_AdjustedModel/run.R
+    required_quality:
+      - "代码可从 cleaned.csv 独立复现"
+
+decisions:
+  - variable: post_score
+    decision: "作为主要结局"
+    rationale: "四个候选中唯一存在可检测组间差异者（d=-0.56, p=0.00541）；经用户确认。属 post hoc 结局选择，全文须按探索性声明。"
+  - variable: comorbidity
+    decision: "编码为四分类，None 为参照；作为暴露/协变量而非结局"
+    rationale: "两组分布接近（p=0.216），作结局无发现。"
+  - variable: baseline_score
+    decision: "仅作基线均衡指标，不与 post_score 同时入模"
+    rationale: "两者 r=0.84，高度共线；且其组间 SMD=0.04 表明基线均衡。"
+  - variable: 缺失处理
+    decision: "完整病例为主分析（N=102），MICE（m=20）作敏感性"
+    rationale: "缺失均 <8%；两种方法结论一致（-9.01 vs -10.48）。"
+
+notes: >
+  分析在 Batch 2 后达到饱和判据 S1（核心假设已验证、效应量与 CI 稳定）。
+  未做的分析（亚组、RCS、交互）已在 ANALYSIS_LOG 的「否决项」中记录理由，
+  应作为 Phase 3 Discussion 局限性段的素材。
+  已知限制：主结局为 post hoc 选择；横断面设计不支持因果推断；
+  Cook's D 超阈值 4 例未剔除。

@@ -1,0 +1,7 @@
+source("04_Outputs/_figure_config.R")
+cat("  单栏 base_size:", pub_base_size(89), "\n")
+cat("  双栏 base_size:", pub_base_size(183), "\n")
+cat("  DPI:", PUBLICATION_DPI, "| FORMAT:", FIGURE_FORMAT, "\n")
+cat("  双组配色:", paste(get_palette(2), collapse = " / "), "\n")
+cat("  角色取色:", pal("main"), pal("contrast"), pal("accent"), "\n")
+cat("  画布:", paste(names(FIG_WIDTH_MM), FIG_WIDTH_MM, sep = "=", collapse = ", "), "\n")

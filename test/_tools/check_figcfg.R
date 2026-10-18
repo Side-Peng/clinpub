@@ -1,0 +1,7 @@
+source("04_Outputs/_figure_config.R")
+cat("Figure config OK\n")
+cat(sprintf("  apply_theme : %s\n", exists("apply_theme")))
+cat(sprintf("  get_palette : %s\n", exists("get_palette")))
+cat(sprintf("  save_figure : %s\n", exists("save_figure")))
+cat(sprintf("  theme_pub   : %s\n", exists("theme_pub")))
+cat(sprintf("  R 版本      : %s\n", R.version.string))

@@ -1,0 +1,117 @@
+# ============================================================
+# 项目配置文件 —— 工作标题（最终标题在 Phase 3 的 write_abstract_title 产出）
+# 由 Phase 0 初始化生成（ClinPub 3.0）
+# 注意：project.name 只是工作名，用于 spec/里程碑等文档；
+#       正式标题在全文写完后拟定（见 writing workflow 的 write_abstract_title）。
+# ============================================================
+
+project:
+  name: "【暂定】共病与症状负担的横断面关联"
+  title: "真实临床样本中治疗状态与症状负担的横断面关联：基于基线可比性的探索性分析"
+  description: "在老年临床样本中，探讨共病负担、治疗分组与症状评分（及肾功能）之间的横断面关联，探索性设计，主要结局待第一批分析确定。"
+  design: "横断面"
+  sample_size: 120
+  target_journal: "Alzheimer's & Dementia"
+  reporting_standard: "STROBE"
+
+# ============================================================
+# analysis_mode: exploratory
+# 用户明确表示不预设主要结局——由 Phase 2 第一批数据画像/描述分析确定
+# ============================================================
+analysis_mode: "exploratory"          # 主结局在看过数据后确定 → 全文按探索性/pothoc 声明
+
+variables:
+  outcome: "post_score"                # 2026-10-18 经 Batch 1 筛查后由用户确定（post hoc）
+  outcome_type: "continuous"           # 连续（0–100）
+  exposure: ["comorbidity", "group"]   # 共病（None/HTN/DM/Both）+ 治疗分组（横断面的分组差异，非干预效应）
+  covariates: ["age", "sex", "bmi"]    # 候选协变量，待诊断阶段确认
+  time_variable: ""                    # 横断面不使用
+  event_variable: ""                   # 横断面不使用
+  group_variable: "group"              # Treatment / Control —— 横断面下作为分组比较变量
+  id_variable: "patient_id"
+
+paths:
+  raw_data: "01_RawData"
+  preprocessed: "02_PreprocessedData"
+  methods: "03_AnalysisMethods"
+  outputs: "04_Outputs"
+  reference: "Reference"
+  manuscript: "05_Manuscript"
+  progress: "06_ProgressReports"
+  global: "00_Global"
+
+analysis_budget:
+  max_batches: 6
+  max_methods: 12
+  ask_on_branch: true
+
+journal:
+  name: "Alzheimer's & Dementia"
+  tier: "Q1"
+  word_limit: 5000
+  abstract_limit: 300
+  reference_style: "vancouver"
+  figure_limit: 6
+  data_sharing: "required"
+  specific_requirements: []
+
+language:
+  manuscript: "zh-CN"
+  figures_tables: "en"
+  statistics: "R"
+
+quality:
+  journal_level: "Q1"
+  figure_width_mm: 183
+  figure_dpi: 600
+  figure_format: "tiff"
+  figure_font: "Arial"
+  figure_font_size: 10
+  theme:
+    variant: "theme_pub"
+    base_size: null
+    base_family: "Arial"
+    legend_position: "right"
+    title_hjust: 0
+    panel_border: false
+    grid: false
+  color_palette:
+    preset: "auto"
+    custom_colors: []
+    group_mapping: {}
+    continuous: "viridis"
+
+analysis:
+  missing_threshold_low: 0.05
+  missing_threshold_mid: 0.20
+  missing_threshold_high: 0.20
+  significance_level: 0.05
+  multiple_comparison: "fdr"
+
+writing:
+  pause_after: [results, discussion]
+  min_words: 5000
+  abstract_words: [250, 300]
+
+citation_strategy:
+  section_targets:
+    introduction: 12
+    methods: 4
+    results: 2
+    discussion: 20
+  total_range: [30, 55]
+  year_range:
+    max_years_ago: 5
+    landmark_exceptions: []
+  if_preference:
+    min_if: null
+    note: "默认策略，2026-10-18 经用户确认"
+
+import:
+  mode: false
+  date: ""
+  source_description: ""
+  starting_phase: 0
+  skipped_phases: []
+  imported_files: []
+  unverified_gates: []

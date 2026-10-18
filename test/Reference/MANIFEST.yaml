@@ -1,0 +1,41 @@
+# MANIFEST — 参考文献输出
+# 消费者：writer-agent（Phase 3）、clinpub-verifier
+
+agent: reference-agent
+phase: 3
+type: literature-retrieval
+
+outputs:
+  - directory: Reference
+    files:
+      - name: reference_library.json
+        format: json
+        statistics: [n_references]
+      - name: references.bib
+        format: bib
+      - name: citation_map.md
+        format: md
+      - name: MANIFEST.yaml
+        format: yaml
+
+handoffs:
+  - consumer: writer-agent
+    required_files:
+      - Reference/reference_library.json
+      - Reference/citation_map.md
+    required_quality:
+      - "每条记录含完整 abstract"
+      - "每条记录 DOI 非 pending"
+
+decisions:
+  - variable: 检索工具
+    decision: "内置 ncbi_search.py（ncbi-search v3.0.0）"
+    rationale: "clinpub 自带，无需外部 skill；v3 默认不返回摘要，筛选阶段用 --abstract preview。"
+  - variable: 引用数量
+    decision: "12 篇（低于 citation_strategy 的 30–55）"
+    rationale: "本次为引用链路验证，覆盖 Intro/Methods/Discussion 三节即可打通编号与 DOI 检查。"
+
+notes: >
+  共 12 条引用，全部含 DOI 与 PMID，编号按正文首次出现顺序分配。
+  其中 2014/2015/2018/2008 年文献超出"近 5 年"窗口，属 landmark/方法学经典，
+  保留依据：STROBE 为报告规范原文，MI 与预测模型为该领域方法学基础文献。

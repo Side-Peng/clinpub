@@ -1,0 +1,330 @@
+{
+  "library_version": "3.0",
+  "updated": "2026-10-18",
+  "references": [
+    {
+      "id": 1,
+      "citation_key": "Steffens2026",
+      "title": "Moderators of treatment response in late-life depression.",
+      "authors": [
+        "Steffens D",
+        "Diniz B",
+        "Jain N",
+        "Kluewer-D'Amico J",
+        "Manning K",
+        "Wang L"
+      ],
+      "journal": "Neuropsychopharmacology : official publication of the American College of Neuropsychopharmacology",
+      "year": "2026",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1038/s41386-026-02337-x",
+      "pmid": "41667639",
+      "added_by_section": "introduction",
+      "sections_used": [
+        "introduction"
+      ],
+      "abstract": "As late-life depression is associated with a high degree of treatment resistance, understanding predictors of outcome may inform management. In this review, we examine a spectrum of factors that may moderate treatment response. These include clinical moderators related to depression presentation and history, social moderators, psychosocial stressors, personality, and cognitive factors. As there has been substantial research on biological predictors of response, we also include a review of neuroimaging moderators, including markers of accelerated brain aging, as well as other peripheral or central biomarkers of response.",
+      "added_date": "2026-10-18",
+      "display_number": 3
+    },
+    {
+      "id": 2,
+      "citation_key": "Goke2024",
+      "title": "Predictors of remission after repetitive transcranial magnetic stimulation for the treatment of late-life depression.",
+      "authors": [
+        "Göke K",
+        "Trevizol A",
+        "Ma C",
+        "Mah L",
+        "Rajji T",
+        "Daskalakis Z",
+        "Downar J",
+        "McClintock S",
+        "Nestor S",
+        "Noda Y",
+        "Mulsant B",
+        "Blumberger D"
+      ],
+      "journal": "Psychiatry research",
+      "year": "2024",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1016/j.psychres.2024.115822",
+      "pmid": "38452496",
+      "added_by_section": "discussion",
+      "sections_used": [
+        "discussion"
+      ],
+      "abstract": "Repetitive transcranial magnetic stimulation (rTMS) is an effective treatment in patients with depression, yet treatment response remains variable. While previous work has identified predictors of remission in younger adults, relatively little data exists in late-life depression (LLD). To address this gap, data from 164 participants with LLD from a randomized non-inferiority treatment trial comparing standard bilateral rTMS to bilateral theta burst stimulation (TBS) (ClinicalTrials.gov identifier: NCT02998580) were analyzed using binary logistic regression and conditional inference tree (CIT) modeling. Lower baseline depression symptom severity, fewer prior antidepressant treatment failures, and higher global cognition predicted remission following rTMS treatment. The CIT predicted a higher likelihood of achieving remission for patients with a total score of 19 or lower on the Montgomery-Åsberg Depression Rating Scale, 1 or fewer prior antidepressant treatment failures, and a total score of 23 or higher on the Montreal Cognitive Assessment. Our results indicate that older adults with lower severity of depression, fewer antidepressant treatment failures, and higher global cognition benefit more from current forms of rTMS. The results suggest that there is potentially higher value in using rTMS earlier in the treatment pathway for depression in older adults.",
+      "added_date": "2026-10-18",
+      "display_number": 10
+    },
+    {
+      "id": 3,
+      "citation_key": "Tunvirachaisakul2018",
+      "title": "Predictors of treatment outcome in depression in later life: A systematic review and meta-analysis.",
+      "authors": [
+        "Tunvirachaisakul C",
+        "Gould R",
+        "Coulson M",
+        "Ward E",
+        "Reynolds G",
+        "Gathercole R",
+        "Grocott H",
+        "Supasitthumrong T",
+        "Tunvirachaisakul A",
+        "Kimona K",
+        "Howard R"
+      ],
+      "journal": "Journal of affective disorders",
+      "year": "2018",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1016/j.jad.2017.10.008",
+      "pmid": "29100149",
+      "added_by_section": "discussion",
+      "sections_used": [
+        "discussion"
+      ],
+      "abstract": "BACKGROUND: Predictor analyses of late-life depression can be used to identify variables associated with outcomes of treatments, and hence ways of tailoring specific treatments to patients. The aim of this review was to systematically identify, review and meta-analyse predictors of outcomes of any type of treatment for late-life depression. METHODS: Pubmed, Embase, CINAHL, Web of Science and PsycINFO were searched for studies published up to December 2016. Primary and secondary studies reported treatment predictors from randomised controlled trials of any treatment for patients with major depressive disorder aged over 60 were included. Treatment outcomes included response, remission and change in depression score. RESULTS: Sixty-seven studies met the inclusion criteria. Of 65 identified statistically significant predictors, only 7 were reported in at least 3 studies. Of these, 5 were included in meta-analyses, and only 3 were statistically significant. Most studies were rated as being of moderate to strong quality and satisfied key quality criteria for predictor analyses. LIMITATIONS: The searches were limited to randomised controlled trials and most of the included studies were secondary analyses. CONCLUSIONS: Baseline depression severity, co-morbid anxiety, executive dysfunction, current episode duration, early improvement, physical illnesses and age were reported as statistically significant predictors of treatment outcomes. Only the first three were significant in meta-analyses. Subgroup analyses showed differences in predictor effect between biological and psychosocial treatment. However, high heterogeneity and small study numbers suggest a cautious interpretation of results. These predictors were associated with various mechanisms including brain pathophysiology, perceived social support and proposed distinct types of depressive disorder. Further investigation of the clinical utility of these predictors is suggested.",
+      "added_date": "2026-10-18",
+      "display_number": 9
+    },
+    {
+      "id": 4,
+      "citation_key": "Lee2022",
+      "title": "Confounding by Indication in Studies of Selective Serotonin Reuptake Inhibitors.",
+      "authors": [
+        "Lee J",
+        "Chang S"
+      ],
+      "journal": "Psychiatry investigation",
+      "year": "2022",
+      "volume": "",
+      "pages": "",
+      "doi": "10.30773/pi.2022.0209",
+      "pmid": "36444151",
+      "added_by_section": "introduction",
+      "sections_used": [
+        "introduction"
+      ],
+      "abstract": "Selective serotonin reuptake inhibitors (SSRIs) are used worldwide as the first-line pharmacological treatment for depression. Although SSRI use can increase the risk of suicide, fractures, and infertility, the nature of these relationships is controversial. This review reports confounding by indication and confounding by severity for SSRI side effects in previously published observational studies. The PubMed and Google Scholar databases were searched for English-language articles published from 2005 to 2022. SSRIs are often prescribed for depressive symptoms, and depression is associated with an increased risk of side effects. Therefore, confounding by indication, whereby patients are selected for a particular treatment depending on their diagnosis or severity of illness, may lead to erroneous treatment conclusions, resulting in an adverse outcome. The side effects of SSRIs that can be considered due to confounding by indication or severity include suicide, fractures, infertility, atrial fibrillation, stroke, autism spectrum disorder, and congenital malformation. When prescribing SSRIs for depression, physicians must consider confounding by indication and severity in the management of side effects. In addition, medication discontinuation should be carefully considered when side effects occur during the treatment.",
+      "added_date": "2026-10-18",
+      "display_number": 4
+    },
+    {
+      "id": 5,
+      "citation_key": "Remschmidt2015",
+      "title": "Frequency and impact of confounding by indication and healthy vaccinee bias in observational studies assessing influenza vaccine effectiveness: a systematic review.",
+      "authors": [
+        "Remschmidt C",
+        "Wichmann O",
+        "Harder T"
+      ],
+      "journal": "BMC infectious diseases",
+      "year": "2015",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1186/s12879-015-1154-y",
+      "pmid": "26474974",
+      "added_by_section": "discussion",
+      "sections_used": [
+        "introduction"
+      ],
+      "abstract": "BACKGROUND: Evidence on influenza vaccine effectiveness (VE) is commonly derived from observational studies. However, these studies are prone to confounding by indication and healthy vaccinee bias. We aimed to systematically investigate these two forms of confounding/bias. METHODS: Systematic review of observational studies reporting influenza VE and indicators for bias and confounding. We assessed risk of confounding by indication and healthy vaccinee bias for each study and calculated ratios of odds ratios (crude/adjusted) to quantify the effect of confounder adjustment. VE-estimates during and outside influenza seasons were compared to assess residual confounding by healthy vaccinee effects. RESULTS: We identified 23 studies reporting on 11 outcomes. Of these, 19 (83 %) showed high risk of bias: Fourteen due to confounding by indication, two for healthy vaccinee bias, and three studies showed both forms of confounding/bias. Adjustment for confounders increased VE on average by 12 % (95 % CI: 7-17 %; all-cause mortality), 9 % (95 % CI: 4-14 %; all-cause hospitalization) and 7 % (95 % CI: 4-10 %; influenza-like illness). Despite adjustment, nine studies showed residual confounding as indicated by significant off-season VE-estimates. These were observed for five outcomes, but more frequently for all-cause mortality as compared to other outcomes (p = 0.03) and in studies which indicated healthy vaccinee bias at baseline (p = 0.01). CONCLUSIONS: Both confounding by indication and healthy vaccinee bias are likely to operate simultaneously in observational studies on influenza VE. Although adjustment can correct for confounding by indication to some extent, the resulting estimates are still prone to healthy vaccinee bias, at least as long as unspecific outcomes like all-cause mortality are used. Therefore, cohort studies using administrative data bases with unspecific outcomes should no longer be used to measure the effects of influenza vaccination.",
+      "added_date": "2026-10-18",
+      "display_number": 5
+    },
+    {
+      "id": 6,
+      "citation_key": "vonElm2008",
+      "title": "The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement: guidelines for reporting observational studies.",
+      "authors": [
+        "von Elm E",
+        "Altman D",
+        "Egger M",
+        "Pocock S",
+        "Gøtzsche P",
+        "Vandenbroucke J",
+        "STROBE Initiative"
+      ],
+      "journal": "Journal of clinical epidemiology",
+      "year": "2008",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1016/j.jclinepi.2007.11.008",
+      "pmid": "18313558",
+      "added_by_section": "methods",
+      "sections_used": [
+        "methods"
+      ],
+      "abstract": "Much of biomedical research is observational. The reporting of such research is often inadequate, which hampers the assessment of its strengths and weaknesses and of a study's generalizability. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) Initiative developed recommendations on what should be included in an accurate and complete report of an observational study. We defined the scope of the recommendations to cover three main study designs: cohort, case-control, and cross-sectional studies. We convened a 2-day workshop in September 2004, with methodologists, researchers, and journal editors to draft a checklist of items. This list was subsequently revised during several meetings of the coordinating group and in e-mail discussions with the larger group of STROBE contributors, taking into account empirical evidence and methodological considerations. The workshop and the subsequent iterative process of consultation and revision resulted in a checklist of 22 items (the STROBE Statement) that relate to the title, abstract, introduction, methods, results, and discussion sections of articles. Eighteen items are common to all three study designs and four are specific for cohort, case-control, or cross-sectional studies. A detailed Explanation and Elaboration document is published separately and is freely available on the web sites of PLoS Medicine, Annals of Internal Medicine, and Epidemiology. We hope that the STROBE Statement will contribute to improving the quality of reporting of observational studies.",
+      "added_date": "2026-10-18",
+      "display_number": 6
+    },
+    {
+      "id": 7,
+      "citation_key": "Allotey2019",
+      "title": "Multiple Imputation for Incomplete Data in Environmental Epidemiology Research.",
+      "authors": [
+        "Allotey P",
+        "Harel O"
+      ],
+      "journal": "Current environmental health reports",
+      "year": "2019",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1007/s40572-019-00230-y",
+      "pmid": "31090043",
+      "added_by_section": "methods",
+      "sections_used": [
+        "methods"
+      ],
+      "abstract": "PURPOSE OF REVIEW: Incomplete data are a common problem in statistical analysis of environmental epidemiological research. However, many researchers still ignore this complication. We evaluate the performance of two commonly used multiple imputation (MI) methods (fully conditional specification and multivariate normal) for handling missing data and compare them to complete case analysis (CCA) method. We further discuss issues that arise when these methods are being used. RECENT FINDINGS: MI is a simulation-based approach to deal with incomplete data. In general, MI will perform better then ad hoc techniques such as CCA. MI is an approach which replaces the missing data with plausible values and allows for additional uncertainty due to the missing information caused by the incomplete data. To illustrate this, we use data of 944 women from the Collaborative Perinatal Project and compare estimates between these methods. The goal is to examine if each of two outcomes, birth-weight and spontaneous abortion, in the data set are associated with mothers' smoking status during pregnancy adjusting for baseline covariates in the model. Results indicate that MI is better suited for handling incomplete data and led to a significant improvement in parameter estimates compared to CCA. The two MI methods produced similar point estimates, but slightly different standard errors.",
+      "added_date": "2026-10-18",
+      "display_number": 7
+    },
+    {
+      "id": 8,
+      "citation_key": "Wijesuriya2025",
+      "title": "Multiple Imputation for Longitudinal Data: A Tutorial.",
+      "authors": [
+        "Wijesuriya R",
+        "Moreno-Betancur M",
+        "Carlin J",
+        "White I",
+        "Quartagno M",
+        "Lee K"
+      ],
+      "journal": "Statistics in medicine",
+      "year": "2025",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1002/sim.10274",
+      "pmid": "39846338",
+      "added_by_section": "methods",
+      "sections_used": [
+        "methods"
+      ],
+      "abstract": "Longitudinal studies are frequently used in medical research and involve collecting repeated measures on individuals over time. Observations from the same individual are invariably correlated and thus an analytic approach that accounts for this clustering by individual is required. While almost all research suffers from missing data, this can be particularly problematic in longitudinal studies as participation often becomes harder to maintain over time. Multiple imputation (MI) is widely used to handle missing data in such studies. When using MI, it is important that the imputation model is compatible with the proposed analysis model. In a longitudinal analysis, this implies that the clustering considered in the analysis model should be reflected in the imputation process. Several MI approaches have been proposed to impute incomplete longitudinal data, such as treating repeated measurements of the same variable as distinct variables or using generalized linear mixed imputation models. However, the uptake of these methods has been limited, as they require additional data manipulation and use of advanced imputation procedures. In this tutorial, we review the available MI approaches that can be used for handling incomplete longitudinal data, including where individuals are clustered within higher-level clusters. We illustrate implementation with replicable R and Stata code using a case study from the Childhood to Adolescence Transition Study.",
+      "added_date": "2026-10-18",
+      "display_number": 8
+    },
+    {
+      "id": 9,
+      "citation_key": "Vyas2020",
+      "title": "Association of Race and Ethnicity With Late-Life Depression Severity, Symptom Burden, and Care.",
+      "authors": [
+        "Vyas C",
+        "Donneyong M",
+        "Mischoulon D",
+        "Chang G",
+        "Gibson H",
+        "Cook N",
+        "Manson J",
+        "Reynolds C",
+        "Okereke O"
+      ],
+      "journal": "JAMA network open",
+      "year": "2020",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1001/jamanetworkopen.2020.1606",
+      "pmid": "32215634",
+      "added_by_section": "introduction",
+      "sections_used": [
+        "introduction"
+      ],
+      "abstract": "IMPORTANCE: Knowledge gaps persist regarding racial and ethnic variation in late-life depression, including differences in specific depressive symptoms and disparities in care. OBJECTIVE: To examine racial/ethnic differences in depression severity, symptom burden, and care. DESIGN, SETTING, AND PARTICIPANTS: This cross-sectional study included 25 503 of 25 871 community-dwelling older adults who participated in the Vitamin D and Omega-3 Trial (VITAL), a randomized trial of cancer and cardiovascular disease prevention conducted from November 2011 to December 2017. Data analysis was conducted from June to September 2018. EXPOSURE: Racial/ethnic group (ie, non-Hispanic white; black; Hispanic; Asian; and other, multiple, or unspecified race). MAIN OUTCOMES AND MEASURES: Depressive symptoms, assessed using the Patient Health Questionnaire-8 (PHQ-8); participant-reported diagnosis, medication, and/or counseling for depression. Differences across racial/ethnic groups were evaluated using multivariable zero-inflated negative binomial regression to compare PHQ-8 scores and multivariable logistic regression to estimate odds of item-level symptom burden and odds of depression treatment among those with diagnosed depression. RESULTS: There were 25 503 VITAL participants with adequate depression data (mean [SD] age, 67.1 [7.1] years) including 12 888 [50.5%] women, 17 828 [69.9%] non-Hispanic white participants, 5004 [19.6%] black participants, 1001 [3.9%] Hispanic participants, 377 [1.5%] Asian participants, and 1293 participants [5.1%] who were categorized in the other, multiple, or unspecified race group. After adjustment for sociodemographic, lifestyle, and health confounders, black participants had a 10% higher severity level of PHQ-8 scores compared with non-Hispanic white participants (rate ratio [RR], 1.10; 95% CI, 1.04-1.17; P < .001); Hispanic participants had a 23% higher severity level of PHQ-8 scores compared with non-Hispanic white participants (RR, 1.23; 95% CI, 1.10-1.38; P < .001); and participants in the other, multiple, or unspecified group had a 14% higher severity level of PHQ-8 scores compared with non-Hispanic white participants (RR, 1.14; 95% CI, 1.04-1.25; P = .007). Compared with non-Hispanic white participants, participants belonging to minority groups had 1.5-fold to 2-fold significantly higher fully adjusted odds of anhedonia (among black participants: odds ratio [OR], 1.76; 95% CI, 1.47-2.11; among Hispanic participants: OR, 1.96; 95% CI, 1.43-2.69), sadness (among black participants: OR, 1.31; 95% CI, 1.07-1.60; among Hispanic participants: OR, 2.09; 95% CI, 1.51-2.88), and psychomotor symptoms (among black participants: OR, 1.77; 95% CI, 1.31-2.39; among Hispanic participants: OR, 2.12; 95% CI, 1.28-3.50); multivariable-adjusted odds of sleep problems and guilt appeared higher among Hispanic vs non-Hispanic white participants (sleep: OR, 1.24; 95% CI, 1.01-1.52; guilt: 1.84; 95% CI, 1.31-2.59). Among those with clinically significant depressive symptoms (ie, PHQ-8 score ≥10) and/or those with diagnosed depression, black participants were 61% less likely to report any treatment (ie, medications and/or counseling) than non-Hispanic white participants after adjusting for confounders (adjusted OR, 0.39; 95% CI, 0.27-0.56). CONCLUSIONS AND RELEVANCE: In this cross-sectional study, significant racial and ethnic differences in late-life depression severity, item-level symptom burden, and depression care were observed after adjustment for numerous confounders. These findings suggest a need for further examination of novel patient-level and clinician-level factors underlying these associations.",
+      "added_date": "2026-10-18",
+      "display_number": 1
+    },
+    {
+      "id": 10,
+      "citation_key": "Triolo2024",
+      "title": "Mapping 15-year depressive symptom transitions in late life: population-based cohort study.",
+      "authors": [
+        "Triolo F",
+        "Vetrano D",
+        "Trevisan C",
+        "Sjöberg L",
+        "Calderón-Larrañaga A",
+        "Belvederi Murri M",
+        "Fratiglioni L",
+        "Dekhtyar S"
+      ],
+      "journal": "The British journal of psychiatry : the journal of mental science",
+      "year": "2024",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1192/bjp.2024.84",
+      "pmid": "38812455",
+      "added_by_section": "introduction",
+      "sections_used": [
+        "introduction"
+      ],
+      "abstract": "BACKGROUND: The longitudinal course of late-life depression remains under-studied. AIMS: To describe transitions along the depression continuum in old age and to identify factors associated with specific transition patterns. METHOD: We analysed 15-year longitudinal data on 2745 dementia-free persons aged 60+ from the population-based Swedish National Study on Aging and Care in Kungsholmen. Depression (minor and major) was diagnosed according to the Diagnostic and Statistical Manual of Mental Disorders, Fourth Edition, Text Revision; subsyndromal depression (SSD) was operationalised as the presence of ≥2 symptoms without depression. Multistate survival models were used to map depression transitions, including death, and to examine the association of psychosocial (social network, connection and support), lifestyle (smoking, alcohol consumption and physical activity) and clinical (somatic disease count) factors with transition patterns. RESULTS: Over the follow-up, 19.1% had ≥1 transitions across depressive states, while 6.5% had ≥2. Each additional somatic disease was associated with a higher hazard of progression from no depression (No Dep) to SSD (hazard ratio 1.09; 1.07-1.10) and depression (Dep) (hazard ratio 1.06; 1.04-1.08), but also with a lower recovery (HRSSD-No Dep 0.95; 0.93-0.97 [where 'HR' refers to 'hazard ratio']; HRDep-No Dep 0.96; 0.93-0.99). Physical activity was associated with an increased hazard of recovery to no depression from SSD (hazard ratio 1.49; 1.28-1.73) and depression (hazard ratio 1.20; 1.00-1.44), while a richer social network was associated with both higher recovery from (HRSSD-No Dep 1.44; 1.26-1.66; HRDep-No Dep 1.51; 1.34-1.71) and lower progression hazards to a worse depressive state (HRNo Dep-SSD 0.81; 0.70-0.94; HRNo Dep-Dep 0.58; 0.46-0.73; HRSSD-Dep 0.66; 0.44-0.98). CONCLUSIONS: Older people may present with heterogeneous depressive trajectories. Targeting the accumulation of somatic diseases and enhancing social interactions may be appropriate for both depression prevention and burden reduction, while promoting physical activity may primarily benefit recovery from depressive disorders.",
+      "added_date": "2026-10-18",
+      "display_number": 2
+    },
+    {
+      "id": 11,
+      "citation_key": "Hou2025",
+      "title": "Cumulative and variable depression symptom exposure and incident dementia: Panel data analysis of four longitudinal cohort studies.",
+      "authors": [
+        "Hou Z",
+        "Ming Y",
+        "Lu K",
+        "Ma Y",
+        "Jia R",
+        "Lai G",
+        "Bai Y",
+        "Huang W"
+      ],
+      "journal": "Alzheimer's & dementia : the journal of the Alzheimer's Association",
+      "year": "2025",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1002/alz.70950",
+      "pmid": "41313677",
+      "added_by_section": "discussion",
+      "sections_used": [
+        "discussion"
+      ],
+      "abstract": "INTRODUCTION: Late-life depression symptoms are implicated in dementia. We examined how cumulative burden, duration, trajectory, and variability of depression symptoms are associated with incident dementia. METHODS: A prospective cohort analysis of 23,305 dementia-free adults from four population studies (English Longitudinal Study of Ageing [ELSA], Health and Retirement Study [HRS], Survey of Health, Ageing and Retirement in Europe [SHARE], China Health and Retirement Longitudinal Study [CHARLS]) with repeated Centre for Epidemiologic Studies of Depression scale (CES-D)/Euro-Depression scale (EURO-D) assessments across three waves and a pooled median follow-up of ≈10.8 years. Exposures included CumSD/cumulative average depression symptom score (CumADS), high-symptom exposure duration, visit-to-visit variability (Standard deviation [SD], coefficient of variation [CV], variation independent of the mean [VIM]), and time-course patterns. Associations were analyzed using multivariable-adjusted Cox regression. RESULTS: Each 1-unit increase in cumulative score was associated with a 3%-8% higher dementia hazard across cohorts. Highest versus lowest cumulative quartiles showed markedly elevated risk. Sustained high exposure for 4 years conferred ≈2.7-3.9× greater risk. Higher variability and worsening trajectories were also linked to higher incidence. Associations were robust across subgroups. DISCUSSION: Persistent and unstable depression symptoms independently predict higher dementia risk, supporting longitudinal mood monitoring and sustained management. HIGHLIGHTS: Multi-cohort study of 23,305 adults (ELSA, HRS, SHARE, CHARLS). Cumulative depression burden shows a dose-response with dementia risk. Highest versus lowest quartile: dementia hazard up to 18× (HRS). Sustained high symptoms (4 years) linked to ≈2.7-3.9× greater risk. Visit-to-visit variability independently associates with higher dementia risk.",
+      "added_date": "2026-10-18",
+      "display_number": 12
+    },
+    {
+      "id": 12,
+      "citation_key": "Joel2014",
+      "title": "Dynamic prediction of treatment response in late-life depression.",
+      "authors": [
+        "Joel I",
+        "Begley A",
+        "Mulsant B",
+        "Lenze E",
+        "Mazumdar S",
+        "Dew M",
+        "Blumberger D",
+        "Butters M",
+        "Reynolds C",
+        "IRL GREY Investigative Team"
+      ],
+      "journal": "The American journal of geriatric psychiatry : official journal of the American Association for Geriatric Psychiatry",
+      "year": "2014",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1016/j.jagp.2012.07.002",
+      "pmid": "23567441",
+      "added_by_section": "discussion",
+      "sections_used": [
+        "discussion"
+      ],
+      "abstract": "OBJECTIVE: To identify actionable predictors of remission to antidepressant pharmacotherapy in depressed older adults and to use signal detection theory to develop decision trees to guide clinical decision making. METHOD: We treated 277 participants with current major depression using open-label venlafaxine XR (up to 300 mg/day) for 12 weeks, in an NIMH-sponsored randomized, placebo-controlled augmentation trial of adjunctive aripiprazole. Multiple logistic regression and signal detection approaches identified predictors of remission in both completer and intent-to-treat samples. RESULTS: Higher baseline depressive symptom severity (odds ratio [OR]: 0.86, 95% confidence interval [CI]: 0.80-0.93; p <0.001), smaller symptom improvement during the first two weeks of treatment (OR: 0.96, 95% CI: 0.94-0.97; p <0.001), male sex (OR: 0.41 95% CI: 0.18-0.93; p = 0.03), duration of current episode ≥2 years (OR: 0.26, 95% CI: 0.12-0.57; p <0.001) and adequate past depression treatment (ATHF ≥3) (OR: 0.34, 95% CI: 0.16-0.74; p = 0.006) predicted lower probability of remission in the completer sample. Subjects with Montgomery Asberg (MADRS) decreasing by greater than 27% in the first 2 weeks and with baseline MADRS scores of less than 27 (percentile rank = 51) had the best chance of remission (89%). Subjects with small symptom decrease in the first 2 weeks with adequate prior treatment and younger than 75 years old had the lowest chance of remission (16%). CONCLUSION: Our results suggest the clinical utility of measuring pre-treatment illness severity and change during the first 2 weeks of treatment in predicting remission of late-life major depression.",
+      "added_date": "2026-10-18",
+      "display_number": 11
+    }
+  ]
+}

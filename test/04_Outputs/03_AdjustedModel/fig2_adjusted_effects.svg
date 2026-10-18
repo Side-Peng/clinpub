@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='252.28pt' height='147.40pt' viewBox='0 0 252.28 147.40'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHwyNTIuMjh8MC4wMHwxNDcuNDA='>
+    <rect x='0.00' y='0.00' width='252.28' height='147.40' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHwyNTIuMjh8MC4wMHwxNDcuNDA=)'>
+<rect x='0.00' y='0.00' width='252.28' height='147.40' style='stroke-width: 0.68; stroke: none; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNzYuMTZ8MjQ5LjI5fDIuOTl8MTI0LjI4'>
+    <rect x='76.16' y='2.99' width='173.13' height='121.29' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNzYuMTZ8MjQ5LjI5fDIuOTl8MTI0LjI4)'>
+<rect x='76.16' y='2.99' width='173.13' height='121.29' style='stroke-width: 0.68; stroke: none; fill: #FFFFFF;' />
+<line x1='185.99' y1='124.28' x2='185.99' y2='2.99' style='stroke-width: 0.64; stroke: #999999; stroke-dasharray: 2.00,2.00; stroke-linecap: butt;' />
+<polyline points='169.19,22.34 169.19,18.29 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='169.19,20.32 84.03,20.32 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='84.03,22.34 84.03,18.29 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='188.76,51.22 188.76,47.17 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='188.76,49.19 184.74,49.19 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='184.74,51.22 184.74,47.17 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='241.42,80.10 241.42,76.05 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='241.42,78.07 153.76,78.07 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='153.76,80.10 153.76,76.05 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='187.51,108.97 187.51,104.93 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='187.51,106.95 175.32,106.95 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<polyline points='175.32,108.97 175.32,104.93 ' style='stroke-width: 0.83; stroke-linecap: butt;' />
+<circle cx='126.61' cy='20.32' r='2.15' style='stroke-width: 0.45; stroke: #0072B2; fill: #0072B2;' />
+<circle cx='186.79' cy='49.19' r='2.15' style='stroke-width: 0.45; stroke: #0072B2; fill: #0072B2;' />
+<circle cx='197.59' cy='78.07' r='2.15' style='stroke-width: 0.45; stroke: #0072B2; fill: #0072B2;' />
+<circle cx='181.45' cy='106.95' r='2.15' style='stroke-width: 0.45; stroke: #0072B2; fill: #0072B2;' />
+</g>
+<g clip-path='url(#cpMC4wMHwyNTIuMjh8MC4wMHwxNDcuNDA=)'>
+<polyline points='76.16,124.28 76.16,2.99 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<text x='72.97' y='109.46' text-anchor='end' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='52.47px' lengthAdjust='spacingAndGlyphs'>BMI (per kg/m2)</text>
+<text x='72.97' y='80.58' text-anchor='end' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='51.31px' lengthAdjust='spacingAndGlyphs'>Male vs Female</text>
+<text x='72.97' y='51.70' text-anchor='end' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='47.05px' lengthAdjust='spacingAndGlyphs'>Age (per year)</text>
+<text x='72.97' y='22.82' text-anchor='end' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='69.98px' lengthAdjust='spacingAndGlyphs'>Treatment vs Control</text>
+<polyline points='74.37,106.95 76.16,106.95 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='74.37,78.07 76.16,78.07 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='74.37,49.19 76.16,49.19 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='74.37,20.32 76.16,20.32 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='76.16,124.28 249.29,124.28 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='87.13,126.07 87.13,124.28 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='120.08,126.07 120.08,124.28 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='153.04,126.07 153.04,124.28 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='185.99,126.07 185.99,124.28 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<polyline points='218.95,126.07 218.95,124.28 ' style='stroke-width: 0.75; stroke-linecap: butt;' />
+<text x='87.13' y='132.48' text-anchor='middle' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='10.11px' lengthAdjust='spacingAndGlyphs'>-15</text>
+<text x='120.08' y='132.48' text-anchor='middle' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='10.11px' lengthAdjust='spacingAndGlyphs'>-10</text>
+<text x='153.04' y='132.48' text-anchor='middle' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='6.22px' lengthAdjust='spacingAndGlyphs'>-5</text>
+<text x='185.99' y='132.48' text-anchor='middle' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='3.89px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='218.95' y='132.48' text-anchor='middle' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='3.89px' lengthAdjust='spacingAndGlyphs'>5</text>
+<text x='162.73' y='143.68' text-anchor='middle' style='font-size: 7.00px; font-weight: bold; font-family: "Arial";' textLength='176.89px' lengthAdjust='spacingAndGlyphs'>Adjusted mean difference in symptom score (95% CI)</text>
+</g>
+</g>
+</svg>

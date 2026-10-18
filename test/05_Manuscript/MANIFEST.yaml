@@ -1,0 +1,69 @@
+# MANIFEST — Phase 3 手稿输出
+# 消费者：clinpub-verifier
+
+agent: writer-agent
+phase: 3
+type: progressive-manuscript-writing
+
+outputs:
+  - directory: 05_Manuscript
+    files:
+      - name: manuscript.md
+        format: md
+        generated_by: scripts/assemble_manuscript.py
+        word_count: 3989
+        sections: 6
+      - name: FIGURE_SKELETON.md
+        format: md
+      - name: NARRATIVE.md
+        format: md
+      - name: MANIFEST.yaml
+        format: yaml
+
+  - directory: 05_Manuscript/sections
+    files:
+      - name: abstract.md
+        format: md
+        status: final
+      - name: introduction.md
+        format: md
+        status: final
+      - name: methods.md
+        format: md
+        status: final
+      - name: results.md
+        format: md
+        status: final
+      - name: discussion.md
+        format: md
+        status: final
+      - name: conclusion.md
+        format: md
+        status: final
+
+handoffs:
+  - consumer: clinpub-verifier
+    required_files:
+      - 05_Manuscript/manuscript.md
+      - .clinpub/phases/02-analysis/ANALYSIS_SUMMARY.md
+      - .clinpub/ANALYSIS_LOG.md
+    required_quality:
+      - "六节齐全且全为 final"
+      - "Methods 与 ANALYSIS_LOG 双向一致"
+      - "无占位符残留"
+
+decisions:
+  - variable: 写作顺序
+    decision: "Results → Methods → Discussion → Conclusion → 叙事设计 → Introduction → Abstract"
+    rationale: "先定死发现了什么，Introduction 的 Gap 才能服务于已有发现，避免'引言承诺的分析没做'。"
+  - variable: 主结局声明
+    decision: "在 Methods 的统计分析末段与 Discussion 局限性中各声明一次 post hoc"
+    rationale: "结局看过数据后确定，不声明会被审稿人直接质疑。"
+  - variable: Figure 1
+    decision: "保留候选结局筛查双面板"
+    rationale: "探索性研究必须交代'为什么选这个结局'，经用户确认。"
+
+notes: >
+  word_count 3989，低于 writing.min_words（5000）——本次为流程验证，
+  未为凑字数扩写内容。引用库为空，References 段未生成（citation 相关的一致性检查项不适用）。
+  已知待补：参考文献 30–55 篇（含 DOI）、STROBE 条目对照表。

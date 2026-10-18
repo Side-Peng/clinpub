@@ -1,0 +1,5 @@
+"candidate","control_m","treatment_m","diff","ci_low","ci_high","cohens_d","p","shapiro_p"
+"baseline_score",49.6,50.15,0.54,-4.8,5.88,0.04,0.84,0.172
+"post_score",46.65,37.54,-9.11,-15.46,-2.75,-0.56,0.00541,0.379
+"egfr",89.77,93.08,3.31,-2.43,9.04,0.23,0.255,0.632
+"comorbidity",NA,NA,0.209,NA,NA,NA,0.216,NA

@@ -1,0 +1,311 @@
+{
+  "file": "patients.csv",
+  "n_rows": 120,
+  "n_columns": 11,
+  "column_names": [
+    "patient_id",
+    "age",
+    "sex",
+    "bmi",
+    "group",
+    "baseline_score",
+    "post_score",
+    "followup_months",
+    "event",
+    "comorbidity",
+    "egfr"
+  ],
+  "variables": [
+    {
+      "name": "patient_id",
+      "dtype": "int64",
+      "n_unique": 120,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "id",
+      "type": "continuous",
+      "min": 1.0,
+      "max": 120.0,
+      "mean": 60.5,
+      "median": 60.5,
+      "std": 34.7851,
+      "q1": 30.75,
+      "q3": 90.25
+    },
+    {
+      "name": "age",
+      "dtype": "int64",
+      "n_unique": 39,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "covariate",
+      "type": "continuous",
+      "min": 32.0,
+      "max": 78.0,
+      "mean": 57.4917,
+      "median": 58.0,
+      "std": 10.2104,
+      "q1": 51.0,
+      "q3": 65.25
+    },
+    {
+      "name": "sex",
+      "dtype": "str",
+      "n_unique": 2,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "covariate",
+      "type": "categorical",
+      "top_values": [
+        {
+          "value": "Female",
+          "pct": 55.0
+        },
+        {
+          "value": "Male",
+          "pct": 45.0
+        }
+      ]
+    },
+    {
+      "name": "bmi",
+      "dtype": "float64",
+      "n_unique": 78,
+      "n_missing": 9,
+      "missing_pct": 7.5,
+      "role": "covariate",
+      "type": "continuous",
+      "min": 14.3,
+      "max": 33.6,
+      "mean": 23.9811,
+      "median": 24.0,
+      "std": 3.598,
+      "q1": 21.7,
+      "q3": 25.95
+    },
+    {
+      "name": "group",
+      "dtype": "str",
+      "n_unique": 2,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "exposure",
+      "type": "categorical",
+      "top_values": [
+        {
+          "value": "Control",
+          "pct": 50.0
+        },
+        {
+          "value": "Treatment",
+          "pct": 50.0
+        }
+      ]
+    },
+    {
+      "name": "baseline_score",
+      "dtype": "float64",
+      "n_unique": 49,
+      "n_missing": 6,
+      "missing_pct": 5.0,
+      "role": "biomarker",
+      "type": "continuous",
+      "min": 17.0,
+      "max": 100.0,
+      "mean": 50.2368,
+      "median": 49.0,
+      "std": 13.602,
+      "q1": 41.0,
+      "q3": 59.0
+    },
+    {
+      "name": "post_score",
+      "dtype": "int64",
+      "n_unique": 57,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "biomarker",
+      "type": "continuous",
+      "min": 3.0,
+      "max": 99.0,
+      "mean": 42.8583,
+      "median": 44.0,
+      "std": 17.0048,
+      "q1": 33.0,
+      "q3": 52.25
+    },
+    {
+      "name": "followup_months",
+      "dtype": "int64",
+      "n_unique": 38,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "time",
+      "type": "continuous",
+      "min": 6.0,
+      "max": 57.0,
+      "mean": 29.2667,
+      "median": 28.5,
+      "std": 9.8456,
+      "q1": 22.0,
+      "q3": 36.0
+    },
+    {
+      "name": "event",
+      "dtype": "int64",
+      "n_unique": 2,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "outcome",
+      "type": "categorical_encoded",
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.4917,
+      "median": 0.0,
+      "std": 0.502,
+      "q1": 0.0,
+      "q3": 1.0,
+      "unique_values": [
+        0,
+        1
+      ]
+    },
+    {
+      "name": "comorbidity",
+      "dtype": "str",
+      "n_unique": 4,
+      "n_missing": 0,
+      "missing_pct": 0.0,
+      "role": "unknown",
+      "type": "categorical",
+      "top_values": [
+        {
+          "value": "None",
+          "pct": 30.0
+        },
+        {
+          "value": "Hypertension",
+          "pct": 30.0
+        },
+        {
+          "value": "Both",
+          "pct": 20.8
+        },
+        {
+          "value": "Diabetes",
+          "pct": 19.2
+        }
+      ]
+    },
+    {
+      "name": "egfr",
+      "dtype": "float64",
+      "n_unique": 109,
+      "n_missing": 5,
+      "missing_pct": 4.2,
+      "role": "unknown",
+      "type": "continuous",
+      "min": 49.4,
+      "max": 131.8,
+      "mean": 91.0157,
+      "median": 90.4,
+      "std": 14.6559,
+      "q1": 80.9,
+      "q3": 100.7
+    }
+  ],
+  "missing_summary": {
+    "total_vars_with_missing": 3,
+    "high_missing_vars": [],
+    "medium_missing_vars": [
+      {
+        "name": "bmi",
+        "missing_pct": 7.5
+      },
+      {
+        "name": "baseline_score",
+        "missing_pct": 5.0
+      }
+    ],
+    "low_missing_vars": [
+      {
+        "name": "egfr",
+        "missing_pct": 4.2
+      }
+    ]
+  },
+  "correlation_warning": false,
+  "ambiguous_na_tokens": [
+    {
+      "column": "comorbidity",
+      "tokens": [
+        "none"
+      ]
+    }
+  ],
+  "high_correlations": [
+    {
+      "var1": "baseline_score",
+      "var2": "post_score",
+      "correlation": 0.817
+    }
+  ],
+  "study_type": {
+    "suggestions": [
+      {
+        "type": "队列研究 (Cohort)",
+        "confidence": "high",
+        "reason": "检测到时间-事件数据+暴露分组",
+        "methods": [
+          "KM 生存曲线",
+          "Cox 回归",
+          "亚组分析",
+          "敏感性分析"
+        ]
+      },
+      {
+        "type": "诊断性研究 (Diagnostic)",
+        "confidence": "high",
+        "reason": "有标志物和结局变量",
+        "methods": [
+          "ROC 曲线",
+          "敏感度/特异度",
+          "最佳阈值"
+        ]
+      }
+    ],
+    "has_outcome": true,
+    "has_exposure": true,
+    "has_time": true,
+    "biomarker_count": 2,
+    "n_variables": 11
+  },
+  "role_summary": {
+    "id": [
+      "patient_id"
+    ],
+    "covariate": [
+      "age",
+      "sex",
+      "bmi"
+    ],
+    "exposure": [
+      "group"
+    ],
+    "biomarker": [
+      "baseline_score",
+      "post_score"
+    ],
+    "time": [
+      "followup_months"
+    ],
+    "outcome": [
+      "event"
+    ],
+    "unknown": [
+      "comorbidity",
+      "egfr"
+    ]
+  },
+  "sample_size_assessment": "偏小（50-200），适合简单比较或描述性研究"
+}
